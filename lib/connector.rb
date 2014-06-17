@@ -37,7 +37,7 @@ module Connector
 
   def self.get_api_response(apiMessage)
     apiMessage.messageId = get_unique_id
-    dataLen = apiMessage.serialize_to_string.bytes.length
+    dataLen = apiMessage.serialize_to_string.bytesize
     ProtocolBuffers::Varint.encode @@apiSocket, dataLen
     apiMessage.serialize(@@apiSocket)
 
@@ -47,6 +47,6 @@ module Connector
   end
 
   def self.get_unique_id
-    rand(2**32..2**63-1)
+    rand(2**63-1)
   end
 end

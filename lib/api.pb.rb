@@ -3,52 +3,20 @@
 
 require 'protocol_buffers'
 
+begin; require 'spec.pb'; rescue LoadError; end
+
 module Main
   # forward declarations
-  class GetProjectRootRequest < ::ProtocolBuffers::Message;
-  end
-  class GetProjectRootResponse < ::ProtocolBuffers::Message;
-  end
-  class GetAllStepsRequest < ::ProtocolBuffers::Message;
-  end
-  class GetAllStepsResponse < ::ProtocolBuffers::Message;
-  end
-  class GetAllSpecsRequest < ::ProtocolBuffers::Message;
-  end
-  class GetAllSpecsResponse < ::ProtocolBuffers::Message;
-  end
-  class GetStepValueRequest < ::ProtocolBuffers::Message;
-  end
-  class GetStepValueResponse < ::ProtocolBuffers::Message;
-  end
-  class ErrorResponse < ::ProtocolBuffers::Message;
-  end
-  class ProtoSpec < ::ProtocolBuffers::Message;
-  end
-  class ProtoItem < ::ProtocolBuffers::Message;
-  end
-  class ProtoHeading < ::ProtocolBuffers::Message;
-  end
-  class ProtoScenario < ::ProtocolBuffers::Message;
-  end
-  class ProtoStep < ::ProtocolBuffers::Message;
-  end
-  class ProtoConcept < ::ProtocolBuffers::Message;
-  end
-  class Fragment < ::ProtocolBuffers::Message;
-  end
-  class Parameter < ::ProtocolBuffers::Message;
-  end
-  class ProtoComment < ::ProtocolBuffers::Message;
-  end
-  class ProtoTableParam < ::ProtocolBuffers::Message;
-  end
-  class ProtoTableRow < ::ProtocolBuffers::Message;
-  end
-  class APIMessage < ::ProtocolBuffers::Message;
-  end
-  class ProtoTags < ::ProtocolBuffers::Message;
-  end
+  class GetProjectRootRequest < ::ProtocolBuffers::Message; end
+  class GetProjectRootResponse < ::ProtocolBuffers::Message; end
+  class GetAllStepsRequest < ::ProtocolBuffers::Message; end
+  class GetAllStepsResponse < ::ProtocolBuffers::Message; end
+  class GetAllSpecsRequest < ::ProtocolBuffers::Message; end
+  class GetAllSpecsResponse < ::ProtocolBuffers::Message; end
+  class GetStepValueRequest < ::ProtocolBuffers::Message; end
+  class GetStepValueResponse < ::ProtocolBuffers::Message; end
+  class ErrorResponse < ::ProtocolBuffers::Message; end
+  class APIMessage < ::ProtocolBuffers::Message; end
 
   class GetProjectRootRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.GetProjectRootRequest"
@@ -102,143 +70,6 @@ module Main
     required :string, :error, 1
   end
 
-  class ProtoSpec < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoSpec"
-
-    repeated ::Main::ProtoItem, :items, 1
-  end
-
-  class ProtoItem < ::ProtocolBuffers::Message
-    # forward declarations
-
-    # enums
-    module ItemType
-      include ::ProtocolBuffers::Enum
-
-      set_fully_qualified_name "main.ProtoItem.ItemType"
-
-      Heading = 1
-      Step = 2
-      Concept = 4
-      Scenario = 5
-      Comment = 6
-      Table = 7
-      Tags = 8
-    end
-
-    set_fully_qualified_name "main.ProtoItem"
-
-    required ::Main::ProtoItem::ItemType, :itemType, 1
-    optional ::Main::ProtoHeading, :heading, 2
-    optional ::Main::ProtoStep, :step, 3
-    optional ::Main::ProtoConcept, :concept, 4
-    optional ::Main::ProtoScenario, :scenario, 5
-    optional ::Main::ProtoComment, :comment, 6
-    optional ::Main::ProtoTableParam, :table, 7
-    optional ::Main::ProtoTags, :tags, 8
-  end
-
-  class ProtoHeading < ::ProtocolBuffers::Message
-    # forward declarations
-
-    # enums
-    module HeadingType
-      include ::ProtocolBuffers::Enum
-
-      set_fully_qualified_name "main.ProtoHeading.HeadingType"
-
-      Spec = 1
-      Scenario = 2
-    end
-
-    set_fully_qualified_name "main.ProtoHeading"
-
-    required ::Main::ProtoHeading::HeadingType, :headingType, 1
-    required :string, :text, 2
-  end
-
-  class ProtoScenario < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoScenario"
-
-    repeated ::Main::ProtoItem, :scenarioItems, 1
-  end
-
-  class ProtoStep < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoStep"
-
-    required :string, :text, 1
-    repeated ::Main::Parameter, :parameters, 2
-    repeated ::Main::Fragment, :fragments, 3
-  end
-
-  class ProtoConcept < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoConcept"
-
-    required ::Main::ProtoStep, :conceptStep, 1
-    repeated ::Main::ProtoStep, :steps, 2
-  end
-
-  class Fragment < ::ProtocolBuffers::Message
-    # forward declarations
-
-    # enums
-    module FragmentType
-      include ::ProtocolBuffers::Enum
-
-      set_fully_qualified_name "main.Fragment.FragmentType"
-
-      Text = 1
-      Parameter = 2
-    end
-
-    set_fully_qualified_name "main.Fragment"
-
-    required ::Main::Fragment::FragmentType, :fragmentType, 1
-    optional :string, :text, 2
-    optional ::Main::Parameter, :parameter, 3
-  end
-
-  class Parameter < ::ProtocolBuffers::Message
-    # forward declarations
-
-    # enums
-    module ParameterType
-      include ::ProtocolBuffers::Enum
-
-      set_fully_qualified_name "main.Parameter.ParameterType"
-
-      Static = 1
-      Dynamic = 2
-      Special = 3
-      Table = 4
-    end
-
-    set_fully_qualified_name "main.Parameter"
-
-    required ::Main::Parameter::ParameterType, :parameterType, 1
-    optional :string, :value, 2
-    optional ::Main::ProtoTableParam, :table, 3
-  end
-
-  class ProtoComment < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoComment"
-
-    required :string, :text, 1
-  end
-
-  class ProtoTableParam < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoTableParam"
-
-    required ::Main::ProtoTableRow, :headers, 1
-    repeated ::Main::ProtoTableRow, :rows, 2
-  end
-
-  class ProtoTableRow < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoTableRow"
-
-    repeated :string, :cells, 1
-  end
-
   class APIMessage < ::ProtocolBuffers::Message
     # forward declarations
 
@@ -272,12 +103,6 @@ module Main
     optional ::Main::GetStepValueRequest, :stepValueRequest, 9
     optional ::Main::GetStepValueResponse, :stepValueResponse, 10
     optional ::Main::ErrorResponse, :error, 11
-  end
-
-  class ProtoTags < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoTags"
-
-    repeated :string, :tags, 1
   end
 
 end

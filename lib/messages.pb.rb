@@ -3,66 +3,31 @@
 
 require 'protocol_buffers'
 
+begin; require 'spec.pb'; rescue LoadError; end
+
 module Main
   # forward declarations
-  class ExecutionStatus < ::ProtocolBuffers::Message;
-  end
-  class KillProcessRequest < ::ProtocolBuffers::Message;
-  end
-  class ExecutionStatusResponse < ::ProtocolBuffers::Message;
-  end
-  class ExecutionStartingRequest < ::ProtocolBuffers::Message;
-  end
-  class SpecExecutionStartingRequest < ::ProtocolBuffers::Message;
-  end
-  class SpecExecutionEndingRequest < ::ProtocolBuffers::Message;
-  end
-  class ScenarioExecutionStartingRequest < ::ProtocolBuffers::Message;
-  end
-  class ScenarioExecutionEndingRequest < ::ProtocolBuffers::Message;
-  end
-  class StepExecutionStartingRequest < ::ProtocolBuffers::Message;
-  end
-  class StepExecutionEndingRequest < ::ProtocolBuffers::Message;
-  end
-  class ExecutionInfo < ::ProtocolBuffers::Message;
-  end
-  class SpecInfo < ::ProtocolBuffers::Message;
-  end
-  class ScenarioInfo < ::ProtocolBuffers::Message;
-  end
-  class StepInfo < ::ProtocolBuffers::Message;
-  end
-  class ExecuteStepRequest < ::ProtocolBuffers::Message;
-  end
-  class ProtoTable < ::ProtocolBuffers::Message;
-  end
-  class TableRow < ::ProtocolBuffers::Message;
-  end
-  class Argument < ::ProtocolBuffers::Message;
-  end
-  class StepValidateRequest < ::ProtocolBuffers::Message;
-  end
-  class StepValidateResponse < ::ProtocolBuffers::Message;
-  end
-  class ExecutionEndingRequest < ::ProtocolBuffers::Message;
-  end
-  class StepNamesRequest < ::ProtocolBuffers::Message;
-  end
-  class StepNamesResponse < ::ProtocolBuffers::Message;
-  end
-  class Message < ::ProtocolBuffers::Message;
-  end
-
-  class ExecutionStatus < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ExecutionStatus"
-
-    required :bool, :passed, 1
-    optional :bool, :recoverableError, 2
-    optional :string, :errorMessage, 3
-    optional :string, :stackTrace, 4
-    optional :bytes, :screenShot, 5
-  end
+  class KillProcessRequest < ::ProtocolBuffers::Message; end
+  class ExecutionStatusResponse < ::ProtocolBuffers::Message; end
+  class ExecutionStartingRequest < ::ProtocolBuffers::Message; end
+  class SpecExecutionStartingRequest < ::ProtocolBuffers::Message; end
+  class SpecExecutionEndingRequest < ::ProtocolBuffers::Message; end
+  class ScenarioExecutionStartingRequest < ::ProtocolBuffers::Message; end
+  class ScenarioExecutionEndingRequest < ::ProtocolBuffers::Message; end
+  class StepExecutionStartingRequest < ::ProtocolBuffers::Message; end
+  class StepExecutionEndingRequest < ::ProtocolBuffers::Message; end
+  class ExecutionInfo < ::ProtocolBuffers::Message; end
+  class SpecInfo < ::ProtocolBuffers::Message; end
+  class ScenarioInfo < ::ProtocolBuffers::Message; end
+  class StepInfo < ::ProtocolBuffers::Message; end
+  class ExecuteStepRequest < ::ProtocolBuffers::Message; end
+  class StepValidateRequest < ::ProtocolBuffers::Message; end
+  class StepValidateResponse < ::ProtocolBuffers::Message; end
+  class ExecutionEndingRequest < ::ProtocolBuffers::Message; end
+  class SuiteExecutionResult < ::ProtocolBuffers::Message; end
+  class StepNamesRequest < ::ProtocolBuffers::Message; end
+  class StepNamesResponse < ::ProtocolBuffers::Message; end
+  class Message < ::ProtocolBuffers::Message; end
 
   class KillProcessRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.KillProcessRequest"
@@ -72,7 +37,7 @@ module Main
   class ExecutionStatusResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.ExecutionStatusResponse"
 
-    required ::Main::ExecutionStatus, :executionStatus, 1
+    required ::Main::ProtoExecutionResult, :executionResult, 1
   end
 
   class ExecutionStartingRequest < ::ProtocolBuffers::Message
@@ -159,26 +124,6 @@ module Main
     repeated ::Main::Argument, :args, 4
   end
 
-  class ProtoTable < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ProtoTable"
-
-    repeated ::Main::TableRow, :rows, 1
-  end
-
-  class TableRow < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.TableRow"
-
-    repeated :string, :cells, 1
-  end
-
-  class Argument < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.Argument"
-
-    required :string, :type, 1
-    optional :string, :value, 2
-    optional ::Main::ProtoTable, :table, 3
-  end
-
   class StepValidateRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.StepValidateRequest"
 
@@ -197,6 +142,12 @@ module Main
     set_fully_qualified_name "main.ExecutionEndingRequest"
 
     optional ::Main::ExecutionInfo, :currentExecutionInfo, 1
+  end
+
+  class SuiteExecutionResult < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.SuiteExecutionResult"
+
+    required ::Main::ProtoSuiteResult, :suiteResult, 1
   end
 
   class StepNamesRequest < ::ProtocolBuffers::Message
@@ -234,6 +185,7 @@ module Main
       StepNamesRequest = 12
       StepNamesResponse = 13
       KillProcessRequest = 14
+      SuiteExecutionResult = 15
     end
 
     set_fully_qualified_name "main.Message"
@@ -254,7 +206,8 @@ module Main
     optional ::Main::ExecutionStatusResponse, :executionStatusResponse, 14
     optional ::Main::StepNamesRequest, :stepNamesRequest, 15
     optional ::Main::StepNamesResponse, :stepNamesResponse, 16
-    optional ::Main::KillProcessRequest, :killProcessRequest, 17
+    optional ::Main::SuiteExecutionResult, :suiteExecutionResult, 17
+    optional ::Main::KillProcessRequest, :killProcessRequest, 18
   end
 
 end

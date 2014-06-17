@@ -10,6 +10,7 @@ def process_execute_step_request(message)
   begin
     execute_step step_text, args
   rescue Exception => e
+    puts "Got excaption - #{e}"
     return handle_failure message, e
   end
   handle_pass message
@@ -109,20 +110,21 @@ def handle_hooks_execution(hooks, message, currentExecutionInfo)
 end
 
 def handle_pass(message)
-  execution_status_response = Main::ExecutionStatusResponse.new(:executionStatus => Main::ExecutionStatus.new(:passed => true))
+  execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => false))
   Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
 end
 
 def handle_failure(message, exception)
-  execution_status_response = Main::ExecutionStatusResponse.new(:executionStatus => Main::ExecutionStatus.new(:passed => false,
-                                                                                                              :recoverableError => false,
-                                                                                                              :errorMessage => exception.message,
-                                                                                                              :stackTrace => exception.backtrace.join("\n"),
-                                                                                                              :screenShot => screenshot_bytes))
+  execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => true,
+                                                                                                                   :recoverableError => false,
+                                                                                                                   :errorMessage => exception.message,
+                                                                                                                   :stackTrace => exception.backtrace.join("\n")+"\n",
+                                                                                                                   :screenShot => screenshot_bytes))
   Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
 end
 
 def screenshot_bytes
+  # todo: make it platform independent
   file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
   `screencapture #{file.path}`
   file_content = file.read
