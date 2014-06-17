@@ -1,0 +1,12 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    ruby-protocol-buffers (1.5.1)
+    varint (0.1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ruby-protocol-buffers
+  varint
