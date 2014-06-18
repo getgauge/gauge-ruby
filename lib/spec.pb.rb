@@ -45,12 +45,13 @@ module Main
       set_fully_qualified_name "main.ProtoItem.ItemType"
 
       Step = 1
-      Concept = 2
-      Scenario = 3
-      TableDrivenScenario = 4
-      Comment = 5
-      Table = 6
-      Tags = 7
+      Comment = 2
+      Concept = 3
+      Scenario = 4
+      TableDrivenScenario = 5
+      Context = 6
+      Table = 7
+      Tags = 8
     end
 
     set_fully_qualified_name "main.ProtoItem"
