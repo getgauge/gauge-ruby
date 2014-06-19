@@ -207,7 +207,7 @@ module Main
     repeated ::Main::ProtoSpecResult, :specResults, 1
     optional ::Main::ProtoHookFailure, :preHookFailure, 2
     optional ::Main::ProtoHookFailure, :postHookFailure, 3
-    required :bool, :isFailed, 4
+    required :bool, :failed, 4
     required :int32, :specsFailedCount, 5
   end
 
@@ -217,7 +217,7 @@ module Main
     required ::Main::ProtoSpec, :protoSpec, 1
     required :int32, :scenarioCount, 2
     required :int32, :scenarioFailedCount, 3
-    required :bool, :ifFailed, 4
+    required :bool, :failed, 4
   end
 
 end
