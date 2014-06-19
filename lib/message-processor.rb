@@ -1,5 +1,6 @@
 require_relative 'messages.pb'
 require_relative 'executor'
+require_relative 'table'
 require 'tempfile'
 
 
@@ -20,7 +21,8 @@ def create_arg_values arguments
   args = []
   arguments.each do |argument|
     if (argument.type == "table")
-      args.push argument.table
+      gtable = GaugeTable.new(argument.table)
+      args.push gtable
     else
       args.push argument.value
     end
