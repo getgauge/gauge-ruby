@@ -33,6 +33,7 @@ module Main
     optional ::Main::ProtoHookFailure, :preHookFailure, 4
     optional ::Main::ProtoHookFailure, :postHookFailure, 5
     required :string, :fileName, 6
+    repeated :string, :tags, 7
   end
 
   class ProtoItem < ::ProtocolBuffers::Message
@@ -51,7 +52,6 @@ module Main
       TableDrivenScenario = 5
       Context = 6
       Table = 7
-      Tags = 8
     end
 
     set_fully_qualified_name "main.ProtoItem"
@@ -63,7 +63,6 @@ module Main
     optional ::Main::ProtoTableDrivenScenario, :tableDrivenScenario, 5
     optional ::Main::ProtoComment, :comment, 6
     optional ::Main::ProtoTable, :table, 7
-    optional ::Main::ProtoTags, :tags, 8
   end
 
   class ProtoScenario < ::ProtocolBuffers::Message
@@ -74,6 +73,7 @@ module Main
     repeated ::Main::ProtoItem, :scenarioItems, 3
     optional ::Main::ProtoHookFailure, :preHookFailure, 4
     optional ::Main::ProtoHookFailure, :postHookFailure, 5
+    repeated :string, :tags, 7
   end
 
   class ProtoTableDrivenScenario < ::ProtocolBuffers::Message
