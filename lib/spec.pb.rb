@@ -218,6 +218,7 @@ module Main
     required :int32, :scenarioCount, 2
     required :int32, :scenarioFailedCount, 3
     required :bool, :failed, 4
+    repeated :int32, :failedDataTableRows, 5
   end
 
 end
