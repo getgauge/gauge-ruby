@@ -14,7 +14,6 @@ module Main
   class ProtoTags < ::ProtocolBuffers::Message; end
   class Fragment < ::ProtocolBuffers::Message; end
   class Parameter < ::ProtocolBuffers::Message; end
-  class Argument < ::ProtocolBuffers::Message; end
   class ProtoComment < ::ProtocolBuffers::Message; end
   class ProtoTable < ::ProtocolBuffers::Message; end
   class ProtoTableRow < ::ProtocolBuffers::Message; end
@@ -50,8 +49,7 @@ module Main
       Concept = 3
       Scenario = 4
       TableDrivenScenario = 5
-      Context = 6
-      Table = 7
+      Table = 6
     end
 
     set_fully_qualified_name "main.ProtoItem"
@@ -70,10 +68,12 @@ module Main
 
     required :string, :scenarioHeading, 1
     required :bool, :failed, 2
-    repeated ::Main::ProtoItem, :scenarioItems, 3
-    optional ::Main::ProtoHookFailure, :preHookFailure, 4
-    optional ::Main::ProtoHookFailure, :postHookFailure, 5
+    repeated ::Main::ProtoItem, :contexts, 3
+    repeated ::Main::ProtoItem, :scenarioItems, 4
+    optional ::Main::ProtoHookFailure, :preHookFailure, 5
+    optional ::Main::ProtoHookFailure, :postHookFailure, 6
     repeated :string, :tags, 7
+    optional :int64, :executionTime, 8
   end
 
   class ProtoTableDrivenScenario < ::ProtocolBuffers::Message
@@ -96,8 +96,7 @@ module Main
 
     required ::Main::ProtoStep, :conceptStep, 1
     repeated ::Main::ProtoStep, :steps, 2
-    required :bool, :failed, 3
-    optional ::Main::ProtoStepExecutionResult, :conceptExecutionResult, 4
+    optional ::Main::ProtoStepExecutionResult, :conceptExecutionResult, 3
   end
 
   class ProtoTags < ::ProtocolBuffers::Message
@@ -137,23 +136,17 @@ module Main
 
       Static = 1
       Dynamic = 2
-      Special = 3
-      Table = 4
+      Special_String = 3
+      Special_Table = 4
+      Table = 5
     end
 
     set_fully_qualified_name "main.Parameter"
 
     required ::Main::Parameter::ParameterType, :parameterType, 1
     optional :string, :value, 2
-    optional ::Main::ProtoTable, :table, 3
-  end
-
-  class Argument < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.Argument"
-
-    required :string, :type, 1
-    optional :string, :value, 2
-    optional ::Main::ProtoTable, :table, 3
+    optional :string, :name, 3
+    optional ::Main::ProtoTable, :table, 4
   end
 
   class ProtoComment < ::ProtocolBuffers::Message
@@ -191,6 +184,7 @@ module Main
     optional :string, :errorMessage, 3
     optional :string, :stackTrace, 4
     optional :bytes, :screenShot, 5
+    required :int64, :executionTime, 6
   end
 
   class ProtoHookFailure < ::ProtocolBuffers::Message
@@ -209,6 +203,8 @@ module Main
     optional ::Main::ProtoHookFailure, :postHookFailure, 3
     required :bool, :failed, 4
     required :int32, :specsFailedCount, 5
+    optional :int64, :executionTime, 6
+    required :float, :successRate, 7
   end
 
   class ProtoSpecResult < ::ProtocolBuffers::Message
@@ -219,6 +215,7 @@ module Main
     required :int32, :scenarioFailedCount, 3
     required :bool, :failed, 4
     repeated :int32, :failedDataTableRows, 5
+    optional :int64, :executionTime, 6
   end
 
 end

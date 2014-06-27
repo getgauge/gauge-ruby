@@ -4,30 +4,34 @@ require_relative 'table'
 require 'tempfile'
 
 
+def time_elapsed_since(start_time)
+  ((Time.now-start_time) * 1000).round
+end
+
 def process_execute_step_request(message)
   step_text = message.executeStepRequest.parsedStepText
-  arguments = message.executeStepRequest.args
-  args = create_arg_values arguments
+  parameters = message.executeStepRequest.parameters
+  args = create_param_values parameters
+  start_time= Time.now
   begin
     execute_step step_text, args
   rescue Exception => e
-    puts "Got excaption - #{e}"
-    return handle_failure message, e
+    return handle_failure message, e, time_elapsed_since(start_time)
   end
-  handle_pass message
+  handle_pass message, time_elapsed_since(start_time)
 end
 
-def create_arg_values arguments
-  args = []
-  arguments.each do |argument|
-    if (argument.type == "table")
-      gtable = GaugeTable.new(argument.table)
-      args.push gtable
+def create_param_values parameters
+  params = []
+  parameters.each do |param|
+    if ((param.parameterType == Main::Parameter::ParameterType::Table) ||(param.parameterType == Main::Parameter::ParameterType::Special_Table))
+      gtable = GaugeTable.new(param.table)
+      params.push gtable
     else
-      args.push argument.value
+      params.push param.value
     end
   end
-  return args
+  return params
 end
 
 def process_execution_start_request(message)
@@ -103,24 +107,26 @@ class MessageProcessor
 end
 
 def handle_hooks_execution(hooks, message, currentExecutionInfo)
+  start_time= Time.now
   execution_error = execute_hooks(hooks, currentExecutionInfo)
   if execution_error == nil
-    return handle_pass message
+    return handle_pass message, time_elapsed_since(start_time)
   else
-    return handle_failure message, execution_error
+    return handle_failure message, execution_error, time_elapsed_since(start_time)
   end
 end
 
-def handle_pass(message)
-  execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => false))
+def handle_pass(message, execution_time)
+  execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => false, :executionTime => execution_time))
   Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
 end
 
-def handle_failure(message, exception)
+def handle_failure(message, exception, execution_time)
   execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => true,
                                                                                                                    :recoverableError => false,
                                                                                                                    :errorMessage => exception.message,
                                                                                                                    :stackTrace => exception.backtrace.join("\n")+"\n",
+                                                                                                                   :executionTime => execution_time,
                                                                                                                    :screenShot => screenshot_bytes))
   Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
 end

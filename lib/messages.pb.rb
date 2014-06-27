@@ -121,14 +121,14 @@ module Main
     required :string, :actualStepText, 1
     required :string, :parsedStepText, 2
     optional :bool, :scenarioFailing, 3
-    repeated ::Main::Argument, :args, 4
+    repeated ::Main::Parameter, :parameters, 4
   end
 
   class StepValidateRequest < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.StepValidateRequest"
 
     required :string, :stepText, 1
-    required :int32, :numberOfArguments, 2
+    required :int32, :numberOfParameters, 2
   end
 
   class StepValidateResponse < ::ProtocolBuffers::Message
