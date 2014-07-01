@@ -18,8 +18,12 @@ def execute_step(step, args)
 end
 
 def execute_hooks(hooks, currentExecutionInfo)
-  hooks.each do |hook|
-    hook.call(currentExecutionInfo)
+  begin
+    hooks.each do |hook|
+      hook.call(currentExecutionInfo)
+    end
+    return nil
+  rescue Exception => e
+    return e
   end
-  return nil
 end
