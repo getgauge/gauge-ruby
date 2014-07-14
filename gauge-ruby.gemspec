@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
     s.name        = "gauge-ruby"
-    s.version     = '0.0.1'
+    s.version     = '0.0.2'
     s.authors     = ["Gauge Team"]
-    s.email       = ["gauge-team@thoughtworks.com"]
+    s.email       = ["gauge@thoughtworks.com"]
 
     s.summary     = "Ruby support for Gauge"
     s.description = "Adds Ruby support into Gauge tests"
