@@ -16,7 +16,7 @@ def dispatch_messages(socket)
     data = socket.read len
     message = Main::Message.parse(data)
     handle_message(socket, message)
-    if (message.messageType == Main::Message::MessageType::KillProcessRequest)
+    if (message.messageType == Main::Message::MessageType::KillProcessRequest || message.messageType == Main::Message::MessageType::ExecutionEnding)
       socket.close
       return
     end
