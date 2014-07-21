@@ -10,8 +10,10 @@ $after_scenario_hooks = []
 $before_step_hooks = []
 $after_step_hooks = []
 
-def step(text, &block)
-  $steps_map[Connector.step_value(text)] = block;
+def step(*stepTexts, &block)
+  stepTexts.each do |text|
+    $steps_map[Connector.step_value(text)] = block;
+  end
 end
 
 def before_step(&block)
