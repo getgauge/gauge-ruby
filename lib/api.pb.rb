@@ -68,13 +68,15 @@ module Main
     set_fully_qualified_name "main.GetStepValueRequest"
 
     required :string, :stepText, 1
+    optional :bool, :hasInlineTable, 2
   end
 
   class GetStepValueResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.GetStepValueResponse"
 
     required :string, :stepValue, 1
-    repeated :string, :parameters, 2
+    required :string, :parameterizedStepValue, 2
+    repeated :string, :parameters, 3
   end
 
   class ErrorResponse < ::ProtocolBuffers::Message
