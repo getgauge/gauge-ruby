@@ -9,6 +9,8 @@ module Main
   # forward declarations
   class GetProjectRootRequest < ::ProtocolBuffers::Message; end
   class GetProjectRootResponse < ::ProtocolBuffers::Message; end
+  class GetInstallationRootRequest < ::ProtocolBuffers::Message; end
+  class GetInstallationRootResponse < ::ProtocolBuffers::Message; end
   class GetAllStepsRequest < ::ProtocolBuffers::Message; end
   class GetAllStepsResponse < ::ProtocolBuffers::Message; end
   class GetAllSpecsRequest < ::ProtocolBuffers::Message; end
@@ -27,6 +29,17 @@ module Main
     set_fully_qualified_name "main.GetProjectRootResponse"
 
     required :string, :projectRoot, 1
+  end
+
+  class GetInstallationRootRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetInstallationRootRequest"
+
+  end
+
+  class GetInstallationRootResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetInstallationRootResponse"
+
+    required :string, :installationRoot, 1
   end
 
   class GetAllStepsRequest < ::ProtocolBuffers::Message
@@ -81,13 +94,15 @@ module Main
 
       GetProjectRootRequest = 1
       GetProjectRootResponse = 2
-      GetAllStepsRequest = 3
-      GetAllStepResponse = 4
-      GetAllSpecsRequest = 5
-      GetAllSpecsResponse = 6
-      GetStepValueRequest = 7
-      GetStepValueResponse = 8
-      ErrorResponse = 9
+      GetInstallationRootRequest = 3
+      GetInstallationRootResponse = 4
+      GetAllStepsRequest = 5
+      GetAllStepResponse = 6
+      GetAllSpecsRequest = 7
+      GetAllSpecsResponse = 8
+      GetStepValueRequest = 9
+      GetStepValueResponse = 10
+      ErrorResponse = 11
     end
 
     set_fully_qualified_name "main.APIMessage"
@@ -96,13 +111,15 @@ module Main
     required :int64, :messageId, 2
     optional ::Main::GetProjectRootRequest, :projectRootRequest, 3
     optional ::Main::GetProjectRootResponse, :projectRootResponse, 4
-    optional ::Main::GetAllStepsRequest, :allStepsRequest, 5
-    optional ::Main::GetAllStepsResponse, :allStepsResponse, 6
-    optional ::Main::GetAllSpecsRequest, :allSpecsRequest, 7
-    optional ::Main::GetAllSpecsResponse, :allSpecsResponse, 8
-    optional ::Main::GetStepValueRequest, :stepValueRequest, 9
-    optional ::Main::GetStepValueResponse, :stepValueResponse, 10
-    optional ::Main::ErrorResponse, :error, 11
+    optional ::Main::GetInstallationRootRequest, :installationRootRequest, 5
+    optional ::Main::GetInstallationRootResponse, :installationRootResponse, 6
+    optional ::Main::GetAllStepsRequest, :allStepsRequest, 7
+    optional ::Main::GetAllStepsResponse, :allStepsResponse, 8
+    optional ::Main::GetAllSpecsRequest, :allSpecsRequest, 9
+    optional ::Main::GetAllSpecsResponse, :allSpecsResponse, 10
+    optional ::Main::GetStepValueRequest, :stepValueRequest, 11
+    optional ::Main::GetStepValueResponse, :stepValueResponse, 12
+    optional ::Main::ErrorResponse, :error, 13
   end
 
 end

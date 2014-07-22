@@ -89,11 +89,6 @@ func createRubyPropertiesFile() {
 	}
 }
 
-func getInstallationPath() string {
-	libsPath := common.GetLibsPath()
-	return path.Join(libsPath, ruby_directory)
-}
-
 func printUsage() {
 	flag.PrintDefaults()
 	os.Exit(2)
