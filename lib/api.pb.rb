@@ -50,7 +50,7 @@ module Main
   class GetAllStepsResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.GetAllStepsResponse"
 
-    repeated :string, :steps, 1
+    repeated ::Main::ProtoStepValue, :allSteps, 1
   end
 
   class GetAllSpecsRequest < ::ProtocolBuffers::Message
@@ -74,9 +74,7 @@ module Main
   class GetStepValueResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.GetStepValueResponse"
 
-    required :string, :stepValue, 1
-    required :string, :parameterizedStepValue, 2
-    repeated :string, :parameters, 3
+    required ::Main::ProtoStepValue, :stepValue, 1
   end
 
   class ErrorResponse < ::ProtocolBuffers::Message
