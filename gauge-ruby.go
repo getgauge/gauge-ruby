@@ -14,11 +14,8 @@ const (
 	step_implementations_dir = "step_implementations"
 	ruby_properties_file     = "ruby.properties"
 	ruby_directory           = "ruby"
-	gauge_runtime_ruby_file  = "gauge-runtime.rb"
-	lib_dir                  = "lib"
 )
 
-var projectRoot = ""
 var start = flag.Bool("start", false, "Start the gauge ruby runner")
 var initialize = flag.Bool("init", false, "Initialize the gauge ruby runner")
 
