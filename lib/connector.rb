@@ -32,7 +32,7 @@ module Connector
       puts "[Error] Failed to load step implementation. #{response.error.error}:  \"#{text}\""
       return ''
     end
-    return response.stepValueResponse.stepValue
+    return response.stepValueResponse.stepValue.stepValue
   end
 
   def self.get_api_response(apiMessage)
