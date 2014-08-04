@@ -13,11 +13,14 @@ const (
 	step_implementation_file = "step_implementation.rb"
 	step_implementations_dir = "step_implementations"
 	ruby_properties_file     = "ruby.properties"
-	ruby_directory           = "ruby"
+	skelDir                  = "skel"
+	envDir                   = "env"
 )
 
 var start = flag.Bool("start", false, "Start the gauge ruby runner")
 var initialize = flag.Bool("init", false, "Initialize the gauge ruby runner")
+var pluginDir = ""
+var projectRoot = ""
 
 func getProjectRoot() string {
 	pwd, err := common.GetProjectRoot()
@@ -35,7 +38,7 @@ func showMessage(action, filename string) {
 }
 
 func createStepImplementationsDirectory() {
-	createDirectory(path.Join("step_implementations"))
+	createDirectory(path.Join(projectRoot, "step_implementations"))
 }
 
 func createDirectory(filePath string) {
@@ -51,17 +54,13 @@ func createDirectory(filePath string) {
 }
 
 func createStepImplementationFile() {
-	destFile := path.Join(step_implementations_dir, step_implementation_file)
+	destFile := path.Join(projectRoot, step_implementations_dir, step_implementation_file)
 	showMessage("create", destFile)
 	if common.FileExists(destFile) {
 		showMessage("skip", destFile)
 	} else {
-		srcFile, err := common.GetSkeletonFilePath(path.Join(ruby_directory, step_implementation_file))
-		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to find %s. %s", step_implementation_file, err.Error()))
-			return
-		}
-		err = common.CopyFile(srcFile, destFile)
+		srcFile := path.Join(skelDir, step_implementation_file)
+		err := common.CopyFile(srcFile, destFile)
 		if err != nil {
 			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
 		}
@@ -69,17 +68,13 @@ func createStepImplementationFile() {
 }
 
 func createRubyPropertiesFile() {
-	destFile := path.Join("env", "default", ruby_properties_file)
+	destFile := path.Join(projectRoot, envDir, "default", ruby_properties_file)
 	showMessage("create", destFile)
 	if common.FileExists(destFile) {
 		showMessage("skip", destFile)
 	} else {
-		srcFile, err := common.GetSkeletonFilePath(path.Join("env", ruby_properties_file))
-		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to find env/%s. %s", ruby_properties_file, err.Error()))
-			return
-		}
-		err = common.CopyFile(srcFile, destFile)
+		srcFile := path.Join(skelDir, envDir, ruby_properties_file)
+		err := common.CopyFile(srcFile, destFile)
 		if err != nil {
 			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
 		}
@@ -112,8 +107,20 @@ func runCommand(cmdName string, arg ...string) {
 
 func main() {
 	flag.Parse()
+	var err error
+	pluginDir, err = os.Getwd()
+	if err != nil {
+		fmt.Printf("Failed to find current working directory: %s \n", err)
+		os.Exit(1)
+	}
+	projectRoot = os.Getenv("gauge_project_root")
+	if projectRoot == "" {
+		fmt.Println("Could not find gauge_project_root env. Java Runner exiting...")
+		os.Exit(1)
+	}
+
 	if *start {
-		os.Chdir(getProjectRoot())
+		os.Chdir(projectRoot)
 		runCommand("ruby", "-e", "require 'gauge-runtime'")
 	} else if *initialize {
 		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createRubyPropertiesFile}
