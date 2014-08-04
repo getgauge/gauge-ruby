@@ -22,6 +22,7 @@ module Main
   class ProtoHookFailure < ::ProtocolBuffers::Message; end
   class ProtoSuiteResult < ::ProtocolBuffers::Message; end
   class ProtoSpecResult < ::ProtocolBuffers::Message; end
+  class ProtoStepValue < ::ProtocolBuffers::Message; end
 
   class ProtoSpec < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.ProtoSpec"
@@ -216,6 +217,14 @@ module Main
     required :bool, :failed, 4
     repeated :int32, :failedDataTableRows, 5
     optional :int64, :executionTime, 6
+  end
+
+  class ProtoStepValue < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.ProtoStepValue"
+
+    required :string, :stepValue, 1
+    required :string, :parameterizedStepValue, 2
+    repeated :string, :parameters, 3
   end
 
 end
