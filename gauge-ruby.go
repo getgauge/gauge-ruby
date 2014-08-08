@@ -115,7 +115,7 @@ func main() {
 	}
 	projectRoot = os.Getenv("gauge_project_root")
 	if projectRoot == "" {
-		fmt.Println("Could not find gauge_project_root env. Java Runner exiting...")
+		fmt.Println("Could not find gauge_project_root env. Ruby Runner exiting...")
 		os.Exit(1)
 	}
 
