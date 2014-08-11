@@ -17,6 +17,8 @@ module Main
   class GetAllSpecsResponse < ::ProtocolBuffers::Message; end
   class GetStepValueRequest < ::ProtocolBuffers::Message; end
   class GetStepValueResponse < ::ProtocolBuffers::Message; end
+  class GetLanguagePluginLibPathRequest < ::ProtocolBuffers::Message; end
+  class GetLanguagePluginLibPathResponse < ::ProtocolBuffers::Message; end
   class ErrorResponse < ::ProtocolBuffers::Message; end
   class APIMessage < ::ProtocolBuffers::Message; end
 
@@ -77,6 +79,18 @@ module Main
     required ::Main::ProtoStepValue, :stepValue, 1
   end
 
+  class GetLanguagePluginLibPathRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetLanguagePluginLibPathRequest"
+
+    required :string, :language, 1
+  end
+
+  class GetLanguagePluginLibPathResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetLanguagePluginLibPathResponse"
+
+    required :string, :path, 1
+  end
+
   class ErrorResponse < ::ProtocolBuffers::Message
     set_fully_qualified_name "main.ErrorResponse"
 
@@ -102,7 +116,9 @@ module Main
       GetAllSpecsResponse = 8
       GetStepValueRequest = 9
       GetStepValueResponse = 10
-      ErrorResponse = 11
+      GetLanguagePluginLibPathRequest = 11
+      GetLanguagePluginLibPathResponse = 12
+      ErrorResponse = 13
     end
 
     set_fully_qualified_name "main.APIMessage"
@@ -119,7 +135,9 @@ module Main
     optional ::Main::GetAllSpecsResponse, :allSpecsResponse, 10
     optional ::Main::GetStepValueRequest, :stepValueRequest, 11
     optional ::Main::GetStepValueResponse, :stepValueResponse, 12
-    optional ::Main::ErrorResponse, :error, 13
+    optional ::Main::GetLanguagePluginLibPathRequest, :libPathRequest, 13
+    optional ::Main::GetLanguagePluginLibPathResponse, :libPathResponse, 14
+    optional ::Main::ErrorResponse, :error, 15
   end
 
 end
