@@ -27,6 +27,9 @@ module Main
   class SuiteExecutionResult < ::ProtocolBuffers::Message; end
   class StepNamesRequest < ::ProtocolBuffers::Message; end
   class StepNamesResponse < ::ProtocolBuffers::Message; end
+  class ScenarioDataStoreInitRequest < ::ProtocolBuffers::Message; end
+  class SpecDataStoreInitRequest < ::ProtocolBuffers::Message; end
+  class SuiteDataStoreInitRequest < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
 
   class KillProcessRequest < ::ProtocolBuffers::Message
@@ -161,6 +164,21 @@ module Main
     repeated :string, :steps, 1
   end
 
+  class ScenarioDataStoreInitRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.ScenarioDataStoreInitRequest"
+
+  end
+
+  class SpecDataStoreInitRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.SpecDataStoreInitRequest"
+
+  end
+
+  class SuiteDataStoreInitRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.SuiteDataStoreInitRequest"
+
+  end
+
   class Message < ::ProtocolBuffers::Message
     # forward declarations
 
@@ -186,6 +204,9 @@ module Main
       StepNamesResponse = 13
       KillProcessRequest = 14
       SuiteExecutionResult = 15
+      ScenarioDataStoreInit = 16
+      SpecDataStoreInit = 17
+      SuiteDataStoreInit = 18
     end
 
     set_fully_qualified_name "main.Message"
@@ -208,6 +229,9 @@ module Main
     optional ::Main::StepNamesResponse, :stepNamesResponse, 16
     optional ::Main::SuiteExecutionResult, :suiteExecutionResult, 17
     optional ::Main::KillProcessRequest, :killProcessRequest, 18
+    optional ::Main::ScenarioDataStoreInitRequest, :scenarioDataStoreInitRequest, 19
+    optional ::Main::SpecDataStoreInitRequest, :specDataStoreInitRequest, 20
+    optional ::Main::SuiteDataStoreInitRequest, :suiteDataStoreInitRequest, 21
   end
 
 end
