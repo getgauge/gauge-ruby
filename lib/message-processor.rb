@@ -2,6 +2,7 @@ require_relative 'messages.pb'
 require_relative 'executor'
 require_relative 'table'
 require 'tempfile'
+require_relative 'datastore'
 
 
 def time_elapsed_since(start_time)
@@ -81,6 +82,19 @@ def process_kill_processor_request(message)
   return message
 end
 
+def dataStoreInit(message)
+  case message.messageType
+    when Main::Message::MessageType::SuiteDataStoreInit
+      DataStoreFactory.getSuiteDataStore.clear
+    when Main::Message::MessageType::SpecDataStoreInit
+      DataStoreFactory.getSpecDataStore.clear
+    when Main::Message::MessageType::ScenarioDataStoreInit
+      DataStoreFactory.getScenarioDataStore.clear
+  end
+  execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => false, :executionTime => 0))
+  Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+end
+
 class MessageProcessor
   @processors = Hash.new
   @processors[Main::Message::MessageType::StepValidateRequest] = method(:process_step_validation_request)
@@ -95,6 +109,9 @@ class MessageProcessor
   @processors[Main::Message::MessageType::ExecuteStep] = method(:process_execute_step_request)
   @processors[Main::Message::MessageType::StepNamesRequest] = method(:process_step_names_request)
   @processors[Main::Message::MessageType::KillProcessRequest] = method(:process_kill_processor_request)
+  @processors[Main::Message::MessageType::SuiteDataStoreInit] = method(:dataStoreInit)
+  @processors[Main::Message::MessageType::SpecDataStoreInit] = method(:dataStoreInit)
+  @processors[Main::Message::MessageType::ScenarioDataStoreInit] = method(:dataStoreInit)
 
   def self.is_valid_message(message)
     return @processors.has_key? message.messageType
