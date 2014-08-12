@@ -27,6 +27,9 @@ end
 def handle_message(socket, message)
   if (!MessageProcessor.is_valid_message(message))
     puts "Invalid message received : #{message}"
+    execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => true, :executionTime => 0))
+    message = Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+    write_message(socket, message)
   else
     response = MessageProcessor.process_message message
     write_message(socket, response)
