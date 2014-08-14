@@ -113,9 +113,9 @@ func main() {
 		fmt.Printf("Failed to find current working directory: %s \n", err)
 		os.Exit(1)
 	}
-	projectRoot = os.Getenv("gauge_project_root")
+	projectRoot = os.Getenv("GAUGE_PROJECT_ROOT")
 	if projectRoot == "" {
-		fmt.Println("Could not find gauge_project_root env. Ruby Runner exiting...")
+		fmt.Println("Could not find GAUGE_PROJECT_ROOT env. Ruby Runner exiting...")
 		os.Exit(1)
 	}
 
