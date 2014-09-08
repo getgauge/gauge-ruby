@@ -5,34 +5,34 @@ class DataStore
   end
 
   def get(key)
-    @dataMap[key]
+    @data_map[key]
   end
 
   def put(key, value)
-    @dataMap[key] = value
+    @data_map[key] = value
   end
 
   def clear
-    @dataMap = Hash.new
+    @data_map = Hash.new
   end
 end
 
 
 class DataStoreFactory
-  @@suiteDataStore = DataStore.new
-  @@specDataStore = DataStore.new
-  @@scenarioDataStore = DataStore.new
+  @@suite_datastore = DataStore.new
+  @@spec_datastore = DataStore.new
+  @@scenario_datastore = DataStore.new
 
-  def self.getSuiteDataStore
-    return @@suiteDataStore
+  def self.suite_datastore
+    return @@suite_datastore
   end
 
-  def self.getSpecDataStore
-    return @@specDataStore
+  def self.spec_datastore
+    return @@spec_datastore
   end
 
-  def self.getScenarioDataStore
-    return @@scenarioDataStore
+  def self.scenario_datastore
+    return @@scenario_datastore
   end
 end
 

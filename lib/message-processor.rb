@@ -85,11 +85,11 @@ end
 def dataStoreInit(message)
   case message.messageType
     when Main::Message::MessageType::SuiteDataStoreInit
-      DataStoreFactory.getSuiteDataStore.clear
+      DataStoreFactory.suite_datastore.clear
     when Main::Message::MessageType::SpecDataStoreInit
-      DataStoreFactory.getSpecDataStore.clear
+      DataStoreFactory.spec_datastore.clear
     when Main::Message::MessageType::ScenarioDataStoreInit
-      DataStoreFactory.getScenarioDataStore.clear
+      DataStoreFactory.scenario_datastore.clear
   end
   execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => false, :executionTime => 0))
   Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
