@@ -2,14 +2,14 @@
     "id" : "ruby",
     "version" : "0.0.2",
 	"description": "ruby support for gauge",
-	"run": {
-		"windows": "bin/gauge-ruby --start",
-		"linux": "bin/gauge-ruby --start",
-		"darwin": "bin/gauge-ruby --start"
-	},
-	"init": {
-        "windows": "bin/gauge-ruby --init",
-        "linux": "bin/gauge-ruby --init",
-        "darwin": "bin/gauge-ruby --init"
+    "run": {
+        "windows": ["bin/gauge-ruby", "--start"],
+        "linux": ["bin/gauge-ruby", "--start"],
+        "darwin": ["bin/gauge-ruby", "--start"]
+    },
+    "init": {
+        "windows": ["bin/gauge-ruby", "--init"],
+        "linux": ["bin/gauge-ruby", "--init"],
+        "darwin": ["bin/gauge-ruby", "--init"]
     }
 }
