@@ -1,6 +1,7 @@
 require_relative 'messages.pb'
 require_relative 'executor'
 require_relative 'table'
+require_relative 'os'
 require 'tempfile'
 require_relative 'datastore'
 
@@ -150,10 +151,13 @@ end
 
 def screenshot_bytes
   # todo: make it platform independent
-  file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
-  `screencapture #{file.path}`
-  file_content = file.read
-  File.delete file
-  return file_content
+  if (OS.mac?)
+    file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
+    `screencapture #{file.path}`
+    file_content = File.read file.path
+    File.delete file
+    return file_content
+  end
+  return Array.new
 end
 
