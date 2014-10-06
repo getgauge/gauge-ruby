@@ -96,7 +96,7 @@ module Main
     set_fully_qualified_name "main.ProtoConcept"
 
     required ::Main::ProtoStep, :conceptStep, 1
-    repeated ::Main::ProtoStep, :steps, 2
+    repeated ::Main::ProtoItem, :steps, 2
     optional ::Main::ProtoStepExecutionResult, :conceptExecutionResult, 3
   end
 
