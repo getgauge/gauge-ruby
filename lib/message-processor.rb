@@ -158,6 +158,6 @@ def screenshot_bytes
     File.delete file
     return file_content
   end
-  return Array.new
+  return nil
 end
 
