@@ -1,0 +1,5 @@
+.idea*
+tmp
+bin
+*.gem
+deploy

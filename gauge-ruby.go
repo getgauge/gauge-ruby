@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/getgauge/common"
 	"flag"
 	"fmt"
+	"github.com/getgauge/common"
 	"os"
 	"os/exec"
 	"path"
