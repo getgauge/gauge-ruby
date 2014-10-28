@@ -1,6 +1,7 @@
 package main
 
 import (
+	"archive/zip"
 	"encoding/json"
 	"errors"
 	"flag"
@@ -43,7 +44,6 @@ var BUILD_DIR_BIN = filepath.Join(BUILD_DIR, bin)
 var BUILD_DIR_SRC = filepath.Join(BUILD_DIR, "src")
 var BUILD_DIR_PKG = filepath.Join(BUILD_DIR, "pkg")
 var BUILD_DIR_GAUGE_RUBY = filepath.Join(BUILD_DIR_SRC, gaugeRuby)
-var platformBinDir = filepath.Join(bin, fmt.Sprintf("%s_%s", runtime.GOOS, runtime.GOARCH))
 
 var gaugeRubyFiles = []string{"gauge-ruby.go"}
 
@@ -230,7 +230,7 @@ func copyFiles(files map[string]string, installDir string) {
 
 func copyGaugeRubyFiles(destDir string) error {
 	files := make(map[string]string)
-	if runtime.GOOS == "windows" {
+	if getGOOS() == "windows" {
 		files[filepath.Join(getBinDir(), "gauge-ruby.exe")] = bin
 	} else {
 		files[filepath.Join(getBinDir(), gaugeRuby)] = bin
@@ -288,9 +288,9 @@ func installGaugeRubyFiles(installPath string) error {
 
 func getBinDir() string {
 	if *binDir == "" {
-		return platformBinDir
+		return filepath.Join(bin, fmt.Sprintf("%s_%s", getGOOS(), getGOARCH()))
 	}
-	return path.Join(bin, *binDir)
+	return filepath.Join(bin, *binDir)
 }
 
 func getGemFile() string {
@@ -435,8 +435,56 @@ func createGaugeDistro(forAllPlatforms bool) {
 }
 
 func createDistro() {
-	distroDir := filepath.Join(deployDir, fmt.Sprintf("%s-%s-%s.%s", gaugeRuby, getGaugeRubyVersion(), runtime.GOOS, getArch()))
+	packageName := fmt.Sprintf("%s-%s-%s.%s", gaugeRuby, getGaugeRubyVersion(), getGOOS(), getArch())
+	distroDir := filepath.Join(deployDir, packageName)
 	copyGaugeRubyFiles(distroDir)
+	createZip(deployDir, packageName)
+	os.RemoveAll(distroDir)
+}
+
+func createZip(dir, packageName string) {
+	wd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	os.Chdir(dir)
+
+	zipFileName := packageName + ".zip"
+	newfile, err := os.Create(zipFileName)
+	if err != nil {
+		panic(err)
+	}
+	defer newfile.Close()
+
+	zipWriter := zip.NewWriter(newfile)
+	defer zipWriter.Close()
+
+	filepath.Walk(packageName, func(path string, info os.FileInfo, err error) error {
+		infoHeader, err := zip.FileInfoHeader(info)
+		if err != nil {
+			panic(err)
+		}
+		infoHeader.Name = strings.Replace(path, fmt.Sprintf("%s%c", packageName, filepath.Separator), "", 1)
+		if info.IsDir() {
+			return nil
+		}
+		writer, err := zipWriter.CreateHeader(infoHeader)
+		if err != nil {
+			panic(err)
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			panic(err)
+		}
+		defer file.Close()
+		_, err = io.Copy(writer, file)
+		if err != nil {
+			panic(err)
+		}
+		return nil
+	})
+
+	os.Chdir(wd)
 }
 
 func compileGaugeRubyAcrossPlatforms() {
@@ -485,8 +533,27 @@ func getUserHome() string {
 }
 
 func getArch() string {
-	if runtime.GOARCH == X86 {
+	arch := getGOARCH()
+	if arch == X86 {
 		return "x86"
 	}
 	return "x86_64"
+}
+
+func getGOARCH() string {
+	goArch := os.Getenv(GOARCH)
+	if goArch == "" {
+		return runtime.GOARCH
+
+	}
+	return goArch
+}
+
+func getGOOS() string {
+	os := os.Getenv(GOOS)
+	if os == "" {
+		return runtime.GOOS
+
+	}
+	return os
 }
