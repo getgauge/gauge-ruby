@@ -23,7 +23,7 @@ var pluginDir = ""
 var projectRoot = ""
 
 func getProjectRoot() string {
-	pwd, err := common.GetProjectRoot()
+	pwd, err := common.GetProjectRootFromWD()
 	if err != nil {
 		panic(err)
 	}

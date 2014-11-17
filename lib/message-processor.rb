@@ -158,6 +158,10 @@ def screenshot_bytes
     File.delete file
     return file_content
   end
+  if (OS.linux?)
+    `import -window root ~/Desktop/screenshot.png`
+    return File.read '~/Desktop/screenshot.png'
+  end
   return nil
 end
 
