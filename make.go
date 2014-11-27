@@ -38,6 +38,7 @@ const (
 	gauge             = "gauge"
 	gaugeRuby         = "gauge-ruby"
 	deployDir         = "deploy"
+	commonDep         = "github.com/getgauge/common"
 )
 
 var BUILD_DIR_BIN = filepath.Join(BUILD_DIR, bin)
@@ -185,7 +186,7 @@ func executeCommand(command string, arg ...string) (string, error) {
 
 func compileGoPackage(packageName string) {
 	setGoEnv()
-	runProcess("go", BUILD_DIR, "get", "-d", "u", "./..")
+	runProcess("go", BUILD_DIR, "get", "-u", "-d", commonDep)
 	runProcess("go", BUILD_DIR, "install", "-v", packageName)
 }
 
