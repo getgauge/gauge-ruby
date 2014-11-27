@@ -316,9 +316,9 @@ func getGemFile() string {
 func installGaugeRubyGem() {
 	gemHome := getGemHome()
 	if gemHome == "" {
-		runProcess("gem", "install", "--user-install", gaugeRubyGemfile)
+		runProcess("gem", currentWorkingDir(), "install", "--user-install", gaugeRubyGemfile)
 	} else {
-		runProcess("gem", "install", gaugeRubyGemfile, "--install-dir", gemHome)
+		runProcess("gem", currentWorkingDir(), "install", gaugeRubyGemfile, "--install-dir", gemHome)
 	}
 }
 
@@ -496,12 +496,16 @@ func compileGaugeRubyAcrossPlatforms() {
 }
 
 func buildGaugeRubyGem() {
+	runProcess("gem", currentWorkingDir(), "build", "gauge-ruby.gemspec")
+}
+
+func currentWorkingDir() string {
 	wd, err := os.Getwd()
 	if err != nil {
 		panic(err)
 
 	}
-	runProcess("gem", wd, "build", "gauge-ruby.gemspec")
+	return wd
 }
 
 func installGaugeRuby(installPrefix string) {
