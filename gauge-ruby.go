@@ -22,15 +22,6 @@ var initialize = flag.Bool("init", false, "Initialize the gauge ruby runner")
 var pluginDir = ""
 var projectRoot = ""
 
-func getProjectRoot() string {
-	pwd, err := common.GetProjectRootFromWD()
-	if err != nil {
-		panic(err)
-	}
-
-	return pwd
-}
-
 type initializerFunc func()
 
 func showMessage(action, filename string) {
@@ -113,12 +104,11 @@ func main() {
 		fmt.Printf("Failed to find current working directory: %s \n", err)
 		os.Exit(1)
 	}
-	projectRoot = os.Getenv("GAUGE_PROJECT_ROOT")
+	projectRoot = os.Getenv(common.GaugeProjectRootEnv)
 	if projectRoot == "" {
-		fmt.Println("Could not find GAUGE_PROJECT_ROOT env. Ruby Runner exiting...")
+		fmt.Printf("Could not find %s env. Ruby Runner exiting...", common.GaugeProjectRootEnv)
 		os.Exit(1)
 	}
-
 	if *start {
 		os.Chdir(projectRoot)
 		runCommand("ruby", "-e", "require 'gauge-runtime'")
