@@ -15,6 +15,9 @@ module Main
   class GetAllStepsResponse < ::ProtocolBuffers::Message; end
   class GetAllSpecsRequest < ::ProtocolBuffers::Message; end
   class GetAllSpecsResponse < ::ProtocolBuffers::Message; end
+  class GetAllConceptsRequest < ::ProtocolBuffers::Message; end
+  class GetAllConceptsResponse < ::ProtocolBuffers::Message; end
+  class ConceptInfo < ::ProtocolBuffers::Message; end
   class GetStepValueRequest < ::ProtocolBuffers::Message; end
   class GetStepValueResponse < ::ProtocolBuffers::Message; end
   class GetLanguagePluginLibPathRequest < ::ProtocolBuffers::Message; end
@@ -64,6 +67,25 @@ module Main
     set_fully_qualified_name "main.GetAllSpecsResponse"
 
     repeated ::Main::ProtoSpec, :specs, 1
+  end
+
+  class GetAllConceptsRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetAllConceptsRequest"
+
+  end
+
+  class GetAllConceptsResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetAllConceptsResponse"
+
+    repeated ::Main::ConceptInfo, :concepts, 1
+  end
+
+  class ConceptInfo < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.ConceptInfo"
+
+    required ::Main::ProtoStepValue, :stepValue, 1
+    required :string, :filepath, 2
+    required :int32, :lineNumber, 3
   end
 
   class GetStepValueRequest < ::ProtocolBuffers::Message
@@ -119,6 +141,8 @@ module Main
       GetLanguagePluginLibPathRequest = 11
       GetLanguagePluginLibPathResponse = 12
       ErrorResponse = 13
+      GetAllConceptsRequest = 14
+      GetAllConceptsResponse = 15
     end
 
     set_fully_qualified_name "main.APIMessage"
@@ -138,6 +162,8 @@ module Main
     optional ::Main::GetLanguagePluginLibPathRequest, :libPathRequest, 13
     optional ::Main::GetLanguagePluginLibPathResponse, :libPathResponse, 14
     optional ::Main::ErrorResponse, :error, 15
+    optional ::Main::GetAllConceptsRequest, :allConceptsRequest, 16
+    optional ::Main::GetAllConceptsResponse, :allConceptsResponse, 17
   end
 
 end
