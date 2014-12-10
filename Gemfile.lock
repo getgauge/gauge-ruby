@@ -1,12 +1,15 @@
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
+    os (0.9.6)
     ruby-protocol-buffers (1.5.1)
     varint (0.1.0)
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
+  os
   ruby-protocol-buffers
   varint

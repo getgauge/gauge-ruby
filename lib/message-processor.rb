@@ -1,7 +1,7 @@
 require_relative 'messages.pb'
 require_relative 'executor'
 require_relative 'table'
-require_relative 'os'
+require 'os'
 require 'tempfile'
 require_relative 'datastore'
 
@@ -164,4 +164,3 @@ def screenshot_bytes
   end
   return nil
 end
-
