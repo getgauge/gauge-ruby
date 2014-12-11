@@ -9,5 +9,7 @@ Gem::Specification.new do |s|
     s.homepage    = "http://www.thoughtworks.com"
     s.files = Dir.glob("lib/**/*.rb")
     s.add_runtime_dependency 'ruby-protocol-buffers', '1.5.1'
+    s.add_runtime_dependency 'os', '0.9.6'
+    s.add_runtime_dependency 'varint', '0.1.0'
 end
 

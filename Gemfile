@@ -1,5 +1,3 @@
 source "https://rubygems.org"
+gemspec
 
-gem "ruby-protocol-buffers"
-gem "varint"
-gem "os"
