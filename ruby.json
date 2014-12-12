@@ -1,7 +1,7 @@
 {
     "id" : "ruby",
-    "version" : "0.0.2",
-	"description": "ruby support for gauge",
+    "version" : "0.0.3",
+	"description": "ruby support for gauge 0.0.3",
     "run": {
         "windows": ["bin/gauge-ruby", "--start"],
         "linux": ["bin/gauge-ruby", "--start"],
