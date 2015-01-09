@@ -30,6 +30,11 @@ module Main
   class ScenarioDataStoreInitRequest < ::ProtocolBuffers::Message; end
   class SpecDataStoreInitRequest < ::ProtocolBuffers::Message; end
   class SuiteDataStoreInitRequest < ::ProtocolBuffers::Message; end
+  class ParameterPosition < ::ProtocolBuffers::Message; end
+  class RefactorRequest < ::ProtocolBuffers::Message; end
+  class RefactorResponse < ::ProtocolBuffers::Message; end
+  class GetStepNameRequest < ::ProtocolBuffers::Message; end
+  class GetStepNameResponse < ::ProtocolBuffers::Message; end
   class Message < ::ProtocolBuffers::Message; end
 
   class KillProcessRequest < ::ProtocolBuffers::Message
@@ -179,6 +184,41 @@ module Main
 
   end
 
+  class ParameterPosition < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.ParameterPosition"
+
+    required :int32, :oldPosition, 1
+    required :int32, :newPosition, 2
+  end
+
+  class RefactorRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.RefactorRequest"
+
+    required ::Main::ProtoStepValue, :oldStepValue, 1
+    required ::Main::ProtoStepValue, :newStepValue, 2
+    repeated ::Main::ParameterPosition, :paramPositions, 3
+  end
+
+  class RefactorResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.RefactorResponse"
+
+    required :bool, :success, 1
+    optional :string, :error, 2
+  end
+
+  class GetStepNameRequest < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetStepNameRequest"
+
+    required :string, :stepValue, 1
+  end
+
+  class GetStepNameResponse < ::ProtocolBuffers::Message
+    set_fully_qualified_name "main.GetStepNameResponse"
+
+    required :bool, :isStepPresent, 1
+    optional :string, :stepName, 2
+  end
+
   class Message < ::ProtocolBuffers::Message
     # forward declarations
 
@@ -207,6 +247,10 @@ module Main
       ScenarioDataStoreInit = 16
       SpecDataStoreInit = 17
       SuiteDataStoreInit = 18
+      StepNameRequest = 19
+      StepNameResponse = 20
+      RefactorRequest = 21
+      RefactorResponse = 22
     end
 
     set_fully_qualified_name "main.Message"
@@ -232,6 +276,10 @@ module Main
     optional ::Main::ScenarioDataStoreInitRequest, :scenarioDataStoreInitRequest, 19
     optional ::Main::SpecDataStoreInitRequest, :specDataStoreInitRequest, 20
     optional ::Main::SuiteDataStoreInitRequest, :suiteDataStoreInitRequest, 21
+    optional ::Main::GetStepNameRequest, :stepNameRequest, 22
+    optional ::Main::GetStepNameResponse, :stepNameResponse, 23
+    optional ::Main::RefactorRequest, :refactorRequest, 24
+    optional ::Main::RefactorResponse, :refactorResponse, 25
   end
 
 end

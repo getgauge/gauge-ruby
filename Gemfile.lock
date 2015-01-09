@@ -1,17 +1,15 @@
 PATH
   remote: .
   specs:
-    gauge-ruby (0.0.2)
+    gauge-ruby (0.0.3)
       os (= 0.9.6)
       ruby-protocol-buffers (= 1.5.1)
-      varint (= 0.1.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
     os (0.9.6)
     ruby-protocol-buffers (1.5.1)
-    varint (0.1.0)
 
 PLATFORMS
   ruby
