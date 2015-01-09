@@ -23,7 +23,6 @@ const (
 )
 
 const (
-	gaugeRubyGemfile  = "gauge-ruby-*.gem"
 	dotGauge          = ".gauge"
 	plugins           = "plugins"
 	GOARCH            = "GOARCH"
@@ -317,9 +316,9 @@ func getGemFile() string {
 func installGaugeRubyGem() {
 	gemHome := getGemHome()
 	if gemHome == "" {
-		runProcess("gem", currentWorkingDir(), "install", "--user-install", gaugeRubyGemfile)
+		runProcess("gem", currentWorkingDir(), "install", "--user-install", fmt.Sprintf("gauge-ruby-%s.gem", getGaugeRubyVersion()))
 	} else {
-		runProcess("gem", currentWorkingDir(), "install", gaugeRubyGemfile, "--install-dir", gemHome)
+		runProcess("gem", currentWorkingDir(), "install", fmt.Sprintf("gauge-ruby-%s.gem", getGaugeRubyVersion()), "--install-dir", gemHome)
 	}
 }
 
