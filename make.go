@@ -294,31 +294,15 @@ func getBinDir() string {
 }
 
 func getGemFile() string {
-	dir, err1 := os.Getwd()
-	if err1 != nil {
-		fmt.Println("Could not get working directory")
-		os.Exit(1)
-	}
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		fmt.Println("Could not find .gem file")
-		os.Exit(1)
-	} else {
-		for _, file := range files {
-			if filepath.Ext(filepath.Join(dir, file.Name())) == ".gem" {
-				return file.Name()
-			}
-		}
-	}
-	return ""
+	return fmt.Sprintf("gauge-ruby-%s.gem", getGaugeRubyVersion())
 }
 
 func installGaugeRubyGem() {
 	gemHome := getGemHome()
 	if gemHome == "" {
-		runProcess("gem", currentWorkingDir(), "install", "--user-install", fmt.Sprintf("gauge-ruby-%s.gem", getGaugeRubyVersion()))
+		runProcess("gem", currentWorkingDir(), "install", "--user-install", getGemFile())
 	} else {
-		runProcess("gem", currentWorkingDir(), "install", fmt.Sprintf("gauge-ruby-%s.gem", getGaugeRubyVersion()), "--install-dir", gemHome)
+		runProcess("gem", currentWorkingDir(), "install", getGemFile(), "--install-dir", gemHome)
 	}
 }
 

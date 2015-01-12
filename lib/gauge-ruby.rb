@@ -1,6 +1,7 @@
 require_relative 'connector'
 
 $steps_map = Hash.new
+$steps_text_map = Hash.new
 $before_suite_hooks = []
 $after_suite_hooks = []
 $before_spec_hooks = []
@@ -12,7 +13,9 @@ $after_step_hooks = []
 
 def step(*stepTexts, &block)
   stepTexts.each do |text|
-    $steps_map[Connector.step_value(text)] = block;
+    parameterizedStepText = Connector.step_value(text)
+    $steps_map[parameterizedStepText] = block;
+    $steps_text_map[parameterizedStepText] = text
   end
 end
 
@@ -47,4 +50,3 @@ end
 def after_suite(&block)
   $after_suite_hooks.push block;
 end
-

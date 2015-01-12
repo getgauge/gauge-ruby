@@ -96,6 +96,25 @@ def dataStoreInit(message)
   Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
 end
 
+def refactor_step(message)
+  p message.inspect
+  oldStepValue = message.refactorRequest.oldStepValue.stepValue
+  newStep = message.refactorRequest.newStepValue.stepValue
+  stepBlock = $steps_map[oldStepValue]
+  p stepBlock.inspect
+  p message.refactorRequest.oldStepValue
+  p newStep.inspect
+  return message
+end
+
+def process_step_name_request(message)
+  step_text = message.stepNameRequest.stepValue
+  is_valid = is_valid_step(step_text)
+  parsed_step_text = is_valid ? $steps_text_map[step_text] : ""
+  get_step_name_response = Main::GetStepNameResponse.new(isStepPresent: is_valid, stepName: parsed_step_text)
+  Main::Message.new(:messageType => Main::Message::MessageType::StepNameResponse, :messageId => message.messageId, :stepNameResponse => get_step_name_response)
+end
+
 class MessageProcessor
   @processors = Hash.new
   @processors[Main::Message::MessageType::StepValidateRequest] = method(:process_step_validation_request)
@@ -113,6 +132,8 @@ class MessageProcessor
   @processors[Main::Message::MessageType::SuiteDataStoreInit] = method(:dataStoreInit)
   @processors[Main::Message::MessageType::SpecDataStoreInit] = method(:dataStoreInit)
   @processors[Main::Message::MessageType::ScenarioDataStoreInit] = method(:dataStoreInit)
+  @processors[Main::Message::MessageType::StepNameRequest] = method(:process_step_name_request)
+  @processors[Main::Message::MessageType::RefactorRequest] = method(:refactor_step)
 
   def self.is_valid_message(message)
     return @processors.has_key? message.messageType
