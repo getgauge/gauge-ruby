@@ -154,7 +154,7 @@ def screenshot_bytes
   if (OS.mac?)
     file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
     `screencapture #{file.path}`
-    file_content = File.read file.path
+    file_content = File.binread(file.path)
     File.delete file
     return file_content
   end
