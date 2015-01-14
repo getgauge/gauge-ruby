@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name        = "gauge-ruby"
-    s.version     = '0.0.3'
+    s.version     = '0.0.4'
     s.authors     = ["Gauge Team"]
     s.email       = ["gauge@thoughtworks.com"]
 
