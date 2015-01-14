@@ -4,6 +4,7 @@ require_relative 'table'
 require 'os'
 require 'tempfile'
 require_relative 'datastore'
+require_relative 'code_parser'
 
 
 def time_elapsed_since(start_time)
@@ -100,8 +101,14 @@ def refactor_step(message)
   oldStepValue = message.refactorRequest.oldStepValue.stepValue
   newStep = message.refactorRequest.newStepValue
   stepBlock = $steps_map[oldStepValue]
-  Gauge::CodeParser.refactor_args stepBlock, newStep.paramPositions, newStep.parameters
-  return message
+  refactor_response = Main::RefactorResponse.new(success: true)
+  # begin
+    Gauge::CodeParser.refactor stepBlock, message.refactorRequest.paramPositions, newStep.parameters, newStep.stepValue
+  # rescue Exception => e
+  #   refactor_response.success=false
+  #   refactor_response.error=e.message
+  # end
+  Main::Message.new(:messageType => Main::Message::MessageType::RefactorResponse, :messageId => message.messageId, refactorResponse: refactor_response)
 end
 
 def process_step_name_request(message)
