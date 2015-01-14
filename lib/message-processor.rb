@@ -97,13 +97,10 @@ def dataStoreInit(message)
 end
 
 def refactor_step(message)
-  p message.inspect
   oldStepValue = message.refactorRequest.oldStepValue.stepValue
-  newStep = message.refactorRequest.newStepValue.stepValue
+  newStep = message.refactorRequest.newStepValue
   stepBlock = $steps_map[oldStepValue]
-  p stepBlock.inspect
-  p message.refactorRequest.oldStepValue
-  p newStep.inspect
+  Gauge::CodeParser.refactor_args stepBlock, newStep.paramPositions, newStep.parameters
   return message
 end
 
