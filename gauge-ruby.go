@@ -111,7 +111,7 @@ func main() {
 	}
 	if *start {
 		os.Chdir(projectRoot)
-		runCommand("ruby", "-e", "require 'gauge-runtime'")
+		runCommand("ruby", "-e", "require 'gauge_runtime'")
 	} else if *initialize {
 		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createRubyPropertiesFile}
 		for _, f := range funcs {

@@ -1,4 +1,4 @@
-require_relative 'gauge-ruby'
+require_relative 'gauge_ruby'
 
 def load_steps(steps_implementation_dir)
   Dir["#{steps_implementation_dir}/**/*.rb"].each { |x| require x }

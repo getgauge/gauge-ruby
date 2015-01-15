@@ -2,6 +2,7 @@ require_relative 'connector'
 
 $steps_map = Hash.new
 $steps_text_map = Hash.new
+$steps_with_aliases = []
 $before_suite_hooks = []
 $after_suite_hooks = []
 $before_spec_hooks = []
@@ -16,6 +17,7 @@ def step(*stepTexts, &block)
     parameterizedStepText = Connector.step_value(text)
     $steps_map[parameterizedStepText] = block;
     $steps_text_map[parameterizedStepText] = text
+    $steps_with_aliases.push parameterizedStepText if stepTexts.length > 1
   end
 end
 

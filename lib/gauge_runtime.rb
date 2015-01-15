@@ -4,7 +4,7 @@ require 'protocol_buffers'
 require_relative 'messages.pb'
 require_relative 'executor'
 require_relative 'connector'
-require_relative 'message-processor'
+require_relative 'message_processor'
 
 HOST_NAME = 'localhost'
 

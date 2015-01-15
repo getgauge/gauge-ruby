@@ -1,6 +1,6 @@
 require 'rspec'
 require_relative '../lib/code_parser.rb'
-require_relative '../lib/gauge-ruby.rb'
+require_relative '../lib/gauge_ruby.rb'
 require_relative '../lib/messages.pb.rb'
 require 'method_source'
 
