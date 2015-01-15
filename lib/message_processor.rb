@@ -176,6 +176,7 @@ def handle_failure(message, exception, execution_time)
 end
 
 def screenshot_bytes
+  return nil if ENV["screenshot_enabled"] == "false"
   # todo: make it platform independent
   if (OS.mac?)
     file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
