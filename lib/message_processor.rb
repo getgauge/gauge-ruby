@@ -112,10 +112,11 @@ def refactor_step(message)
 end
 
 def process_step_name_request(message)
-  step_text = message.stepNameRequest.stepValue
-  is_valid = is_valid_step(step_text)
-  parsed_step_text = is_valid ? $steps_text_map[step_text] : ""
-  get_step_name_response = Main::GetStepNameResponse.new(isStepPresent: is_valid, stepName: parsed_step_text)
+  parsed_step_text = message.stepNameRequest.stepValue
+  is_valid = is_valid_step(parsed_step_text)
+  step_text = is_valid ? $steps_text_map[parsed_step_text] : ""
+  has_alias = $steps_with_aliases.include?(step_text)
+  get_step_name_response = Main::GetStepNameResponse.new(isStepPresent: is_valid, stepName: [step_text], hasAlias: has_alias)
   Main::Message.new(:messageType => Main::Message::MessageType::StepNameResponse, :messageId => message.messageId, :stepNameResponse => get_step_name_response)
 end
 

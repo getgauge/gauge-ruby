@@ -17,7 +17,7 @@ def step(*stepTexts, &block)
     parameterizedStepText = Connector.step_value(text)
     $steps_map[parameterizedStepText] = block;
     $steps_text_map[parameterizedStepText] = text
-    $steps_with_aliases.push parameterizedStepText if stepTexts.length > 1
+    $steps_with_aliases.push text if stepTexts.length > 1
   end
 end
 

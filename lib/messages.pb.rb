@@ -216,7 +216,8 @@ module Main
     set_fully_qualified_name "main.GetStepNameResponse"
 
     required :bool, :isStepPresent, 1
-    optional :string, :stepName, 2
+    repeated :string, :stepName, 2
+    required :bool, :hasAlias, 3
   end
 
   class Message < ::ProtocolBuffers::Message

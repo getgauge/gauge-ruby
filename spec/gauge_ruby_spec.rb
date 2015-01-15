@@ -56,17 +56,17 @@ describe "gauge_ruby" do
 	describe "step definitions" do
 		before(:each) {
 			["foo", "bar", "baz"].each{ |v|
-				allow(Connector).to receive(:step_value).with(v).and_return(v)
+				allow(Connector).to receive(:step_value).with(v).and_return("parameterized_#{v}")
 			}
 			step "foo", &foo_block 
 		}
 
 		describe $steps_map do
-			it { should include("foo" => foo_block)}
+			it { should include("parameterized_foo" => foo_block)}
 		end
 
 		describe $steps_text_map do
-			it { should include "foo"=>"foo" }
+			it { should include "parameterized_foo"=>"foo" }
 		end
 
 		describe $steps_with_aliases do
