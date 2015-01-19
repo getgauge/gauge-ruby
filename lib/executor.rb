@@ -4,7 +4,7 @@ def load_steps(steps_implementation_dir)
   Dir["#{steps_implementation_dir}/**/*.rb"].each { |x| require x }
 end
 
-def is_valid_step(step)
+def valid_step?(step)
   $steps_map.has_key? step
 end
 
