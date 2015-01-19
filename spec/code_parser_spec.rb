@@ -75,7 +75,6 @@ describe Gauge::CodeParser do
 		it "inserts arguments when none existed" do
 			param_positions=[Main::ParameterPosition.new(oldPosition: -1, newPosition: 0), Main::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
 			refactored_code = described_class.refactor_args(source_code_no_args, param_positions, ["what", "who"], "say <what> to <who>")
-			p refactored_code
 			new_args = described_class.step_args_from_code(refactored_code)
 			expect(new_args.to_s).to eq "[(arg :what), (arg :who)]"
 		end
