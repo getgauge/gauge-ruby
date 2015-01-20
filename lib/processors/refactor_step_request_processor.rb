@@ -7,7 +7,7 @@ module Processors
     stepBlock = $steps_map[oldStepValue]
     refactor_response = Gauge::Messages::RefactorResponse.new(success: true)
     begin
-      Gauge::CodeParser.refactor stepBlock, message.refactorRequest.paramPositions, newStep.parameters, newStep.stepValue
+      Gauge::CodeParser.refactor stepBlock, message.refactorRequest.paramPositions, newStep.parameters, newStep.parameterizedStepValue
     rescue Exception => e
       refactor_response.success=false
       refactor_response.error=e.message
