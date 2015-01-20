@@ -13,8 +13,13 @@ module Gauge
 
 		def self.refactor_args(code, param_positions, new_param_values, new_step_text)
 			new_params = []
+			args = step_args_from_code code
 			param_positions.sort_by!(&:newPosition).each { |e|
-				new_params[e.newPosition] = new_param_values[e.newPosition]
+				if e.oldPosition == -1
+					new_params[e.newPosition] = new_param_values[e.newPosition]
+				else
+					new_params[e.newPosition] = args[e.oldPosition].children[0]
+				end
 			}
 			buffer = Parser::Source::Buffer.new '(rewriter)'
 			buffer.source=code
