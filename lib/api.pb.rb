@@ -5,165 +5,188 @@ require 'protocol_buffers'
 
 begin; require 'spec.pb'; rescue LoadError; end
 
-module Main
-  # forward declarations
-  class GetProjectRootRequest < ::ProtocolBuffers::Message; end
-  class GetProjectRootResponse < ::ProtocolBuffers::Message; end
-  class GetInstallationRootRequest < ::ProtocolBuffers::Message; end
-  class GetInstallationRootResponse < ::ProtocolBuffers::Message; end
-  class GetAllStepsRequest < ::ProtocolBuffers::Message; end
-  class GetAllStepsResponse < ::ProtocolBuffers::Message; end
-  class GetAllSpecsRequest < ::ProtocolBuffers::Message; end
-  class GetAllSpecsResponse < ::ProtocolBuffers::Message; end
-  class GetAllConceptsRequest < ::ProtocolBuffers::Message; end
-  class GetAllConceptsResponse < ::ProtocolBuffers::Message; end
-  class ConceptInfo < ::ProtocolBuffers::Message; end
-  class GetStepValueRequest < ::ProtocolBuffers::Message; end
-  class GetStepValueResponse < ::ProtocolBuffers::Message; end
-  class GetLanguagePluginLibPathRequest < ::ProtocolBuffers::Message; end
-  class GetLanguagePluginLibPathResponse < ::ProtocolBuffers::Message; end
-  class ErrorResponse < ::ProtocolBuffers::Message; end
-  class APIMessage < ::ProtocolBuffers::Message; end
-
-  class GetProjectRootRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetProjectRootRequest"
-
-  end
-
-  class GetProjectRootResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetProjectRootResponse"
-
-    required :string, :projectRoot, 1
-  end
-
-  class GetInstallationRootRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetInstallationRootRequest"
-
-  end
-
-  class GetInstallationRootResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetInstallationRootResponse"
-
-    required :string, :installationRoot, 1
-  end
-
-  class GetAllStepsRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetAllStepsRequest"
-
-  end
-
-  class GetAllStepsResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetAllStepsResponse"
-
-    repeated ::Main::ProtoStepValue, :allSteps, 1
-  end
-
-  class GetAllSpecsRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetAllSpecsRequest"
-
-  end
-
-  class GetAllSpecsResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetAllSpecsResponse"
-
-    repeated ::Main::ProtoSpec, :specs, 1
-  end
-
-  class GetAllConceptsRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetAllConceptsRequest"
-
-  end
-
-  class GetAllConceptsResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetAllConceptsResponse"
-
-    repeated ::Main::ConceptInfo, :concepts, 1
-  end
-
-  class ConceptInfo < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ConceptInfo"
-
-    required ::Main::ProtoStepValue, :stepValue, 1
-    required :string, :filepath, 2
-    required :int32, :lineNumber, 3
-  end
-
-  class GetStepValueRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetStepValueRequest"
-
-    required :string, :stepText, 1
-    optional :bool, :hasInlineTable, 2
-  end
-
-  class GetStepValueResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetStepValueResponse"
-
-    required ::Main::ProtoStepValue, :stepValue, 1
-  end
-
-  class GetLanguagePluginLibPathRequest < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetLanguagePluginLibPathRequest"
-
-    required :string, :language, 1
-  end
-
-  class GetLanguagePluginLibPathResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.GetLanguagePluginLibPathResponse"
-
-    required :string, :path, 1
-  end
-
-  class ErrorResponse < ::ProtocolBuffers::Message
-    set_fully_qualified_name "main.ErrorResponse"
-
-    required :string, :error, 1
-  end
-
-  class APIMessage < ::ProtocolBuffers::Message
+module Gauge
+  module Messages
     # forward declarations
+    class GetProjectRootRequest < ::ProtocolBuffers::Message; end
+    class GetProjectRootResponse < ::ProtocolBuffers::Message; end
+    class GetInstallationRootRequest < ::ProtocolBuffers::Message; end
+    class GetInstallationRootResponse < ::ProtocolBuffers::Message; end
+    class GetAllStepsRequest < ::ProtocolBuffers::Message; end
+    class GetAllStepsResponse < ::ProtocolBuffers::Message; end
+    class GetAllSpecsRequest < ::ProtocolBuffers::Message; end
+    class GetAllSpecsResponse < ::ProtocolBuffers::Message; end
+    class GetAllConceptsRequest < ::ProtocolBuffers::Message; end
+    class GetAllConceptsResponse < ::ProtocolBuffers::Message; end
+    class ConceptInfo < ::ProtocolBuffers::Message; end
+    class GetStepValueRequest < ::ProtocolBuffers::Message; end
+    class GetStepValueResponse < ::ProtocolBuffers::Message; end
+    class GetLanguagePluginLibPathRequest < ::ProtocolBuffers::Message; end
+    class GetLanguagePluginLibPathResponse < ::ProtocolBuffers::Message; end
+    class ErrorResponse < ::ProtocolBuffers::Message; end
+    class PerformRefactoringRequest < ::ProtocolBuffers::Message; end
+    class PerformRefactoringResponse < ::ProtocolBuffers::Message; end
+    class APIMessage < ::ProtocolBuffers::Message; end
 
-    # enums
-    module APIMessageType
-      include ::ProtocolBuffers::Enum
+    class GetProjectRootRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetProjectRootRequest"
 
-      set_fully_qualified_name "main.APIMessage.APIMessageType"
-
-      GetProjectRootRequest = 1
-      GetProjectRootResponse = 2
-      GetInstallationRootRequest = 3
-      GetInstallationRootResponse = 4
-      GetAllStepsRequest = 5
-      GetAllStepResponse = 6
-      GetAllSpecsRequest = 7
-      GetAllSpecsResponse = 8
-      GetStepValueRequest = 9
-      GetStepValueResponse = 10
-      GetLanguagePluginLibPathRequest = 11
-      GetLanguagePluginLibPathResponse = 12
-      ErrorResponse = 13
-      GetAllConceptsRequest = 14
-      GetAllConceptsResponse = 15
     end
 
-    set_fully_qualified_name "main.APIMessage"
+    class GetProjectRootResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetProjectRootResponse"
 
-    required ::Main::APIMessage::APIMessageType, :messageType, 1
-    required :int64, :messageId, 2
-    optional ::Main::GetProjectRootRequest, :projectRootRequest, 3
-    optional ::Main::GetProjectRootResponse, :projectRootResponse, 4
-    optional ::Main::GetInstallationRootRequest, :installationRootRequest, 5
-    optional ::Main::GetInstallationRootResponse, :installationRootResponse, 6
-    optional ::Main::GetAllStepsRequest, :allStepsRequest, 7
-    optional ::Main::GetAllStepsResponse, :allStepsResponse, 8
-    optional ::Main::GetAllSpecsRequest, :allSpecsRequest, 9
-    optional ::Main::GetAllSpecsResponse, :allSpecsResponse, 10
-    optional ::Main::GetStepValueRequest, :stepValueRequest, 11
-    optional ::Main::GetStepValueResponse, :stepValueResponse, 12
-    optional ::Main::GetLanguagePluginLibPathRequest, :libPathRequest, 13
-    optional ::Main::GetLanguagePluginLibPathResponse, :libPathResponse, 14
-    optional ::Main::ErrorResponse, :error, 15
-    optional ::Main::GetAllConceptsRequest, :allConceptsRequest, 16
-    optional ::Main::GetAllConceptsResponse, :allConceptsResponse, 17
+      required :string, :projectRoot, 1
+    end
+
+    class GetInstallationRootRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetInstallationRootRequest"
+
+    end
+
+    class GetInstallationRootResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetInstallationRootResponse"
+
+      required :string, :installationRoot, 1
+    end
+
+    class GetAllStepsRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetAllStepsRequest"
+
+    end
+
+    class GetAllStepsResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetAllStepsResponse"
+
+      repeated ::Gauge::Messages::ProtoStepValue, :allSteps, 1
+    end
+
+    class GetAllSpecsRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetAllSpecsRequest"
+
+    end
+
+    class GetAllSpecsResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetAllSpecsResponse"
+
+      repeated ::Gauge::Messages::ProtoSpec, :specs, 1
+    end
+
+    class GetAllConceptsRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetAllConceptsRequest"
+
+    end
+
+    class GetAllConceptsResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetAllConceptsResponse"
+
+      repeated ::Gauge::Messages::ConceptInfo, :concepts, 1
+    end
+
+    class ConceptInfo < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.ConceptInfo"
+
+      required ::Gauge::Messages::ProtoStepValue, :stepValue, 1
+      required :string, :filepath, 2
+      required :int32, :lineNumber, 3
+    end
+
+    class GetStepValueRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetStepValueRequest"
+
+      required :string, :stepText, 1
+      optional :bool, :hasInlineTable, 2
+    end
+
+    class GetStepValueResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetStepValueResponse"
+
+      required ::Gauge::Messages::ProtoStepValue, :stepValue, 1
+    end
+
+    class GetLanguagePluginLibPathRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetLanguagePluginLibPathRequest"
+
+      required :string, :language, 1
+    end
+
+    class GetLanguagePluginLibPathResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.GetLanguagePluginLibPathResponse"
+
+      required :string, :path, 1
+    end
+
+    class ErrorResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.ErrorResponse"
+
+      required :string, :error, 1
+    end
+
+    class PerformRefactoringRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.PerformRefactoringRequest"
+
+      required :string, :oldStep, 1
+      required :string, :newStep, 2
+    end
+
+    class PerformRefactoringResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.PerformRefactoringResponse"
+
+      required :bool, :success, 1
+      repeated :string, :errors, 2
+      repeated :string, :filesChanged, 3
+    end
+
+    class APIMessage < ::ProtocolBuffers::Message
+      # forward declarations
+
+      # enums
+      module APIMessageType
+        include ::ProtocolBuffers::Enum
+
+        set_fully_qualified_name "gauge.messages.APIMessage.APIMessageType"
+
+        GetProjectRootRequest = 1
+        GetProjectRootResponse = 2
+        GetInstallationRootRequest = 3
+        GetInstallationRootResponse = 4
+        GetAllStepsRequest = 5
+        GetAllStepResponse = 6
+        GetAllSpecsRequest = 7
+        GetAllSpecsResponse = 8
+        GetStepValueRequest = 9
+        GetStepValueResponse = 10
+        GetLanguagePluginLibPathRequest = 11
+        GetLanguagePluginLibPathResponse = 12
+        ErrorResponse = 13
+        GetAllConceptsRequest = 14
+        GetAllConceptsResponse = 15
+        PerformRefactoringRequest = 16
+        PerformRefactoringResponse = 17
+      end
+
+      set_fully_qualified_name "gauge.messages.APIMessage"
+
+      required ::Gauge::Messages::APIMessage::APIMessageType, :messageType, 1
+      required :int64, :messageId, 2
+      optional ::Gauge::Messages::GetProjectRootRequest, :projectRootRequest, 3
+      optional ::Gauge::Messages::GetProjectRootResponse, :projectRootResponse, 4
+      optional ::Gauge::Messages::GetInstallationRootRequest, :installationRootRequest, 5
+      optional ::Gauge::Messages::GetInstallationRootResponse, :installationRootResponse, 6
+      optional ::Gauge::Messages::GetAllStepsRequest, :allStepsRequest, 7
+      optional ::Gauge::Messages::GetAllStepsResponse, :allStepsResponse, 8
+      optional ::Gauge::Messages::GetAllSpecsRequest, :allSpecsRequest, 9
+      optional ::Gauge::Messages::GetAllSpecsResponse, :allSpecsResponse, 10
+      optional ::Gauge::Messages::GetStepValueRequest, :stepValueRequest, 11
+      optional ::Gauge::Messages::GetStepValueResponse, :stepValueResponse, 12
+      optional ::Gauge::Messages::GetLanguagePluginLibPathRequest, :libPathRequest, 13
+      optional ::Gauge::Messages::GetLanguagePluginLibPathResponse, :libPathResponse, 14
+      optional ::Gauge::Messages::ErrorResponse, :error, 15
+      optional ::Gauge::Messages::GetAllConceptsRequest, :allConceptsRequest, 16
+      optional ::Gauge::Messages::GetAllConceptsResponse, :allConceptsResponse, 17
+      optional ::Gauge::Messages::PerformRefactoringRequest, :performRefactoringRequest, 18
+      optional ::Gauge::Messages::PerformRefactoringResponse, :performRefactoringResponse, 19
+    end
+
   end
-
 end
