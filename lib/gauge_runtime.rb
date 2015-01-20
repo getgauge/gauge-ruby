@@ -14,9 +14,9 @@ def dispatch_messages(socket)
   while (!socket.eof?)
     len = Connector.message_length(socket)
     data = socket.read len
-    message = Main::Message.parse(data)
+    message = Gauge::Messages::Message.parse(data)
     handle_message(socket, message)
-    if (message.messageType == Main::Message::MessageType::KillProcessRequest || message.messageType == Main::Message::MessageType::ExecutionEnding)
+    if (message.messageType == Gauge::Messages::Message::MessageType::KillProcessRequest || message.messageType == Gauge::Messages::Message::MessageType::ExecutionEnding)
       socket.close
       return
     end
@@ -27,8 +27,8 @@ end
 def handle_message(socket, message)
   if (!MessageProcessor.is_valid_message(message))
     puts "Invalid message received : #{message}"
-    execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => true, :executionTime => 0))
-    message = Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+    execution_status_response = Gauge::Messages::ExecutionStatusResponse.new(:executionResult => Gauge::Messages::ProtoExecutionResult.new(:failed => true, :executionTime => 0))
+    message = Gauge::Messages::Message.new(:messageType => Gauge::Messages::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
     write_message(socket, message)
   else
     response = MessageProcessor.process_message message

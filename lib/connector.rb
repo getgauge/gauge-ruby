@@ -25,10 +25,10 @@ module Connector
   end
 
   def self.step_value text
-    stepValueRequest = Main::GetStepValueRequest.new(:stepText => text)
-    apiMessage = Main::APIMessage.new(:messageType => Main::APIMessage::APIMessageType::GetStepValueRequest, :stepValueRequest => stepValueRequest)
+    stepValueRequest = Gauge::Messages::GetStepValueRequest.new(:stepText => text)
+    apiMessage = Gauge::Messages::APIMessage.new(:messageType => Gauge::Messages::APIMessage::APIMessageType::GetStepValueRequest, :stepValueRequest => stepValueRequest)
     response = get_api_response(apiMessage)
-    if (response.messageType == Main::APIMessage::APIMessageType::ErrorResponse)
+    if (response.messageType == Gauge::Messages::APIMessage::APIMessageType::ErrorResponse)
       puts "[Error] Failed to load step implementation. #{response.error.error}:  \"#{text}\""
       return ''
     end
@@ -43,7 +43,7 @@ module Connector
 
     responseLen = message_length(@@apiSocket)
     data = @@apiSocket.read responseLen
-    message = Main::APIMessage.parse(data)
+    message = Gauge::Messages::APIMessage.parse(data)
   end
 
   def self.get_unique_id

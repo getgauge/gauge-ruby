@@ -10,20 +10,20 @@ module ExecutionHandler
   end
 
   def handle_pass(message, execution_time)
-    execution_status_response = Main::ExecutionStatusResponse.new(:executionResult => Main::ProtoExecutionResult.new(:failed => false, :executionTime => execution_time))
-    Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+    execution_status_response = Gauge::Messages::ExecutionStatusResponse.new(:executionResult => Gauge::Messages::ProtoExecutionResult.new(:failed => false, :executionTime => execution_time))
+    Gauge::Messages::Message.new(:messageType => Gauge::Messages::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
   end
 
   def handle_failure(message, exception, execution_time)
     execution_status_response = 
-      Main::ExecutionStatusResponse.new(
-        :executionResult => Main::ProtoExecutionResult.new(:failed => true,
+      Gauge::Messages::ExecutionStatusResponse.new(
+        :executionResult => Gauge::Messages::ProtoExecutionResult.new(:failed => true,
          :recoverableError => false,
          :errorMessage => exception.message,
          :stackTrace => exception.backtrace.join("\n")+"\n",
          :executionTime => execution_time,
          :screenShot => screenshot_bytes))
-    Main::Message.new(:messageType => Main::Message::MessageType::ExecutionStatusResponse, 
+    Gauge::Messages::Message.new(:messageType => Gauge::Messages::Message::MessageType::ExecutionStatusResponse,
       :messageId => message.messageId, :executionStatusResponse => execution_status_response)
   end
 
@@ -47,7 +47,7 @@ module ExecutionHandler
   def create_param_values parameters
     params = []
     parameters.each do |param|
-      if ((param.parameterType == Main::Parameter::ParameterType::Table) ||(param.parameterType == Main::Parameter::ParameterType::Special_Table))
+      if ((param.parameterType == Gauge::Messages::Parameter::ParameterType::Table) ||(param.parameterType == Gauge::Messages::Parameter::ParameterType::Special_Table))
         gtable = GaugeTable.new(param.table)
         params.push gtable
       else
