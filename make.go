@@ -300,7 +300,7 @@ func getGemFile() string {
 func installGaugeRubyGem() {
 	gemHome := getGemHome()
 	if gemHome == "" {
-		runProcess("gem", currentWorkingDir(), "install", "--user-install", getGemFile())
+		runProcess("gem", currentWorkingDir(), "install",  getGemFile())
 	} else {
 		runProcess("gem", currentWorkingDir(), "install", getGemFile(), "--install-dir", gemHome)
 	}
