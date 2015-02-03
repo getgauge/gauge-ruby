@@ -1,7 +1,9 @@
 require 'rspec'
-require_relative '../lib/gauge_ruby.rb'
+require_relative '../lib/gauge.rb'
 
-describe "gauge_ruby" do
+include Gauge::ExecutionHooks
+
+describe Gauge do
 	foo_block=->{puts "foo"}
 	describe "execution hooks" do
 		describe $before_step_hooks do
@@ -56,7 +58,7 @@ describe "gauge_ruby" do
 	describe "step definitions" do
 		before(:each) {
 			["foo", "bar", "baz"].each{ |v|
-				allow(Connector).to receive(:step_value).with(v).and_return("parameterized_#{v}")
+				allow(Gauge::Connector).to receive(:step_value).with(v).and_return("parameterized_#{v}")
 			}
 			step "foo", &foo_block 
 		}

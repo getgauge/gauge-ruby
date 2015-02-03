@@ -1,18 +1,19 @@
-
-class GaugeTable
+module Gauge
+  class Table
     def initialize(protoTable)
-        @columns = protoTable.headers.cells
-        @rows = []
-        protoTable.rows.each do |row|
-            @rows.push row.cells
-        end
+      @columns = protoTable.headers.cells
+      @rows = []
+      protoTable.rows.each do |row|
+          @rows.push row.cells
+      end
     end
 
     def columns
-        @columns
+      @columns
     end
 
     def rows
-        @rows
+      @rows
     end
+  end
 end
