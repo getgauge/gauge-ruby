@@ -33,7 +33,7 @@ module Gauge
     end
 
     def process_step_execution_end_request(message)
-      handle_hooks_execution(MethodCache.get_before_step_hooks, message, message.stepExecutionEndingRequest.currentExecutionInfo)
+      handle_hooks_execution(MethodCache.get_after_step_hooks, message, message.stepExecutionEndingRequest.currentExecutionInfo)
     end
   end
 end
