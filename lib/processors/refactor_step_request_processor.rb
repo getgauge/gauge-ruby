@@ -5,7 +5,7 @@ module Gauge
     def refactor_step(message)
       oldStepValue = message.refactorRequest.oldStepValue.stepValue
       newStep = message.refactorRequest.newStepValue
-      stepBlock = $steps_map[oldStepValue]
+      stepBlock = MethodCache.get_step oldStepValue
       refactor_response = Messages::RefactorResponse.new(success: true)
       begin
         CodeParser.refactor stepBlock, message.refactorRequest.paramPositions, newStep.parameters, newStep.parameterizedStepValue

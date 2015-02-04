@@ -38,8 +38,8 @@ describe Gauge::CodeParser do
       end
     end
     
-    let(:source_code) {$steps_map[@parsed_step].source}
-    let(:source_code_no_args) {$steps_map[@parsed_step_no_args].source}
+    let(:source_code) {Gauge::MethodCache.get_step(@parsed_step).source}
+    let(:source_code_no_args) {Gauge::MethodCache.get_step(@parsed_step_no_args).source}
 
     it "replaces step text" do
       new_step_text="new step text"

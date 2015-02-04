@@ -1,55 +1,19 @@
 require_relative 'connector'
+require_relative 'method_cache'
 
-def step(*stepTexts, &block)
-  stepTexts.each do |text|
-    parameterizedStepText = Gauge::Connector.step_value(text)
-    $steps_map[parameterizedStepText] = block;
-    $steps_text_map[parameterizedStepText] = text
-    $steps_with_aliases.push text if stepTexts.length > 1
+module Kernel
+  def step(*step_texts, &block)
+    step_texts.each do |text|
+      parameterized_step_text = Gauge::Connector.step_value(text)
+      Gauge::MethodCache.add_step(parameterized_step_text, &block)
+      Gauge::MethodCache.add_step_text(parameterized_step_text, text)
+    end
+    Gauge::MethodCache.add_step_alias(*step_texts)
   end
+
+  Gauge::MethodCache::HOOKS.each { |hook| 
+    define_method hook do |&block|
+      Gauge::MethodCache.send("add_#{hook}_hook".to_sym, &block)
+    end
+  }
 end
-
-  #TODO - move these to a class and encapsulate it
-  $steps_map = Hash.new
-  $steps_text_map = Hash.new
-  $steps_with_aliases = []
-  $before_suite_hooks = []
-  $after_suite_hooks = []
-  $before_spec_hooks = []
-  $after_spec_hooks = []
-  $before_scenario_hooks = []
-  $after_scenario_hooks = []
-  $before_step_hooks = []
-  $after_step_hooks = []
-
-    def before_step(&block)
-      $before_step_hooks.push block;
-    end
-
-    def after_step(&block)
-      $after_step_hooks.push block;
-    end
-
-    def before_spec(&block)
-      $before_spec_hooks.push block;
-    end
-
-    def after_spec(&block)
-      $after_spec_hooks.push block;
-    end
-
-    def before_scenario(&block)
-      $before_scenario_hooks.push block;
-    end
-
-    def after_scenario(&block)
-      $after_scenario_hooks.push block;
-    end
-
-    def before_suite(&block)
-      $before_suite_hooks.push block;
-    end
-
-    def after_suite(&block)
-      $after_suite_hooks.push block;
-    end
