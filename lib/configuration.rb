@@ -21,5 +21,12 @@ module Gauge
     def includes
       @includes
     end
+
+    def self.include_configured_modules
+      # include all modules that have been configured
+      # TODO: move this feature to something more specific, ex look at supporting Sandboxed execution.
+      main=TOPLEVEL_BINDING.eval('self')
+      self.instance.includes.each &main.method(:include)
+    end
   end
 end

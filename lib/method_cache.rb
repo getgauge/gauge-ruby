@@ -1,3 +1,4 @@
+require_relative 'configuration'
 module Gauge
   class MethodCache
     HOOKS = ["before_step", "after_step", "before_spec", "after_spec", "before_scenario", "after_scenario", "before_suite", "after_suite"]
@@ -56,4 +57,8 @@ module Gauge
     @@before_step_hooks = []
     @@after_step_hooks = []
   end
+
+  # hack : get the 'main' object and include the configured includes there.
+  # can be removed once we have scoped execution.
+  MethodCache.add_before_suite_hook { Configuration.include_configured_modules }
 end

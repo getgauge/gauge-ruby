@@ -1,5 +1,6 @@
 require_relative 'connector'
 require_relative 'method_cache'
+require_relative 'configuration'
 
 module Kernel
   def step(*step_texts, &block)
