@@ -497,7 +497,7 @@ func compileGaugeRubyAcrossPlatforms() {
 }
 
 func buildGaugeRubyGem() {
-	runProcess("gem", currentWorkingDir(), "build", "gauge-ruby.gemspec")
+	runProcess("gem", currentWorkingDir(), "build", "gauge.gemspec")
 }
 
 func currentWorkingDir() string {
