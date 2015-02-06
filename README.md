@@ -66,5 +66,5 @@ Gauge-Ruby is released under [GNU Public License version 3.0](http://www.gnu.org
 Copyright
 ---------
 
-Copyright 2014 ThoughtWorks, Inc.
+Copyright 2015 ThoughtWorks, Inc.
 
