@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2014 ThoughtWorks, Inc.
+# Copyright 2015 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
