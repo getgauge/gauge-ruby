@@ -3,6 +3,7 @@ Gem::Specification.new do |s|
     s.version     = '0.0.4'
     s.authors     = ["Gauge Team"]
     s.email       = ["gauge@thoughtworks.com"]
+    s.license     = "GPLv3"
 
     s.summary     = "Ruby support for Gauge"
     s.description = "Adds Ruby support into Gauge tests"
