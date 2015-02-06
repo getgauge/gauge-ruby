@@ -311,7 +311,7 @@ func getBinDir() string {
 }
 
 func getGemFile() string {
-	return fmt.Sprintf("gauge-ruby-%s.gem", getGaugeRubyVersion())
+	return fmt.Sprintf("gauge-%s.gem", getGaugeRubyVersion())
 }
 
 func installGaugeRubyGem() {
