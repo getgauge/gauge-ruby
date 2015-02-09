@@ -3,3 +3,4 @@ tmp
 bin
 *.gem
 deploy
+logs/
