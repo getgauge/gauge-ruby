@@ -194,12 +194,6 @@ func runProcess(command string, workingdir string, arg ...string) {
 	}
 }
 
-func executeCommand(command string, arg ...string) (string, error) {
-	cmd := exec.Command(command, arg...)
-	bytes, err := cmd.Output()
-	return strings.TrimSpace(fmt.Sprintf("%s", bytes)), err
-}
-
 func compileGoPackage(packageName string) {
 	setGoEnv()
 	runProcess("go", BUILD_DIR, "get", "-u", "-d", commonDep)
@@ -257,12 +251,7 @@ func copyGaugeRubyFiles(destDir string) error {
 	files[filepath.Join("skel", "step_implementation.rb")] = "skel"
 	files[filepath.Join("skel", "Gemfile")] = "skel"
 	files[filepath.Join("skel", "ruby.properties")] = filepath.Join("skel", "env")
-	gemFile := getGemFile()
-	if gemFile == "" {
-		return errors.New(fmt.Sprintf("Could not find .gem file"))
-	}
 
-	files[gemFile] = ""
 	copyFiles(files, destDir)
 	return nil
 }
@@ -294,14 +283,8 @@ func installGaugeRubyFiles(installPath string) error {
 	files[filepath.Join("skel", "step_implementation.rb")] = filepath.Join("skel")
 	files[filepath.Join("skel", "Gemfile")] = filepath.Join("skel")
 	files[filepath.Join("skel", "ruby.properties")] = filepath.Join("skel", "env")
-	gemFile := getGemFile()
-	if gemFile == "" {
-		return errors.New(fmt.Sprintf("Could not find .gem file"))
-	}
 
-	files[gemFile] = ""
 	copyFiles(files, rubyRunnerRelativePath)
-	installGaugeRubyGem()
 	return nil
 }
 
@@ -310,36 +293,6 @@ func getBinDir() string {
 		return filepath.Join(bin, fmt.Sprintf("%s_%s", getGOOS(), getGOARCH()))
 	}
 	return filepath.Join(bin, *binDir)
-}
-
-func getGemFile() string {
-	return fmt.Sprintf("gauge-ruby-%s.gem", getGaugeRubyVersion())
-}
-
-func installGaugeRubyGem() {
-	gemHome := getGemHome()
-	if gemHome == "" {
-		runProcess("gem", currentWorkingDir(), "install", "--user-install", getGemFile())
-	} else {
-		runProcess("gem", currentWorkingDir(), "install", getGemFile(), "--install-dir", gemHome)
-	}
-}
-
-func getGemHome() string {
-	gemHome := os.Getenv("GEM_HOME")
-	if gemHome != "" {
-		return gemHome
-	} else {
-		return gemHomeFromRvm()
-	}
-}
-
-func gemHomeFromRvm() string {
-	output, err := executeCommand("rvm", "gemdir")
-	if err == nil {
-		return output
-	}
-	return ""
 }
 
 func moveOSBinaryToCurrentOSArchDirectory(targetName string) {
@@ -509,12 +462,6 @@ func currentWorkingDir() string {
 
 	}
 	return wd
-}
-
-func installGaugeRuby(installPrefix string) {
-	copyGaugeRubyFiles(deployDir)
-	rubyRunnerInstallPath := filepath.Join(installPrefix, "ruby", getGaugeRubyVersion())
-	mirrorDir(deployDir, rubyRunnerInstallPath)
 }
 
 func updatePluginInstallPrefix() {
