@@ -29,6 +29,7 @@ import (
 const (
 	step_implementation_file = "step_implementation.rb"
 	step_implementations_dir = "step_implementations"
+	gem_file                 = "Gemfile"
 	ruby_properties_file     = "ruby.properties"
 	skelDir                  = "skel"
 	envDir                   = "env"
@@ -72,6 +73,30 @@ func createStepImplementationFile() {
 		if err != nil {
 			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
 		}
+	}
+}
+
+func createOrAppendToGemFile() {
+	destFile := path.Join(projectRoot, gem_file)
+	srcFile := path.Join(skelDir, gem_file)
+	showMessage("create", destFile)
+	if !common.FileExists(destFile) {
+		err := common.CopyFile(srcFile, destFile)
+		if err != nil {
+			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
+		}
+	}
+	showMessage("append", destFile)
+	f, err := os.OpenFile(destFile, os.O_APPEND|os.O_WRONLY, 0666)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	//TODO - Get compatible version from repository, and add it as gem version here.
+	if _, err = f.WriteString(fmt.Sprint("gem 'gauge-ruby', :group => [:development, :test]\n")); err != nil {
+		panic(err)
 	}
 }
 
@@ -130,10 +155,13 @@ func main() {
 		os.Chdir(projectRoot)
 		runCommand("ruby", "-e", "require 'gauge_runtime'")
 	} else if *initialize {
-		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createRubyPropertiesFile}
+		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createRubyPropertiesFile, createOrAppendToGemFile}
 		for _, f := range funcs {
 			f()
 		}
+		os.Chdir(projectRoot)
+		fmt.Println("Running bundle install..")
+		runCommand("bundle", "install")
 	} else {
 		printUsage()
 	}
