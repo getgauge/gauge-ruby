@@ -4,3 +4,5 @@ bin
 *.gem
 deploy
 logs/
+.yardoc/*
+doc/*

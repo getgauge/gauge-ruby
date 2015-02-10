@@ -16,7 +16,9 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 module Gauge
+  # Holds a table definition. This corresponds to a markdown table defined in the .spec files.
   class Table
+    # @api private
     def initialize(protoTable)
       @columns = protoTable.headers.cells
       @rows = []
@@ -25,10 +27,16 @@ module Gauge
       end
     end
 
+    # Gets the column headers of the table
+    # @api public
+    # @return [string[]]
     def columns
       @columns
     end
 
+    # Gets the rows of the table. The rows are two dimensional arrays.
+    # @api public
+    # @return [string[][]]
     def rows
       @rows
     end

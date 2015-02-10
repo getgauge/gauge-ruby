@@ -18,6 +18,7 @@
 require_relative '../datastore'
 
 module Gauge
+  # @api private
   module Processors
     def process_datastore_init(message)
       case message.messageType

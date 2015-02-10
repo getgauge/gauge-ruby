@@ -19,6 +19,7 @@ require 'os'
 
 module Gauge
   module Processors
+    # @api private
     module ExecutionHandler
       def handle_hooks_execution(hooks, message, currentExecutionInfo)
         start_time= Time.now

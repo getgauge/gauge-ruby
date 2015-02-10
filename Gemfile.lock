@@ -2,9 +2,9 @@ PATH
   remote: .
   specs:
     gauge-ruby (0.0.4)
-      method_source
+      method_source (~> 0.8.2)
       os (= 0.9.6)
-      parser
+      parser (~> 2.2)
       ruby-protocol-buffers (= 1.5.1)
 
 GEM
@@ -29,6 +29,7 @@ GEM
       rspec-support (~> 3.1.0)
     rspec-support (3.1.2)
     ruby-protocol-buffers (1.5.1)
+    yard (0.8.7.6)
 
 PLATFORMS
   ruby
@@ -37,3 +38,4 @@ PLATFORMS
 DEPENDENCIES
   gauge-ruby!
   rspec
+  yard

@@ -22,6 +22,7 @@
 require 'protocol_buffers'
 
 module Gauge
+  # @api private
   module Messages
     # forward declarations
     class ProtoSpec < ::ProtocolBuffers::Message; end

@@ -1,4 +1,4 @@
-# Copyright 2014 ThoughtWorks, Inc.
+# Copyright 2015 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -16,5 +16,8 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'rspec/core/rake_task'
+require 'yard'
 
 RSpec::Core::RakeTask.new(:spec)
+
+YARD::Rake::YardocTask.new 

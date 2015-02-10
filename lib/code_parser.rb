@@ -1,17 +1,17 @@
 # Copyright 2015 ThoughtWorks, Inc.
-
+#
 # This file is part of Gauge-Ruby.
-
+#
 # Gauge-Ruby is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # Gauge-Ruby is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -21,6 +21,7 @@ require 'fileutils'
 require 'tempfile'
 
 module Gauge
+  # @api private
   class CodeParser
     def self.step_args_from_code(code)
       ast=code_to_ast(code)
@@ -51,8 +52,8 @@ module Gauge
       # it's just easy to add arguments via string substitution.
       return include_args(rewriter.process, new_params_string) if ast.children[1].location.expression.nil?
       
-      rewriter.replace(ast.children[1].location.expression, new_params_string) #insert new arguments
-        .process
+      #insert new arguments
+      rewriter.replace(ast.children[1].location.expression, new_params_string).process
     end
 
     def self.refactor(code, param_positions, new_param_values, new_step_text)

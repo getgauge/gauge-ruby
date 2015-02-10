@@ -24,6 +24,7 @@ require 'protocol_buffers'
 begin; require 'spec.pb'; rescue LoadError; end
 
 module Gauge
+  # @api private
   module Messages
     # forward declarations
     class KillProcessRequest < ::ProtocolBuffers::Message; end

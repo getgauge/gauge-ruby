@@ -19,6 +19,7 @@ require 'protocol_buffers'
 require_relative 'api.pb'
 
 module Gauge
+  # @api private
   module Connector
     GAUGE_PORT_ENV = "GAUGE_INTERNAL_PORT"
     API_PORT_ENV = "GAUGE_API_PORT"

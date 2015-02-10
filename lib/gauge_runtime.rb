@@ -23,7 +23,9 @@ require_relative 'executor'
 require_relative 'connector'
 require_relative 'message_processor'
 
+
 module Gauge
+  # @api private
   module Runtime
     DEFAULT_IMPLEMENTATIONS_DIR_PATH = File.join(Dir.pwd, 'step_implementations')
 

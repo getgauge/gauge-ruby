@@ -21,7 +21,7 @@ require_relative 'table'
 Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file }
 
 module Gauge
-
+  # @api private
   class MessageProcessor
     extend Processors
 
