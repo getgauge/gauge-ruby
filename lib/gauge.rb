@@ -19,14 +19,13 @@ require_relative 'connector'
 require_relative 'method_cache'
 require_relative 'configuration'
 
+# @api public
 module Kernel
   class << self
     private
     # @!macro [attach] self.hook
-    #   @method $1
-    #
+    #   @method $1(&block)
     #   @api public
-    #
     #   @param block [block], this block is called while executing the $1 hook
     #   @example
     #      $1 do
@@ -41,7 +40,6 @@ module Kernel
 
   # Specify implementation for a given step
   #
-  # @api public
   #
   # @example
   #   step 'this is a simple step' do

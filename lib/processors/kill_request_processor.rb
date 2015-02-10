@@ -16,6 +16,7 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 module Gauge
+  # @api private
   module Processors
     def process_kill_processor_request(message)
       return message

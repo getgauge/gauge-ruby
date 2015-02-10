@@ -17,6 +17,7 @@
 
 module Gauge
   # Holds a table definition. This corresponds to a markdown table defined in the .spec files.
+  # @api public
   class Table
     # @api private
     def initialize(protoTable)
@@ -28,14 +29,12 @@ module Gauge
     end
 
     # Gets the column headers of the table
-    # @api public
     # @return [string[]]
     def columns
       @columns
     end
 
     # Gets the rows of the table. The rows are two dimensional arrays.
-    # @api public
     # @return [string[][]]
     def rows
       @rows

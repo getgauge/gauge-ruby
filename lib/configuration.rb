@@ -15,26 +15,29 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
+# @api public
 module Gauge
+  # @api public
   class << self
-    # Custom configuration for Gauge
-    # Lets you configure modules that need to be included at runtime.
+    # @!macro [attach] self.configure
+    #   @method configure(&block)
+    #   @api public
+    #   Custom configuration for Gauge
+    #   Lets you configure modules that need to be included at runtime.
+    # 
+    #   @example
+    #     # Given there are two modules defined
+    #     module Foo 
+    #     end
     #
-    # @api public
+    #     module Bar
+    #     end
     #
-    # @example
-    #   # Given there are two modules defined
-    #   module Foo 
-    #   end
+    #     # Gauge can be configured to include these modules at runtime.
     #
-    #   module Bar
-    #   end
-    #
-    #   # Gauge can be configured to include these modules at runtime.
-    #
-    #   Gauge.configure do |config|
-    #     config.include Foo, Bar
-    #   end
+    #     Gauge.configure do |config|
+    #       config.include Foo, Bar
+    #     end
     def configure(&block)
       Configuration.instance.instance_eval &block
     end
