@@ -1,6 +1,7 @@
+require 'json'
 Gem::Specification.new do |s|
     s.name        = "gauge-ruby"
-    s.version     = '0.0.4.1'
+    s.version     = JSON.parse(File.read('ruby.json'))['version']
     s.authors     = ["Gauge Team"]
     s.email       = ["gauge@thoughtworks.com"]
     s.license     = "GPLv3"

@@ -27,7 +27,7 @@ module Gauge
         self.class_variable_get("@@#{hook}_hooks")
       end
     }
-
+    
     def self.add_step(parameterized_step_text, &block)
       @@steps_map[parameterized_step_text] = block
     end

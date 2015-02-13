@@ -94,8 +94,12 @@ func createOrAppendToGemFile() {
 
 	defer f.Close()
 
-	//TODO - Get compatible version from repository, and add it as gem version here.
-	if _, err = f.WriteString(fmt.Sprint("gem 'gauge-ruby', :group => [:development, :test]\n")); err != nil {
+	version, err := common.GetGaugePluginVersion("ruby")
+	if err != nil {
+		panic(err)
+	}
+
+	if _, err = f.WriteString(fmt.Sprintf("gem 'gauge-ruby', '~>%s', :group => [:development, :test]\n", version)); err != nil {
 		panic(err)
 	}
 }
@@ -160,7 +164,7 @@ func main() {
 			f()
 		}
 		os.Chdir(projectRoot)
-		fmt.Println("Running bundle install..")
+		fmt.Printf("Running bundle install.. in %s\n", projectRoot)
 		runCommand("bundle", "install")
 	} else {
 		printUsage()
