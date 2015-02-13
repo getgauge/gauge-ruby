@@ -50,16 +50,12 @@ module Gauge
       end
 
       def screenshot_bytes
-        return nil if (ENV['screenshot_enabled'] || "").downcase == "false"
-        # todo: make it platform independent
-        if (OS.mac?)
-          file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
-          `screencapture #{file.path}`
-          file_content = File.binread(file.path)
-          File.delete file
-          return file_content
-        end
-        return nil
+        return nil if (ENV['screenshot_enabled'] || "").downcase == "false" || which("gauge_screenshot").nil?
+        file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
+        `gauge_screenshot #{file.path}`
+        file_content = File.binread(file.path)
+        File.delete file
+        return file_content
       end
 
       def time_elapsed_since(start_time)

@@ -1,5 +1,5 @@
 # Copyright 2015 ThoughtWorks, Inc.
-
+#
 # This file is part of Gauge-Ruby.
 #
 # Gauge-Ruby is free software: you can redistribute it and/or modify
@@ -15,29 +15,28 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
+# Gauge runtime for Ruby language. Read more about Gauge: http://getgauge.io
+
 # @api public
 module Gauge
-  # @api public
   class << self
-    # @!macro [attach] self.configure
-    #   @method configure(&block)
-    #   @api public
-    #   Custom configuration for Gauge
-    #   Lets you configure modules that need to be included at runtime.
+    # @api public
+    # Custom configuration for Gauge
+    # Lets you configure modules that need to be included at runtime.
     # 
-    #   @example
-    #     # Given there are two modules defined
-    #     module Foo 
-    #     end
+    # @example
+    #   # Given there are two modules defined
+    #   module Foo 
+    #   end
     #
-    #     module Bar
-    #     end
+    #   module Bar
+    #   end
     #
-    #     # Gauge can be configured to include these modules at runtime.
+    #   # Gauge can be configured to include these modules at runtime.
     #
-    #     Gauge.configure do |config|
-    #       config.include Foo, Bar
-    #     end
+    #   Gauge.configure do |config|
+    #     config.include Foo, Bar
+    #   end
     def configure(&block)
       Configuration.instance.instance_eval &block
     end
