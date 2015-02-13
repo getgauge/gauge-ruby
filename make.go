@@ -19,11 +19,12 @@ package main
 
 import (
 	"archive/zip"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/getgauge/common"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -255,6 +256,14 @@ func copyGaugeRubyFiles(destDir string) error {
 	return nil
 }
 
+func getGaugeRubyVersion() string {
+	rubyRunnerProperties, err := getPluginProperties("ruby.json")
+	if err != nil {
+		panic(fmt.Sprintf("Failed to get gauge ruby properties file. %s", err))
+	}
+	return rubyRunnerProperties["version"].(string)
+}
+
 func installGaugeRubyFiles(installPath string) error {
 	files := make(map[string]string)
 	if runtime.GOOS == "windows" {
@@ -263,7 +272,7 @@ func installGaugeRubyFiles(installPath string) error {
 		files[filepath.Join(getBinDir(), "gauge-ruby")] = bin
 	}
 
-	rubyRunnerProperties, err := common.GetPluginProperties("ruby.json")
+	rubyRunnerProperties, err := getPluginProperties("ruby.json")
 
 	if err != nil {
 		return errors.New(fmt.Sprintf("Failed to get ruby runner properties. %s", err))
@@ -329,6 +338,20 @@ var (
 	}
 )
 
+func getPluginProperties(jsonPropertiesFile string) (map[string]interface{}, error) {
+	pluginPropertiesJson, err := ioutil.ReadFile(jsonPropertiesFile)
+	if err != nil {
+		fmt.Printf("Could not read %s: %s\n", filepath.Base(jsonPropertiesFile), err)
+		return nil, err
+	}
+	var pluginJson interface{}
+	if err = json.Unmarshal([]byte(pluginPropertiesJson), &pluginJson); err != nil {
+		fmt.Printf("Could not read %s: %s\n", filepath.Base(jsonPropertiesFile), err)
+		return nil, err
+	}
+	return pluginJson.(map[string]interface{}), nil
+}
+
 func main() {
 	createGoPathForBuild()
 	copyGaugeRubyFilesToGoPath()
@@ -368,11 +391,7 @@ func createGaugeDistro(forAllPlatforms bool) {
 }
 
 func createDistro() {
-	version, err := common.GetGaugePluginVersion("ruby")
-	if err != nil {
-		panic(err)
-	}
-	packageName := fmt.Sprintf("%s-%s-%s.%s", gaugeRuby, version, getGOOS(), getArch())
+	packageName := fmt.Sprintf("%s-%s-%s.%s", gaugeRuby, getGaugeRubyVersion(), getGOOS(), getArch())
 	distroDir := filepath.Join(deployDir, packageName)
 	copyGaugeRubyFiles(distroDir)
 	createZip(deployDir, packageName)
