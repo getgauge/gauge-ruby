@@ -19,7 +19,7 @@ require_relative 'configuration'
 module Gauge
   # @api private
   class MethodCache
-    HOOKS.each { |hook|
+    ["before_step", "after_step", "before_spec", "after_spec", "before_scenario", "after_scenario", "before_suite", "after_suite"].each { |hook|
       define_singleton_method "add_#{hook}_hook" do |&block|
         self.class_variable_get("@@#{hook}_hooks").push block
       end
@@ -61,7 +61,6 @@ module Gauge
     end
 
     private
-    HOOKS = ["before_step", "after_step", "before_spec", "after_spec", "before_scenario", "after_scenario", "before_suite", "after_suite"]
     @@steps_map = Hash.new
     @@steps_text_map = Hash.new
     @@steps_with_aliases = []
