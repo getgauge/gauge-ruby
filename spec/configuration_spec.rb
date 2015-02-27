@@ -15,23 +15,43 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "execution_handler"
+require 'rspec'
+require_relative '../lib/configuration.rb'
 
-module Gauge
-  module Processors
-    include ExecutionHandler
+module Foo
+  def hello_foo
+    "hello_foo"
+  end
+end
 
-    def process_execute_step_request(message)
-      step_text = message.executeStepRequest.parsedStepText
-      parameters = message.executeStepRequest.parameters
-      args = create_param_values parameters
-      start_time= Time.now
-      begin
-        Executor.execute_step step_text, args
-      rescue Exception => e
-        return handle_failure message, e, time_elapsed_since(start_time)
-      end
-      handle_pass message, time_elapsed_since(start_time)
+module Bar
+  def hello_bar
+    "hello_bar"
+  end
+end
+
+module Baz
+end
+
+
+describe Gauge::Configuration do
+  before(:each) {
+    Gauge.configure do |c|
+      c.include Foo, Bar
+    end
+    Gauge::Configuration.include_configured_modules
+  }
+
+  it ".configure" do
+    expect(Gauge::Configuration.instance.includes).to include Foo, Bar
+    expect(hello_foo).to eq "hello_foo"
+    expect(hello_bar).to eq "hello_bar"
+  end
+
+  context "multiple configs" do
+    it "aggregates includes" do
+      Gauge.configure { |c| c.include Baz}
+      expect(Gauge::Configuration.instance.includes).to include Foo, Bar, Baz
     end
   end
 end

@@ -1,3 +1,20 @@
+// Copyright 2015 ThoughtWorks, Inc.
+
+// This file is part of Gauge-Ruby.
+
+// Gauge-Ruby is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// Gauge-Ruby is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
+
 package main
 
 import (
@@ -12,6 +29,7 @@ import (
 const (
 	step_implementation_file = "step_implementation.rb"
 	step_implementations_dir = "step_implementations"
+	gem_file                 = "Gemfile"
 	ruby_properties_file     = "ruby.properties"
 	skelDir                  = "skel"
 	envDir                   = "env"
@@ -55,6 +73,34 @@ func createStepImplementationFile() {
 		if err != nil {
 			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
 		}
+	}
+}
+
+func createOrAppendToGemFile() {
+	destFile := path.Join(projectRoot, gem_file)
+	srcFile := path.Join(skelDir, gem_file)
+	showMessage("create", destFile)
+	if !common.FileExists(destFile) {
+		err := common.CopyFile(srcFile, destFile)
+		if err != nil {
+			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
+		}
+	}
+	showMessage("append", destFile)
+	f, err := os.OpenFile(destFile, os.O_APPEND|os.O_WRONLY, 0666)
+	if err != nil {
+		panic(err)
+	}
+
+	defer f.Close()
+
+	version, err := common.GetGaugePluginVersion("ruby")
+	if err != nil {
+		panic(err)
+	}
+
+	if _, err = f.WriteString(fmt.Sprintf("gem 'gauge-ruby', '~>%s', :group => [:development, :test]\n", version)); err != nil {
+		panic(err)
 	}
 }
 
@@ -113,10 +159,13 @@ func main() {
 		os.Chdir(projectRoot)
 		runCommand("ruby", "-e", "require 'gauge_runtime'")
 	} else if *initialize {
-		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createRubyPropertiesFile}
+		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createRubyPropertiesFile, createOrAppendToGemFile}
 		for _, f := range funcs {
 			f()
 		}
+		os.Chdir(projectRoot)
+		fmt.Printf("Running bundle install.. in %s\n", projectRoot)
+		runCommand("bundle", "install")
 	} else {
 		printUsage()
 	}
