@@ -11,5 +11,9 @@
         "windows": ["bin/gauge-ruby", "--init"],
         "linux": ["bin/gauge-ruby", "--init"],
         "darwin": ["bin/gauge-ruby", "--init"]
+    },
+    "gaugeVersionSupport": {
+        "minimum": "0.0.4",
+        "maximum": "0.0.4"
     }
 }
