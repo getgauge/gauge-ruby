@@ -6,12 +6,6 @@ This is the ruby [language plugin](http://getgauge.io/documentation/user/current
 
 It contains a launcher component (gauge-ruby.go) written in golang which is used to start the plugin from gauge.
 
-Requirements
------------
-* [Golang](http://golang.org/)
-* [Ruby](https://www.ruby-lang.org/en/)
-* [Gauge](http://getgauge.io)
-
 Install through Gauge
 ---------------------
 ````
@@ -20,7 +14,7 @@ gauge --install ruby
 
 * Installing specific version
 ```
-gauge --install xml-report --plugin-version 0.0.6
+gauge --install ruby --plugin-version 0.0.6
 ```
 
 ### Offline installation
@@ -29,8 +23,16 @@ gauge --install xml-report --plugin-version 0.0.6
 gauge --install ruby --file gauge-ruby-0.0.6-linux.x86_64.zip
 ```
 
-Compiling
----------
+Build from Source
+-----------------
+
+### Requirements
+* [Golang](http://golang.org/)
+* [Ruby](https://www.ruby-lang.org/en/)
+* [Gauge](http://getgauge.io)
+
+
+###Compiling
 
 ````
 go run make.go
@@ -42,9 +44,9 @@ For cross platform compilation (launcher)
 go run make.go --all-platforms
 ````
 
-Installing
-----------
-After installing gauge
+###Installing
+
+After compiling
 
 ````
 go run make.go --install
@@ -56,8 +58,8 @@ Installing to a CUSTOM_LOCATION
 go run make.go --install --plugin-prefix CUSTOM_LOCATION
 ````
 
-Creating distributable
-----------------------
+###Creating distributable
+
 
 Note: Run after compiling
 
