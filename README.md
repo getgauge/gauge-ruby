@@ -12,6 +12,22 @@ Requirements
 * [Ruby](https://www.ruby-lang.org/en/)
 * [Gauge](http://getgauge.io)
 
+Install through Gauge
+---------------------
+````
+gauge --install ruby
+````
+
+* Installing specific version
+```
+gauge --install xml-report --plugin-version 0.0.6
+```
+
+### Offline installation
+* Download the plugin from [Releases](https://github.com/getgauge/gauge-ruby/releases)
+```
+gauge --install ruby --file gauge-ruby-0.0.6-linux.x86_64.zip
+```
 
 Compiling
 ---------
