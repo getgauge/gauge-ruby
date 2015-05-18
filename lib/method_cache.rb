@@ -57,7 +57,7 @@ module Gauge
     end
 
     def self.all_steps
-      @@steps_map.keys
+      @@steps_text_map.values
     end
 
     private
