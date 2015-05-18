@@ -127,15 +127,10 @@ func runCommand(cmdName string, arg ...string) {
 	cmd := exec.Command(cmdName, arg...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
 	//TODO: move to logs
 	//fmt.Println(cmd.Args)
-	var err error
-	err = cmd.Start()
-	if err != nil {
-		fmt.Printf("Failed to start Gauge Ruby runner. %s\n", err.Error())
-		os.Exit(1)
-	}
-	err = cmd.Wait()
+	err := cmd.Run()
 	if err != nil {
 		fmt.Printf("Failed to start Gauge Ruby runner. %s\n", err.Error())
 		os.Exit(1)
