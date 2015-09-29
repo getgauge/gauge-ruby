@@ -21,7 +21,7 @@ module Gauge
       step_validate_request = message.stepValidateRequest
       is_valid = MethodCache.valid_step?(step_validate_request.stepText)
       step_validate_response = Messages::StepValidateResponse.new(:isValid => is_valid,
-        :errorMessage => is_valid ? "" : "Step implementation not found")
+        :errorMessage => is_valid ? "" : "Step implementation not found", :errorType => Messages::StepValidateResponse::ErrorType::STEP_IMPLEMENTATION_NOT_FOUND)
       Messages::Message.new(:messageType => Messages::Message::MessageType::StepValidateResponse,
         :messageId => message.messageId, 
         :stepValidateResponse => step_validate_response)
