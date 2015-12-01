@@ -24,8 +24,8 @@ module Gauge
     GAUGE_PORT_ENV = "GAUGE_INTERNAL_PORT"
     API_PORT_ENV = "GAUGE_API_PORT"
     HOST_NAME = 'localhost'
-    @@executionSocket
-    @@apiSocket
+    @@executionSocket = nil
+    @@apiSocket = nil
 
     def self.apiSocket
       @@apiSocket
