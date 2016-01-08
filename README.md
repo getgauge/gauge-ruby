@@ -2,6 +2,8 @@
 gauge-ruby
 ==========
 
+ [ ![Download Nightly](https://api.bintray.com/packages/gauge/gauge-ruby/Nightly/images/download.svg) ](https://bintray.com/gauge/gauge-ruby/Nightly/_latestVersion)
+
 This is the ruby [language plugin](http://getgauge.io/documentation/user/current/plugins/README.html) for [gauge](http://getgauge.io).
 
 It contains a launcher component (gauge-ruby.go) written in golang which is used to start the plugin from gauge.
