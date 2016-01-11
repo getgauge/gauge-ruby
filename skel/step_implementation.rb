@@ -1,10 +1,9 @@
 
-step 'Say <greeting> to <name>' do |x, y|
-  puts "#{x} #{y}"
+step 'Vowels in English language are <vowels>.' do |x|
 end
 
-step 'Step that takes a table <table>' do |x|
+step 'The word <word> has <count> vowels.' do |x, y|
 end
 
-step 'A context step which gets executed before every scenario' do
+step 'Almost all words have vowels <table>' do |x|
 end
