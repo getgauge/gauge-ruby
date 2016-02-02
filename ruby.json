@@ -1,6 +1,6 @@
 {
     "id" : "ruby",
-    "version" : "0.1.1",
+    "version" : "0.1.2",
 	"description": "ruby support for gauge",
     "run": {
         "windows": ["bin/gauge-ruby", "--start"],
