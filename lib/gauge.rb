@@ -32,8 +32,8 @@ module Kernel
     #         puts "I am the $1 hook"
     #      end
     def hook(hook)
-      define_method hook do |&block|
-        Gauge::MethodCache.send("add_#{hook}_hook".to_sym, &block)
+      define_method hook do |options={}, &block|
+        Gauge::MethodCache.send("add_#{hook}_hook".to_sym, options, &block)
       end
     end
   end
@@ -69,7 +69,7 @@ module Kernel
   #   #        |Mingle |Agile project management     |
   #   #        |Snap   |Hosted continuous integration|
   #   #        |Gocd   |Continuous delivery platform |
-  #   
+  #
   #   step 'Step that takes a table <table>' do |table|
   #     # note the extra <table> that is added to the description
   #       puts x.columns.join("|")

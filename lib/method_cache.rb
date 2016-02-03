@@ -20,14 +20,19 @@ module Gauge
   # @api private
   class MethodCache
     ["before_step", "after_step", "before_spec", "after_spec", "before_scenario", "after_scenario", "before_suite", "after_suite"].each { |hook|
-      define_singleton_method "add_#{hook}_hook" do |&block|
-        self.class_variable_get("@@#{hook}_hooks").push block
+      define_singleton_method "add_#{hook}_hook" do |options={}, &block|
+        options = {operator: "AND", tags: []}.merge options
+        self.class_variable_get("@@#{hook}_hooks").push :block=>  block, :options=> options
       end
       define_singleton_method "get_#{hook}_hooks" do
         self.class_variable_get("@@#{hook}_hooks")
       end
     }
-    
+
+    def self.clear_hooks(hook)
+      self.class_variable_get("@@#{hook}_hooks").clear
+    end
+
     def self.add_step(parameterized_step_text, &block)
       @@steps_map[parameterized_step_text] = block
     end

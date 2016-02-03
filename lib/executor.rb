@@ -36,7 +36,7 @@ module Gauge
     def self.execute_hooks(hooks, currentExecutionInfo)
       begin
         hooks.each do |hook|
-          hook.call(currentExecutionInfo)
+          hook[:block].call(currentExecutionInfo)
         end
         return nil
       rescue Exception => e
