@@ -37,8 +37,7 @@ module Gauge
       begin
         hooks.each do |hook|
           if !should_filter || hook[:options][:tags].length == 0
-            hook[:block].call(currentExecutionInfo)
-            next
+            next hook[:block].call(currentExecutionInfo)
           end
           tags = currentExecutionInfo.currentSpec.tags + currentExecutionInfo.currentScenario.tags
           intersection = (tags & hook[:options][:tags])
