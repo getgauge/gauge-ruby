@@ -38,71 +38,74 @@ Info = Struct.new(:currentSpec, :currentScenario)
 
 describe Gauge::Executor do
   subject { Gauge::Executor }
-  it 'execute hook without tags' do
-    hook = Hook.new
-    hooks = [{block: hook, options: {tags: [], operator: 'OR'}}]
-    info = Info.new(Tags.new(['tag1']), Tags.new(%w(tag2 tag3)))
-    Gauge::Executor.execute_hooks(hooks, info, true)
-    expect(hook.called).to eq(true)
-    expect(hook.info).to eq(info)
-  end
+  describe ".execute_hooks" do
+    describe "when OR-ing tags" do
+      let(:execution_info) {{ currentSpec: { tags:["tag1"], currentScenario:{tags:['tag2', 'tag3']}}}}
+      it 'should execute hook with no tags' do
+        hook = double('hook')
+        expect(hook).to receive(:call).with(execution_info)
+        hooks = [{block: hook, options: {tags: [], operator: 'OR'}}]
+        Gauge::Executor.execute_hooks(hooks, execution_info, true)
+      end
+    end
 
-  it 'execute_hook with tags AND operator' do
-    hook = Hook.new
-    hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-    info = Info.new(Tags.new(%w(tag1 tag2)), Tags.new([]))
-    Gauge::Executor.execute_hooks(hooks, info, true)
-    expect(hook.called).to eq(true)
-    expect(hook.info).to eq(info)
-  end
+    let(:execution_info) { double('execution_info') }
+    it 'execute_hook with tags AND operator' do
+      execution_info.stub_chain(:currentSpec, :tags).and_return(["tag1", "tag2"])
+      execution_info.stub_chain(:currentScenario, :tags).and_return([])
+      hook = Hook.new
+      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
+      info = Info.new(Tags.new(%w(tag1 tag2)), Tags.new([]))
+      Gauge::Executor.execute_hooks(hooks, execution_info, true)
+      expect(hook.called).to eq(true)
+      expect(hook.info).to eq(execution_info)
+    end
 
-  it 'execute_hook with non-matching tags AND operator' do
-    hook = Hook.new
-    hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-    info = Info.new(Tags.new(%w(tag1 tag3)), Tags.new([]))
-    Gauge::Executor.execute_hooks(hooks, info, true)
-    expect(hook.called).to eq(false)
-    expect(hook.info).to eq(nil)
-  end
+    it 'execute_hook with non-matching tags AND operator' do
+      hook = Hook.new
+      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
+      info = Info.new(Tags.new(%w(tag1 tag3)), Tags.new([]))
+      Gauge::Executor.execute_hooks(hooks, info, true)
+      expect(hook.called).to eq(false)
+      expect(hook.info).to eq(nil)
+    end
 
-  it 'execute hook with tags OR operator' do
-    hook = Hook.new
-    hooks = [{block: hook, options: {tags: ['tag1'], operator: 'OR'}}]
-    info = Info.new(Tags.new(%w(tag1 tag2)), Tags.new([]))
-    Gauge::Executor.execute_hooks(hooks, info, true)
-    expect(hook.called).to eq(true)
-    expect(hook.info).to eq(info)
-  end
+    it 'execute hook with tags OR operator' do
+      hook = Hook.new
+      hooks = [{block: hook, options: {tags: ['tag1'], operator: 'OR'}}]
+      info = Info.new(Tags.new(%w(tag1 tag2)), Tags.new([]))
+      Gauge::Executor.execute_hooks(hooks, info, true)
+      expect(hook.called).to eq(true)
+      expect(hook.info).to eq(info)
+    end
 
-  it 'execute hook with non-matching tags OR operator' do
-    hook = Hook.new
-    hooks = [{block: hook, options: {tags: ['tag1'], operator: 'OR'}}]
-    info = Info.new(Tags.new(%w(tag4 tag2)), Tags.new([]))
-    Gauge::Executor.execute_hooks(hooks, info, true)
-    expect(hook.called).to eq(false)
-    expect(hook.info).to eq(nil)
-  end
+    it 'execute hook with non-matching tags OR operator' do
+      hook = Hook.new
+      hooks = [{block: hook, options: {tags: ['tag1'], operator: 'OR'}}]
+      info = Info.new(Tags.new(%w(tag4 tag2)), Tags.new([]))
+      Gauge::Executor.execute_hooks(hooks, info, true)
+      expect(hook.called).to eq(false)
+      expect(hook.info).to eq(nil)
+    end
 
-  it 'execute hook with_non-matching tags' do
-    hook = Hook.new
-    hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-    info = Info.new(Tags.new(['tag1']), Tags.new([]))
-    Gauge::Executor.execute_hooks(hooks, info, true)
+    it 'execute hook with_non-matching tags' do
+      hook = Hook.new
+      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
+      info = Info.new(Tags.new(['tag1']), Tags.new([]))
+      Gauge::Executor.execute_hooks(hooks, info, true)
 
-    expect(hook.called).to eq(false)
-    expect(hook.info).to eq(nil)
-  end
+      expect(hook.called).to eq(false)
+      expect(hook.info).to eq(nil)
+    end
 
-  it 'execute hook with non-matching tags and should filter false' do
-    hook = Hook.new
-    hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-    info = Info.new(Tags.new(['tag1']), Tags.new([]))
-    Gauge::Executor.execute_hooks(hooks, info, false)
+    it 'execute hook with non-matching tags and should filter false' do
+      hook = Hook.new
+      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
+      info = Info.new(Tags.new(['tag1']), Tags.new([]))
+      Gauge::Executor.execute_hooks(hooks, info, false)
 
-    expect(hook.called).to eq(true)
-    expect(hook.info).to eq(info)
+      expect(hook.called).to eq(true)
+      expect(hook.info).to eq(info)
+    end
   end
 end
-
-
-
