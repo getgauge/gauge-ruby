@@ -22,11 +22,11 @@ module Gauge
     include ExecutionHandler
 
     def process_execution_start_request(message)
-      handle_hooks_execution(MethodCache.get_before_suite_hooks, message, message.executionStartingRequest.currentExecutionInfo)
+      handle_hooks_execution(MethodCache.get_before_suite_hooks, message, message.executionStartingRequest.currentExecutionInfo,false)
     end
 
     def process_execution_end_request(message)
-      handle_hooks_execution(MethodCache.get_after_suite_hooks, message, message.executionEndingRequest.currentExecutionInfo)
+      handle_hooks_execution(MethodCache.get_after_suite_hooks, message, message.executionEndingRequest.currentExecutionInfo, false)
     end
 
     def process_spec_execution_start_request(message)

@@ -33,10 +33,19 @@ module Gauge
       end
     end
 
-    def self.execute_hooks(hooks, currentExecutionInfo)
+    def self.execute_hooks(hooks, currentExecutionInfo, should_filter)
       begin
         hooks.each do |hook|
-          hook[:block].call(currentExecutionInfo)
+          if !should_filter || hook[:options][:tags].length == 0
+            hook[:block].call(currentExecutionInfo)
+            next
+          end
+          tags = currentExecutionInfo.currentSpec.tags + currentExecutionInfo.currentScenario.tags
+          intersection = (tags & hook[:options][:tags])
+          if (hook[:options][:operator] == 'OR' && intersection.length > 0) ||
+              (hook[:options][:operator] == 'AND' && intersection.length == hook[:options][:tags].length)
+            hook[:block].call(currentExecutionInfo)
+          end
         end
         return nil
       rescue Exception => e
