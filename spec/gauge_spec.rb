@@ -119,11 +119,11 @@ describe Gauge::MethodCache do
 
     # used the should syntax here, since expectations on block does not seem to work.
     it ".get_step" do
-      subject.get_step("parameterized_foo").should be foo_block
+      expect(subject.get_step("parameterized_foo")).to eq foo_block
     end
 
     it ".get_step_text" do
-      subject.get_step_text("parameterized_foo").should eq "foo"
+      expect(subject.get_step_text("parameterized_foo")).to eq "foo"
     end
 
     context "step aliases" do
@@ -136,4 +136,3 @@ describe Gauge::MethodCache do
     end
   end
 end
-
