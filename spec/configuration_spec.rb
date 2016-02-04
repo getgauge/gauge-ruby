@@ -15,9 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'rspec'
-require_relative '../lib/configuration.rb'
-
 module Foo
   def hello_foo
     "hello_foo"

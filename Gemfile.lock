@@ -13,6 +13,8 @@ GEM
   specs:
     ast (2.0.0)
     diff-lcs (1.2.5)
+    docile (1.1.5)
+    json (1.8.3)
     method_source (0.8.2)
     os (0.9.6)
     parser (2.2.3.0)
@@ -30,6 +32,11 @@ GEM
       rspec-support (~> 3.1.0)
     rspec-support (3.1.2)
     ruby-protocol-buffers (1.5.1)
+    simplecov (0.11.2)
+      docile (~> 1.1.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
     yard (0.8.7.6)
 
 PLATFORMS
@@ -39,6 +46,7 @@ PLATFORMS
 DEPENDENCIES
   gauge-ruby!
   rspec
+  simplecov
   yard
 
 BUNDLED WITH

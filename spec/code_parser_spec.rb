@@ -15,12 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'rspec'
-require_relative '../lib/code_parser.rb'
-require_relative '../lib/gauge.rb'
-require_relative '../lib/messages.pb.rb'
-require 'method_source'
-
 describe Gauge::CodeParser do
 
   describe "self.step_args_from_code" do
@@ -45,8 +39,8 @@ describe Gauge::CodeParser do
 
       allow(Gauge::Connector).to receive(:step_value).with('say <what> to <who>').and_return(@parsed_step)
       allow(Gauge::Connector).to receive(:step_value).with('say hello').and_return(@parsed_step_no_args)
-      
-      step 'say <what> to <who>' do |what, who| 
+
+      step 'say <what> to <who>' do |what, who|
         puts "say #{what} to #{who}"
       end
 
@@ -54,7 +48,7 @@ describe Gauge::CodeParser do
         puts "say hello"
       end
     end
-    
+
     let(:source_code) {Gauge::MethodCache.get_step(@parsed_step).source}
     let(:source_code_no_args) {Gauge::MethodCache.get_step(@parsed_step_no_args).source}
 

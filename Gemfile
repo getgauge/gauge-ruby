@@ -4,4 +4,5 @@ gemspec
 group :development, :test do
 	gem 'rspec'
 	gem 'yard'
+	gem 'simplecov', :require => false
 end

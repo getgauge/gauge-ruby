@@ -15,9 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'rspec'
-require_relative '../lib/gauge.rb'
-
 foo_block=-> { puts "foo" }
 describe Gauge::MethodCache do
   subject { Gauge::MethodCache }
