@@ -18,94 +18,80 @@
 require 'rspec'
 require_relative '../lib/executor.rb'
 
-
-class Hook
-  attr_accessor :called, :info
-
-  def initialize()
-    @called = false
-    @info = nil
-  end
-
-  def call(info)
-    @called = true
-    @info = info
-  end
-end
-
-Tags = Struct.new(:tags)
-Info = Struct.new(:currentSpec, :currentScenario)
-
 describe Gauge::Executor do
-  subject { Gauge::Executor }
   describe ".execute_hooks" do
-    describe "when OR-ing tags" do
-      let(:execution_info) {{ currentSpec: { tags:["tag1"], currentScenario:{tags:['tag2', 'tag3']}}}}
-      it 'should execute hook with no tags' do
-        hook = double('hook')
-        expect(hook).to receive(:call).with(execution_info)
-        hooks = [{block: hook, options: {tags: [], operator: 'OR'}}]
-        Gauge::Executor.execute_hooks(hooks, execution_info, true)
+    let(:execution_info) { double('execution_info') }
+    let(:hook) {double('hook')}
+    subject { Gauge::Executor.execute_hooks(hooks, execution_info, true) }
+
+    before {
+      allow(execution_info).to receive_message_chain(:currentSpec, :tags => ['tag1'])
+      allow(execution_info).to receive_message_chain(:currentScenario, :tags => ['tag2', 'tag3'])
+    }
+
+    context "with no tags passed" do
+      let(:hooks) {[{block: hook, options: {tags: [], operator: 'OR'}}]}
+
+      context "on executing hook" do
+        before { expect(hook).to receive(:call).with(execution_info)}
+        it { is_expected.to be_nil }
+      end
+
+      context 'on executing hook that raises exception' do
+        before { expect(hook).to receive(:call).with(execution_info).and_raise(Exception)}
+        it { is_expected.to_not be_nil }
       end
     end
 
-    let(:execution_info) { double('execution_info') }
-    it 'execute_hook with tags AND operator' do
-      execution_info.stub_chain(:currentSpec, :tags).and_return(["tag1", "tag2"])
-      execution_info.stub_chain(:currentScenario, :tags).and_return([])
-      hook = Hook.new
-      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-      info = Info.new(Tags.new(%w(tag1 tag2)), Tags.new([]))
-      Gauge::Executor.execute_hooks(hooks, execution_info, true)
-      expect(hook.called).to eq(true)
-      expect(hook.info).to eq(execution_info)
+    context "when should_filter is false" do
+      subject { Gauge::Executor.execute_hooks(hooks, execution_info, false) }
+      let(:unmatched_hook) { double('unmatched_hook')}
+      let(:hooks) {[
+        {block: hook, options: {tags: %w(tag1), operator: 'AND'}},
+        {block: unmatched_hook, options: {tags: %w(some random tags), operator: 'AND'}}
+      ]}
+      context "execute all hooks" do
+        before { [hook, unmatched_hook].each { |h| expect(h).to receive(:call).with(execution_info)} }
+        it { is_expected.to be_nil }
+      end
     end
 
-    it 'execute_hook with non-matching tags AND operator' do
-      hook = Hook.new
-      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-      info = Info.new(Tags.new(%w(tag1 tag3)), Tags.new([]))
-      Gauge::Executor.execute_hooks(hooks, info, true)
-      expect(hook.called).to eq(false)
-      expect(hook.info).to eq(nil)
+    describe "when OR-ing" do
+      context "with tags passed" do
+        let(:another_hook) {double('hook')}
+        let(:hooks) {[
+          {block: hook, options: {tags: ['tag1', 'tag_blah'], operator: 'OR'}},
+          {block: another_hook, options: {tags: ['tag420'], operator: 'OR'}}
+        ]}
+        context 'executes hooks with matching tags' do
+          before {
+            expect(hook).to receive(:call).with(execution_info)
+            expect(another_hook).to_not receive(:call)
+          }
+          it { is_expected.to be_nil}
+        end
+      end
     end
 
-    it 'execute hook with tags OR operator' do
-      hook = Hook.new
-      hooks = [{block: hook, options: {tags: ['tag1'], operator: 'OR'}}]
-      info = Info.new(Tags.new(%w(tag1 tag2)), Tags.new([]))
-      Gauge::Executor.execute_hooks(hooks, info, true)
-      expect(hook.called).to eq(true)
-      expect(hook.info).to eq(info)
-    end
-
-    it 'execute hook with non-matching tags OR operator' do
-      hook = Hook.new
-      hooks = [{block: hook, options: {tags: ['tag1'], operator: 'OR'}}]
-      info = Info.new(Tags.new(%w(tag4 tag2)), Tags.new([]))
-      Gauge::Executor.execute_hooks(hooks, info, true)
-      expect(hook.called).to eq(false)
-      expect(hook.info).to eq(nil)
-    end
-
-    it 'execute hook with_non-matching tags' do
-      hook = Hook.new
-      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-      info = Info.new(Tags.new(['tag1']), Tags.new([]))
-      Gauge::Executor.execute_hooks(hooks, info, true)
-
-      expect(hook.called).to eq(false)
-      expect(hook.info).to eq(nil)
-    end
-
-    it 'execute hook with non-matching tags and should filter false' do
-      hook = Hook.new
-      hooks = [{block: hook, options: {tags: %w(tag1 tag2), operator: 'AND'}}]
-      info = Info.new(Tags.new(['tag1']), Tags.new([]))
-      Gauge::Executor.execute_hooks(hooks, info, false)
-
-      expect(hook.called).to eq(true)
-      expect(hook.info).to eq(info)
+    describe "when AND-ing" do
+      context "with tags passed" do
+        before{
+          allow(execution_info).to receive_message_chain(:currentSpec, :tags => ['tag1', 'tag2'])
+          allow(execution_info).to receive_message_chain(:currentScenario, :tags => [])
+        }
+        describe "executes hooks with matching tags" do
+          let(:another_hook) {double('hook')}
+          let(:hooks) {[
+            {block: hook, options: {tags: ['tag1', 'tag2'], operator: 'AND'}},
+            {block: another_hook, options: {tags: ['tag1', 'tag420'], operator: 'AND'}}
+          ]}
+          before {
+             expect(hook).to receive(:call).with(execution_info)
+             expect(another_hook).to_not receive(:call)
+          }
+          it { is_expected.to be_nil}
+        end
+      end
     end
   end
 end
