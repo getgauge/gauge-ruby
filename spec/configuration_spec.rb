@@ -39,16 +39,19 @@ describe Gauge::Configuration do
     Gauge::Configuration.include_configured_modules
   }
 
-  it ".configure" do
-    expect(Gauge::Configuration.instance.includes).to include Foo, Bar
-    expect(hello_foo).to eq "hello_foo"
-    expect(hello_bar).to eq "hello_bar"
-  end
+  context ".configure" do
+    it "should include all modules" do
+      expect(Gauge::Configuration.instance.includes).to include Foo, Bar
+      expect(hello_foo).to eq "hello_foo"
+      expect(hello_bar).to eq "hello_bar"
+    end
 
-  context "multiple configs" do
-    it "aggregates includes" do
-      Gauge.configure { |c| c.include Baz}
-      expect(Gauge::Configuration.instance.includes).to include Foo, Bar, Baz
+
+    context "invoked multiple times" do
+      it "aggregates all includes" do
+        Gauge.configure { |c| c.include Baz}
+        expect(Gauge::Configuration.instance.includes).to include Foo, Bar, Baz
+      end
     end
   end
 end
