@@ -23,7 +23,7 @@ describe Gauge::CodeParser do
 
     it "gets arguments from code block" do
       args = described_class.step_args_from_code(code_block)
-      expect(args.to_s).to eq "[(arg :what), (arg :who)]"
+      expect(args.to_s).to eq "[s(:arg, :what), s(:arg, :who)]"
     end
 
     it "gets empty args from code block without args" do
@@ -64,14 +64,14 @@ describe Gauge::CodeParser do
       param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: 0, newPosition: 1)]
       refactored_code = described_class.refactor_args(source_code, param_positions, ["who", "what"], "say <who> to <what>")
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[(arg :who), (arg :what)]"
+      expect(new_args.to_s).to eq "[s(:arg, :who), s(:arg, :what)]"
     end
 
     it "removes arguments" do
       param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 0)]
       refactored_code = described_class.refactor_args(source_code, param_positions, ["who"], "say <who>")
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[(arg :who)]"
+      expect(new_args.to_s).to eq "[s(:arg, :who)]"
     end
 
     it "inserts arguments" do
@@ -80,14 +80,14 @@ describe Gauge::CodeParser do
                        Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 2)]
       refactored_code = described_class.refactor_args(source_code, param_positions, ["what", "where", "who"], "say <what> to <who> at <where>")
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[(arg :what), (arg :where), (arg :who)]"
+      expect(new_args.to_s).to eq "[s(:arg, :what), s(:arg, :where), s(:arg, :who)]"
     end
 
     it "inserts arguments when none existed" do
       param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
       refactored_code = described_class.refactor_args(source_code_no_args, param_positions, ["what", "who"], "say <what> to <who>")
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[(arg :what), (arg :who)]"
+      expect(new_args.to_s).to eq "[s(:arg, :what), s(:arg, :who)]"
     end
   end
 end
