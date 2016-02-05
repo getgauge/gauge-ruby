@@ -30,14 +30,28 @@ module Gauge
 
     # Gets the column headers of the table
     # @return [string[]]
+    # @deprecated Use [] accessor instead
     def columns
       @columns
     end
 
     # Gets the rows of the table. The rows are two dimensional arrays.
     # @return [string[][]]
+    # @deprecated Use [] accessor instead
     def rows
       @rows
+    end
+
+    def [](index)
+      row_values_as_hash(@rows[index])
+    end
+
+    private
+    def row_values_as_hash(row)
+      Hash[@columns.zip(row)]
+    end
+
+    def column_values_as_array()
     end
   end
 end
