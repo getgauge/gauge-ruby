@@ -44,6 +44,11 @@ describe Gauge::Table do
         expect(subject['Author']).to eq "John P. Baugh"
         expect(subject['Price']).to eq "25.00"
       end
+
+      context "and index is out of range" do
+        subject { Gauge::Table.new(proto_table)[4] }
+        it { is_expected.to be_nil }
+      end
     end
 
     context "with string key" do
@@ -57,8 +62,7 @@ describe Gauge::Table do
 
       context "when no such column name" do
         subject { Gauge::Table.new(proto_table)["RandomString"] }
-        it { is_expected.to be_a Array }
-        it { is_expected.to be_empty }
+        it { is_expected.to be_nil }
       end
     end
   end
