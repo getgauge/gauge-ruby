@@ -45,5 +45,21 @@ describe Gauge::Table do
         expect(subject['Price']).to eq "25.00"
       end
     end
+
+    context "with string key" do
+      subject { Gauge::Table.new(proto_table)["Title"] }
+
+      it { is_expected.to_not be_nil }
+      it { is_expected.to be_a Array }
+      it "should contain corresponding row values" do
+        is_expected.to match_array ["Go Programming", "The Way to Go"]
+      end
+
+      context "when no such column name" do
+        subject { Gauge::Table.new(proto_table)["RandomString"] }
+        it { is_expected.to be_a Array }
+        it { is_expected.to be_empty }
+      end
+    end
   end
 end

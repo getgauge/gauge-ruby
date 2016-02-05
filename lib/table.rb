@@ -42,8 +42,19 @@ module Gauge
       @rows
     end
 
+    # Gets the table data.
+    # @return [Hash] When an integer index is passed. Values correspond to a the row in the table with the index.
+    # @example
+    #   table[0] => {"Col1" => "Row1.Cell1", "Col2" => "Row2.Col1", ...}
+    # @return [string[]] When a string key is passed. Values correspond to the respective cells in a row, matching the index of value in Column headers.
+    # @return [empty []]
+    # @example
+    #   table["Col1"] => ["Row1.Cell1", "Row1.Cell1", ...]
+    # @example
+    #   table["Invalid_Col_Name"] => []
     def [](index)
-      row_values_as_hash(@rows[index])
+      return row_values_as_hash(@rows[index]) if index.is_a?(Integer)
+      column_values_as_array(index)
     end
 
     private
@@ -51,7 +62,9 @@ module Gauge
       Hash[@columns.zip(row)]
     end
 
-    def column_values_as_array()
+    def column_values_as_array(col_name)
+      i = @columns.index col_name
+      i.nil? ? [] : @rows.map { |r| r[i] }
     end
   end
 end
