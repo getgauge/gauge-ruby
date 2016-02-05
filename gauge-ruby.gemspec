@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
     s.version     = JSON.parse(File.read('ruby.json'))['version']
     s.authors     = ["Gauge Team"]
     s.email       = ["gauge@thoughtworks.com"]
-    s.license     = "GPLv3"
+    s.license     = "GPL-3.0"
 
     s.summary     = "Ruby support for Gauge"
     s.description = "Adds Ruby support into Gauge tests"
