@@ -26,7 +26,7 @@ module Kernel
     # @!macro [attach] self.hook
     #   @method $1(&block)
     #   @api public
-    #   @param block [block], this block is called while executing the $1 hook
+    #   @param block [block] this block is called while executing the $1 hook
     #   @example
     #      $1 do
     #         puts "I am the $1 hook"
@@ -36,6 +36,20 @@ module Kernel
         Gauge::MethodCache.send("add_#{hook}_hook".to_sym, options, &block)
       end
     end
+
+    # @!macro [attach] self.tagged_hook
+    #   @method $1(options, &block)
+    #   @api public
+    #   @param block [block] this block is called while executing the $1 hook
+    #   @param {{tags: ['list', 'of', 'tags'], operator: 'OR' | 'AND'}} options specify tags and operator for which this $1 execution hook should run.
+    #   @example
+    #      $1({tags: ['tag2', 'tag1'], operator: 'OR'}) do
+    #         puts "I am the $1 hook"
+    #      end
+    def tagged_hook(hook)
+      hook(hook)
+    end
+
   end
 
   # Specify implementation for a given step
@@ -87,17 +101,17 @@ module Kernel
   end
 
   # Invoked before execution of every step.
-  hook "before_step"
+  tagged_hook "before_step"
   # Invoked after execution of every step.
-  hook "after_step"
+  tagged_hook "after_step"
   # Invoked before execution of every specification.
-  hook "before_spec"
+  tagged_hook "before_spec"
   # Invoked after execution of every specification.
-  hook "after_spec"
+  tagged_hook "after_spec"
   # Invoked before execution of every scenario.
-  hook "before_scenario"
+  tagged_hook "before_scenario"
   # Invoked after execution of every scenario.
-  hook "after_scenario"
+  tagged_hook "after_scenario"
   # Invoked before execution of the entire suite.
   hook "before_suite"
   # Invoked after execution of the entire suite.
