@@ -16,6 +16,7 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "execution_handler"
+require_relative "../gauge_messages"
 
 module Gauge
   module Processors
@@ -46,11 +47,14 @@ module Gauge
     end
 
     def process_step_execution_start_request(message)
+      Gauge::GaugeMessages.instance.clear
       handle_hooks_execution(MethodCache.get_before_step_hooks, message, message.stepExecutionStartingRequest.currentExecutionInfo)
     end
 
     def process_step_execution_end_request(message)
-      handle_hooks_execution(MethodCache.get_after_step_hooks, message, message.stepExecutionEndingRequest.currentExecutionInfo)
+      response = handle_hooks_execution(MethodCache.get_after_step_hooks, message, message.stepExecutionEndingRequest.currentExecutionInfo)
+      response.executionStatusResponse.executionResult.message = Gauge::GaugeMessages.instance.get
+      return response
     end
   end
 end
