@@ -32,9 +32,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"time"
-
-	"github.com/getgauge/common"
 )
 
 const (
@@ -268,14 +265,6 @@ func getGaugeRubyVersion() string {
 	return rubyRunnerProperties["version"].(string)
 }
 
-func getGaugeRubyVersionWithBuildInfo() string {
-	version := getGaugeRubyVersion()
-	if buildMetadata != "" {
-		version += fmt.Sprintf(".%s", buildMetadata)
-	}
-	return version
-}
-
 func installGaugeRubyFiles(installPath string) error {
 	files := make(map[string]string)
 	if runtime.GOOS == "windows" {
@@ -338,7 +327,6 @@ var pluginInstallPrefix = flag.String("plugin-prefix", "", "Specifies the prefix
 var distro = flag.Bool("distro", false, "Creates distributables for gauge ruby")
 var allPlatforms = flag.Bool("all-platforms", false, "Compiles or creates distributables for all platforms windows, linux, darwin both x86 and x86_64")
 var binDir = flag.String("bin-dir", "", "Specifies OS_PLATFORM specific binaries to install when cross compiling")
-var nightly = flag.Bool("nightly", false, "Adds nightly build information")
 
 var (
 	platformEnvs = []map[string]string{
@@ -349,7 +337,6 @@ var (
 		map[string]string{GOARCH: X86, GOOS: WINDOWS, CGO_ENABLED: "0"},
 		map[string]string{GOARCH: X86_64, GOOS: WINDOWS, CGO_ENABLED: "0"},
 	}
-	buildMetadata string
 )
 
 func getPluginProperties(jsonPropertiesFile string) (map[string]interface{}, error) {
@@ -370,9 +357,7 @@ func main() {
 	createGoPathForBuild()
 	copyGaugeRubyFilesToGoPath()
 	flag.Parse()
-	if *nightly {
-		buildMetadata = fmt.Sprintf("nightly-%s", time.Now().Format(common.NightlyDatelayout))
-	}
+
 	if *install {
 		updatePluginInstallPrefix()
 		installGaugeRubyFiles(*pluginInstallPrefix)
@@ -407,7 +392,7 @@ func createGaugeDistro(forAllPlatforms bool) {
 }
 
 func createDistro() {
-	packageName := fmt.Sprintf("%s-%s-%s.%s", gaugeRuby, getGaugeRubyVersionWithBuildInfo(), getGOOS(), getArch())
+	packageName := fmt.Sprintf("%s-%s-%s.%s", gaugeRuby, getGaugeRubyVersion(), getGOOS(), getArch())
 	distroDir := filepath.Join(deployDir, packageName)
 	copyGaugeRubyFiles(distroDir)
 	createZip(deployDir, packageName)
