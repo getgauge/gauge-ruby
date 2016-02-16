@@ -33,6 +33,8 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/getgauge/common"
 )
 
 const (
@@ -56,7 +58,6 @@ const (
 	gaugeRuby         = "gauge-ruby"
 	deployDir         = "deploy"
 	commonDep         = "github.com/getgauge/common"
-	nightlyDatelayout = "2006-01-02"
 )
 
 var BUILD_DIR_BIN = filepath.Join(BUILD_DIR, bin)
@@ -370,7 +371,7 @@ func main() {
 	copyGaugeRubyFilesToGoPath()
 	flag.Parse()
 	if *nightly {
-		buildMetadata = fmt.Sprintf("nightly-%s", time.Now().Format(nightlyDatelayout))
+		buildMetadata = fmt.Sprintf("nightly-%s", time.Now().Format(common.NightlyDatelayout))
 	}
 	if *install {
 		updatePluginInstallPrefix()
