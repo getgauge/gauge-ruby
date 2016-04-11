@@ -34,7 +34,7 @@ module Gauge
       args = step_args_from_code code
       param_positions.sort_by!(&:newPosition).each { |e|
         if e.oldPosition == -1
-          new_params[e.newPosition] = new_param_values[e.newPosition]
+          new_params[e.newPosition] = "arg_#{new_param_values[e.newPosition].downcase.split.join('_')}"
         else
           new_params[e.newPosition] = args[e.oldPosition].children[0]
         end

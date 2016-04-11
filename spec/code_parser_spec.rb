@@ -17,25 +17,25 @@
 
 describe Gauge::CodeParser do
 
-  describe "self.step_args_from_code" do
+  describe 'self.step_args_from_code' do
     let(:code_block) { "step \"say <what> to <who>\" do |what, who|\n\tp what + who\nend" }
     let(:code_block_without_args) { "step \"say foo\" do \n\tp \"foo\"end" }
 
-    it "gets arguments from code block" do
+    it 'gets arguments from code block' do
       args = described_class.step_args_from_code(code_block)
-      expect(args.to_s).to eq "[s(:arg, :what), s(:arg, :who)]"
+      expect(args.to_s).to eq '[s(:arg, :what), s(:arg, :who)]'
     end
 
-    it "gets empty args from code block without args" do
+    it 'gets empty args from code block without args' do
       args = described_class.step_args_from_code(code_block_without_args)
-      expect(args.to_s).to eq "[]"
+      expect(args.to_s).to eq '[]'
     end
   end
 
-  describe "self.refactor_args" do
+  describe 'self.refactor_args' do
     before(:each) do
-      @parsed_step = "say {} to {}"
-      @parsed_step_no_args = "say hello"
+      @parsed_step = 'say {} to {}'
+      @parsed_step_no_args = 'say hello'
 
       allow(Gauge::Connector).to receive(:step_value).with('say <what> to <who>').and_return(@parsed_step)
       allow(Gauge::Connector).to receive(:step_value).with('say hello').and_return(@parsed_step_no_args)
@@ -45,49 +45,56 @@ describe Gauge::CodeParser do
       end
 
       step 'say hello' do
-        puts "say hello"
+        puts 'say hello'
       end
     end
 
     let(:source_code) {Gauge::MethodCache.get_step(@parsed_step).source}
     let(:source_code_no_args) {Gauge::MethodCache.get_step(@parsed_step_no_args).source}
 
-    it "replaces step text" do
-      new_step_text="new step text"
+    it 'replaces step text' do
+      new_step_text='new step text'
       refactored_code = described_class.refactor_args(source_code, [], [], new_step_text)
       refactored_code_ast = described_class.code_to_ast(refactored_code)
       refactored_step_text = refactored_code_ast.children[0].children[2].children[0]
       expect(refactored_step_text).to eq new_step_text
     end
 
-    it "reorders arguments" do
+    it 'reorders arguments' do
       param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: 0, newPosition: 1)]
-      refactored_code = described_class.refactor_args(source_code, param_positions, ["who", "what"], "say <who> to <what>")
+      refactored_code = described_class.refactor_args(source_code, param_positions, %w(who what), 'say <who> to <what>')
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[s(:arg, :who), s(:arg, :what)]"
+      expect(new_args.to_s).to eq '[s(:arg, :who), s(:arg, :what)]'
     end
 
-    it "removes arguments" do
+    it 'removes arguments' do
       param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 0)]
-      refactored_code = described_class.refactor_args(source_code, param_positions, ["who"], "say <who>")
+      refactored_code = described_class.refactor_args(source_code, param_positions, ['who'], 'say <who>')
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[s(:arg, :who)]"
+      expect(new_args.to_s).to eq '[s(:arg, :who)]'
     end
 
-    it "inserts arguments" do
+    it 'inserts arguments' do
       param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: 0, newPosition: 0),
                        Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1),
                        Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 2)]
-      refactored_code = described_class.refactor_args(source_code, param_positions, ["what", "where", "who"], "say <what> to <who> at <where>")
+      refactored_code = described_class.refactor_args(source_code, param_positions, %w(what where who), 'say <what> to <who> at <where>')
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[s(:arg, :what), s(:arg, :where), s(:arg, :who)]"
+      expect(new_args.to_s).to eq '[s(:arg, :what), s(:arg, :arg_where), s(:arg, :who)]'
     end
 
-    it "inserts arguments when none existed" do
+    it 'inserts arguments when none existed' do
       param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
-      refactored_code = described_class.refactor_args(source_code_no_args, param_positions, ["what", "who"], "say <what> to <who>")
+      refactored_code = described_class.refactor_args(source_code_no_args, param_positions, %w(what who), 'say <what> to <who>')
       new_args = described_class.step_args_from_code(refactored_code)
-      expect(new_args.to_s).to eq "[s(:arg, :what), s(:arg, :who)]"
+      expect(new_args.to_s).to eq '[s(:arg, :arg_what), s(:arg, :arg_who)]'
+      end
+
+    it 'inserts arguments with keywords' do
+      param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0)]
+      refactored_code = described_class.refactor_args(source_code_no_args, param_positions, ['1'], 'say <1>')
+      new_args = described_class.step_args_from_code(refactored_code)
+      expect(new_args.to_s).to eq '[s(:arg, :arg_1)]'
     end
   end
 end
