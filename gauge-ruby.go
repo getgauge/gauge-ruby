@@ -20,10 +20,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/getgauge/common"
 	"os"
 	"os/exec"
 	"path"
+
+	"github.com/getgauge/common"
 )
 
 const (
@@ -48,6 +49,10 @@ func showMessage(action, filename string) {
 
 func createStepImplementationsDirectory() {
 	createDirectory(path.Join(projectRoot, "step_implementations"))
+}
+
+func createEnvDir() {
+	createDirectory(path.Join(projectRoot, "env", "default"))
 }
 
 func createDirectory(filePath string) {
@@ -154,7 +159,7 @@ func main() {
 		os.Chdir(projectRoot)
 		runCommand("ruby", "-e", "require 'gauge_runtime'")
 	} else if *initialize {
-		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createRubyPropertiesFile, createOrAppendToGemFile}
+		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createEnvDir, createRubyPropertiesFile, createOrAppendToGemFile}
 		for _, f := range funcs {
 			f()
 		}
