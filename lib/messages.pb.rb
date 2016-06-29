@@ -157,6 +157,7 @@ module Gauge
         set_fully_qualified_name "gauge.messages.StepValidateResponse.ErrorType"
 
         STEP_IMPLEMENTATION_NOT_FOUND = 0
+        DUPLICATE_STEP_IMPLEMENTATION = 1
       end
 
       set_fully_qualified_name "gauge.messages.StepValidateResponse"

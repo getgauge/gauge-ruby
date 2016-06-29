@@ -9,6 +9,7 @@ module Gauge
     class ProtoSpec < ::ProtocolBuffers::Message; end
     class ProtoItem < ::ProtocolBuffers::Message; end
     class ProtoScenario < ::ProtocolBuffers::Message; end
+    class Span < ::ProtocolBuffers::Message; end
     class ProtoTableDrivenScenario < ::ProtocolBuffers::Message; end
     class ProtoStep < ::ProtocolBuffers::Message; end
     class ProtoConcept < ::ProtocolBuffers::Message; end
@@ -80,6 +81,16 @@ module Gauge
       optional :int64, :executionTime, 8
       required :bool, :skipped, 9
       repeated :string, :skipErrors, 10
+      optional :string, :ID, 11
+      repeated ::Gauge::Messages::ProtoItem, :tearDownSteps, 12
+      optional ::Gauge::Messages::Span, :span, 13
+    end
+
+    class Span < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.Span"
+
+      required :int64, :start, 1
+      required :int64, :end, 2
     end
 
     class ProtoTableDrivenScenario < ::ProtocolBuffers::Message
@@ -185,6 +196,18 @@ module Gauge
     end
 
     class ProtoExecutionResult < ::ProtocolBuffers::Message
+      # forward declarations
+
+      # enums
+      module ErrorType
+        include ::ProtocolBuffers::Enum
+
+        set_fully_qualified_name "gauge.messages.ProtoExecutionResult.ErrorType"
+
+        ASSERTION = 1
+        VERIFICATION = 2
+      end
+
       set_fully_qualified_name "gauge.messages.ProtoExecutionResult"
 
       required :bool, :failed, 1
@@ -194,6 +217,7 @@ module Gauge
       optional :bytes, :screenShot, 5
       required :int64, :executionTime, 6
       repeated :string, :message, 7
+      optional ::Gauge::Messages::ProtoExecutionResult::ErrorType, :errorType, 8, :default => ::Gauge::Messages::ProtoExecutionResult::ErrorType::ASSERTION
     end
 
     class ProtoHookFailure < ::ProtocolBuffers::Message
