@@ -34,11 +34,16 @@ module Gauge
     end
 
     def self.add_step(parameterized_step_text, &block)
-      @@steps_map[parameterized_step_text] = block
+      @@steps_map[parameterized_step_text] = @@steps_map[parameterized_step_text] || []
+      @@steps_map[parameterized_step_text].push(block)
     end
 
     def self.get_step(parameterized_step_text)
-      @@steps_map[parameterized_step_text]
+      @@steps_map[parameterized_step_text][0]
+    end
+
+    def self.get_steps(parameterized_step_text)
+      @@steps_map[parameterized_step_text] || []
     end
 
     def self.add_step_text(parameterized_step_text, step_text)

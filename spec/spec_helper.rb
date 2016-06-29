@@ -25,3 +25,4 @@ SimpleCov.start{
 Dir.glob('lib/**/*.rb')
   .reject{|f| f.end_with?'gauge_runtime.rb'}
   .each{|f| require_relative "../#{f}"}
+include Gauge::Processors

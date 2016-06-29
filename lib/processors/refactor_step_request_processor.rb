@@ -22,15 +22,21 @@ module Gauge
     def refactor_step(message)
       oldStepValue = message.refactorRequest.oldStepValue.stepValue
       newStep = message.refactorRequest.newStepValue
-      stepBlock = MethodCache.get_step oldStepValue
       refactor_response = Messages::RefactorResponse.new(success: true)
       begin
+        stepBlock = get_step oldStepValue
         CodeParser.refactor stepBlock, message.refactorRequest.paramPositions, newStep.parameters, newStep.parameterizedStepValue
       rescue Exception => e
         refactor_response.success=false
         refactor_response.error=e.message
       end
       Messages::Message.new(:messageType => Messages::Message::MessageType::RefactorResponse, :messageId => message.messageId, refactorResponse: refactor_response)
+    end
+
+    def get_step(step_text)
+      blocks = MethodCache.get_steps step_text
+      raise "Multiple step implementations found for => '#{step_text}'" if blocks.length > 1
+      blocks[0]
     end
   end
 end
