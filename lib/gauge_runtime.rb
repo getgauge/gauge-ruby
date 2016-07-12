@@ -74,5 +74,6 @@ module Gauge
     Connector.make_connections()
     Executor.load_steps(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
     dispatch_messages(Connector.executionSocket)
+    exit(0)
   end
 end
