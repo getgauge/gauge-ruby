@@ -21,7 +21,13 @@ module Gauge
   # @api private
   module Executor
     def self.load_steps(steps_implementation_dir)
-      Dir["#{steps_implementation_dir}/**/*.rb"].each { |x| require x }
+      Dir["#{steps_implementation_dir}/**/*.rb"].each { |x|
+        begin
+          require x
+        rescue Exception => e
+          puts "[ERROR] Cannot import #{x}. Reason: #{e.message}"
+        end
+      }
     end
 
     def self.execute_step(step, args)
