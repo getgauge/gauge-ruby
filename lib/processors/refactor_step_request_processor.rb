@@ -26,6 +26,8 @@ module Gauge
       begin
         stepBlock = get_step oldStepValue
         CodeParser.refactor stepBlock, message.refactorRequest.paramPositions, newStep.parameters, newStep.parameterizedStepValue
+        file, _ = stepBlock.source_location
+        refactor_response.filesChanged = [file]
       rescue Exception => e
         refactor_response.success=false
         refactor_response.error=e.message

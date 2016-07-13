@@ -58,8 +58,7 @@ module Gauge
 
     def self.refactor(code, param_positions, new_param_values, new_step_text)
       source_code=code.source
-      ast = code_to_ast source_code
-      file, line = code.source_location
+      file, _ = code.source_location
       refactored_code=refactor_args(source_code, param_positions, new_param_values, new_step_text)
       tmp_file = Tempfile.new File.basename(file, ".rb")
       tmp_file.write(File.open(file, "r") { |f| f.read.gsub(source_code, refactored_code)})
