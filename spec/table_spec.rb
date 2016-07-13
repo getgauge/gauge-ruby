@@ -33,11 +33,7 @@ describe Gauge::Table do
       subject { Gauge::Table.new(proto_table)[0] }
 
       it { is_expected.to_not be_nil }
-      it { is_expected.to be_a Hash }
-
-      it 'has column names as keys' do
-        expect(subject.keys).to match_array columns
-      end
+      it { is_expected.to be_a Gauge::Row }
 
       it ".['column_name'] fetches respective row value" do
         expect(subject['Title']).to eq 'Go Programming'

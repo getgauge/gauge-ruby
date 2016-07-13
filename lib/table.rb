@@ -24,7 +24,7 @@ module Gauge
       @columns = protoTable.headers.cells
       @rows = []
       protoTable.rows.each do |row|
-          @rows.push row.cells
+          @rows.push Row.new(@columns, row.cells)
       end
     end
 
@@ -53,18 +53,38 @@ module Gauge
     #   table["Col1"] => ["Row1.Cell1", "Row1.Cell1", ...]
     #   table["Invalid_Col_Name"] => nil
     def [](index)
-      return row_values_as_hash(@rows[index]) if index.is_a?(Integer)
+      return @rows[index] if index.is_a?(Integer)
       column_values_as_array(index)
     end
 
     private
-    def row_values_as_hash(row)
-      row.nil? ? nil : Hash[@columns.zip(row)]
-    end
 
     def column_values_as_array(col_name)
       i = @columns.index col_name
       i.nil? ? nil : @rows.map { |r| r[i] }
+    end
+  end
+
+  # Holds a row of a table.
+  # @api public
+  class Row
+    # @api private
+    def initialize(columns, values)
+      @values = values
+      @columns = columns
+    end
+
+    # Gets the row cell.
+    # @param index Either cell index, or Column name.
+    # @return [string] value of the row cell
+    # @example
+    #   row[0] => 'value'
+    #   row['column'] => 'value'
+    #   row[i] => nil # when index is out of range
+    def [](index)
+      return @values[index] if index.is_a?(Integer)
+      columns_index = @columns.index(index)
+      columns_index.nil? ? nil : @values[columns_index]
     end
   end
 end
