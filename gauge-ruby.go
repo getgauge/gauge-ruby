@@ -128,7 +128,7 @@ func printUsage() {
 	os.Exit(2)
 }
 
-func runCommand(cmdName string, arg ...string) {
+func runCommand(cmdName ,errMsg string, arg ...string) {
 	cmd := exec.Command(cmdName, arg...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -137,7 +137,7 @@ func runCommand(cmdName string, arg ...string) {
 	//fmt.Println(cmd.Args)
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("Failed to start Gauge Ruby runner. %s\n", err.Error())
+		fmt.Printf(errMsg, err.Error())
 		os.Exit(1)
 	}
 }
@@ -157,7 +157,7 @@ func main() {
 	}
 	if *start {
 		os.Chdir(projectRoot)
-		runCommand("ruby", "-e", "require 'gauge_runtime'")
+		runCommand("ruby", "Ruby runner Failed. Reason: %s\n", "-e", "require 'gauge_runtime'")
 	} else if *initialize {
 		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createEnvDir, createRubyPropertiesFile, createOrAppendToGemFile}
 		for _, f := range funcs {
@@ -165,7 +165,7 @@ func main() {
 		}
 		os.Chdir(projectRoot)
 		fmt.Printf("Running bundle install.. in %s\n", projectRoot)
-		runCommand("bundle", "install")
+		runCommand("bundle", "bundle install Failed. Reason: %s\n", "install")
 	} else {
 		printUsage()
 	}
