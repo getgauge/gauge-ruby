@@ -96,5 +96,19 @@ describe Gauge::CodeParser do
       new_args = described_class.step_args_from_code(refactored_code)
       expect(new_args.to_s).to eq '[s(:arg, :arg_1)]'
     end
+
+    it 'ignores special characters in param names' do
+      param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
+      refactored_code = described_class.refactor_args(source_code_no_args, param_positions, %w(what@ who&1), 'say <what@> to <who&1>')
+      new_args = described_class.step_args_from_code(refactored_code)
+      expect(new_args.to_s).to eq '[s(:arg, :arg_what), s(:arg, :arg_who1)]'
+    end
+
+    it 'adds param index to param name if it only has a special character' do
+      param_positions=[Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
+      refactored_code = described_class.refactor_args(source_code_no_args, param_positions, %w(@ *), 'say <@> to <*>')
+      new_args = described_class.step_args_from_code(refactored_code)
+      expect(new_args.to_s).to eq '[s(:arg, :arg_0), s(:arg, :arg_1)]'
+    end
   end
 end

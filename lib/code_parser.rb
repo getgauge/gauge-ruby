@@ -32,9 +32,13 @@ module Gauge
     def self.refactor_args(code, param_positions, new_param_values, new_step_text)
       new_params = []
       args = step_args_from_code code
-      param_positions.sort_by!(&:newPosition).each { |e|
+      param_positions.sort_by!(&:newPosition).each.with_index { |e,i|
         if e.oldPosition == -1
-          new_params[e.newPosition] = "arg_#{new_param_values[e.newPosition].downcase.split.join('_')}"
+          param = Util.remove_special_chars new_param_values[e.newPosition].downcase.split.join('_')
+          if param == ''
+            param = i
+          end
+          new_params[e.newPosition] = "arg_#{param}"
         else
           new_params[e.newPosition] = args[e.oldPosition].children[0]
         end
