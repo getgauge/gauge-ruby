@@ -19,6 +19,7 @@ require 'parser/current'
 require 'method_source'
 require 'fileutils'
 require 'tempfile'
+require 'util'
 
 module Gauge
   # @api private

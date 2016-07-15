@@ -15,21 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-class Util
-  def self.valid_variable_name?(var_name)
-    Object.new.instance_variable_set ('@'+var_name).to_sym, nil
-    true
-  rescue NameError
-    !!(var_name =~ /^[0-9]+$/)
-  end
+module Gauge
+  class Util
+    def self.valid_variable_name?(var_name)
+      Object.new.instance_variable_set ('@'+var_name).to_sym, nil
+      true
+    rescue NameError
+      !!(var_name =~ /^[0-9]+$/)
+    end
 
-  def self.remove_special_chars(param)
-    new_param = ''
-    param.each_char { |c|
-      if valid_variable_name? c
-         new_param += c
+    def self.remove_special_chars(param)
+      new_param = ''
+      param.each_char { |c|
+        if valid_variable_name? c
+           new_param += c
+        end
+      }
+      return new_param
       end
-    }
-    return new_param
   end
 end
