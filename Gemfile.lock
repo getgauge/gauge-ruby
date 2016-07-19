@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gauge-ruby (0.2.1)
+    gauge-ruby (0.2.2)
       method_source (~> 0.8.2)
       os (= 0.9.6)
       parser (~> 2.3)
@@ -10,13 +10,13 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    ast (2.2.0)
+    ast (2.3.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     json (1.8.3)
     method_source (0.8.2)
     os (0.9.6)
-    parser (2.3.0.2)
+    parser (2.3.1.2)
       ast (~> 2.2)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
@@ -49,4 +49,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.11.2
+   1.12.5

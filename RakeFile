@@ -17,9 +17,79 @@
 
 require 'rspec/core/rake_task'
 require 'yard'
+require "bundler/gem_tasks"
+require 'zip'
+
+PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
 
 RSpec::Core::RakeTask.new(:spec)
 
 YARD::Rake::YardocTask.new
 
 task :default => [:spec]
+
+desc "Fetch github.com/getgauge/common"
+task :fetch_common do
+    sh "go get -u -d github.com/getgauge/common"
+end
+
+desc "Compile gauge-ruby.go for current OS/Arch"
+task :compile => [:fetch_common, :build] do
+    sh "go build -o pkg/gauge-ruby gauge-ruby.go"
+end
+
+desc "X-Compile gauge-ruby.go for all supported OS/Arch"
+task :xcompile => [:fetch_common, :build] do
+    run_for_all_os_arch {|os,arch|
+        sh "go build -o #{binary_name(os, arch)} gauge-ruby.go"
+    }
+end
+
+desc "Create installable packages for all supported OS/Arch"
+task :package_all => [:clobber, :xcompile] do
+    run_for_all_os_arch {|os, arch| create_package(os, arch)}
+end
+
+desc "Create current OS/Arch specific installable packages"
+task :package => [:clobber, :compile] do
+    create_package
+end
+
+desc "Install Gauge-ruby plugin"
+task :force_install => [:package] do
+    system "gauge --uninstall ruby --plugin-version #{PLUGIN_VERSION}"
+    system "gauge --install ruby -f deploy/gauge-ruby-#{PLUGIN_VERSION}.zip"
+end
+
+def create_package(os=nil, arch=nil)
+    dest_dir="gauge-ruby-#{PLUGIN_VERSION}-#{os}-#{arch}".chomp('-').chomp('-')
+    deploy_dir = "deploy/#{dest_dir}"
+    mkdir_p deploy_dir
+    ["skel", "ruby.json", "notice.md"].each {|f|
+        cp_r f, deploy_dir, verbose: true, preserve: true
+    }
+    bin_dir = "#{deploy_dir}/bin"
+    mkdir_p bin_dir
+    cp_r binary_name(os, arch), bin_dir, preserve: true, verbose: true
+    gems_deploy_dir="#{deploy_dir}/gems"
+    mkdir_p gems_deploy_dir
+    cp_r "pkg/gauge-ruby-#{PLUGIN_VERSION}.gem", gems_deploy_dir, verbose: true, preserve: true
+    Dir.chdir(deploy_dir){
+        system "zip -r ../#{dest_dir}.zip ."
+    }
+end
+
+def binary_name(os, arch)
+    os_subdir="/#{os}_#{arch}" unless os==nil
+    "pkg#{os_subdir}/gauge-ruby#{".exe" if os=="windows"}"
+end
+
+def run_for_all_os_arch
+    ["386", "amd64"].each {|arch|
+        ["darwin", "linux", "windows"].each {|os|
+            ENV["GOOS"] = os
+            ENV["GOARCH"] = arch
+            yield os, arch
+        }
+    }
+end

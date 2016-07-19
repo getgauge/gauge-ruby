@@ -7,3 +7,5 @@ logs/
 .yardoc/*
 doc/*
 coverage/
+pkg
+.DS_Store

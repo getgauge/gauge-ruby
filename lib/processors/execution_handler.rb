@@ -85,7 +85,7 @@ module Gauge
           }
         end
         return nil
-      end      
+      end
     end
   end
 end
