@@ -20,10 +20,19 @@ require 'yard'
 require "bundler/gem_tasks"
 require 'zip'
 
-PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
+def is_nightly_build
+    ENV['NIGHTLY']=='true'
+end
+
+def nightly_suffix
+    return ".nightly-#{DateTime.now.strftime('%Y-%m-%d')}" if is_nightly_build
+    ""
+end
+
+RAW_PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
+PLUGIN_VERSION=RAW_PLUGIN_VERSION + nightly_suffix
 
 RSpec::Core::RakeTask.new(:spec)
-
 YARD::Rake::YardocTask.new
 
 task :default => [:spec]
@@ -45,12 +54,12 @@ task :xcompile => [:fetch_common, :build] do
     }
 end
 
-desc "Create installable packages for all supported OS/Arch"
+desc "Create installable packages for all supported OS/Arch (set ENV['NIGHTLY'']=true for nightlies)"
 task :package_all => [:clobber, :xcompile] do
     run_for_all_os_arch {|os, arch| create_package(os, arch)}
 end
 
-desc "Create current OS/Arch specific installable packages"
+desc "Create current OS/Arch specific installable packages (set ENV['NIGHTLY'']=true for nightly)"
 task :package => [:clobber, :compile] do
     create_package
 end
@@ -71,9 +80,11 @@ def create_package(os=nil, arch=nil)
     bin_dir = "#{deploy_dir}/bin"
     mkdir_p bin_dir
     cp_r binary_name(os, arch), bin_dir, preserve: true, verbose: true
-    gems_deploy_dir="#{deploy_dir}/gems"
-    mkdir_p gems_deploy_dir
-    cp_r "pkg/gauge-ruby-#{PLUGIN_VERSION}.gem", gems_deploy_dir, verbose: true, preserve: true
+    if is_nightly_build
+        gems_deploy_dir="#{deploy_dir}/gems"
+        mkdir_p gems_deploy_dir
+        cp_r "pkg/gauge-ruby-#{RAW_PLUGIN_VERSION}.gem", gems_deploy_dir, verbose: true, preserve: true
+    end
     Dir.chdir(deploy_dir){
         system "zip -r ../#{dest_dir}.zip ."
     }
