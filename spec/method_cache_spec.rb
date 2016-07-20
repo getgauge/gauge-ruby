@@ -198,12 +198,18 @@ describe Gauge::MethodCache do
         it { is_expected.to eq "step_text" }
       end
     end
-    context 'step with more than one step text' do
+    context 'with more than one step text' do
       it 'has alias' do
         step 'bar', 'baz', &given_block
         %w(bar baz).each { |e|
           expect(subject.has_alias? e).to eq true
         }
+      end
+    end
+    context 'with :continue_on_failure => true' do
+      it 'should be marked as recoverable' do
+        step 'step_text', continue_on_failure: true, &given_block
+        expect(subject.is_recoverable? 'parameterized_step_text').to eq true
       end
     end
   end

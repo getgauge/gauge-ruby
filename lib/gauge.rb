@@ -91,11 +91,15 @@ module Kernel
   #   end
   # @param step_texts [string, ...] the step text(s)
   # @param block [block] the implementation block for given step.
-  def step(*step_texts, &block)
+  def step(*args, &block)
+    opts = args.select {|x| x.is_a? Hash}
+    step_texts = args-opts
+    opts = {:continue_on_failure => false}.merge opts.reduce({}, :merge)
     step_texts.each do |text|
       parameterized_step_text = Gauge::Connector.step_value(text)
       Gauge::MethodCache.add_step(parameterized_step_text, &block)
       Gauge::MethodCache.add_step_text(parameterized_step_text, text)
+      Gauge::MethodCache.set_recoverable(parameterized_step_text) if opts[:continue_on_failure]
     end
     Gauge::MethodCache.add_step_alias(*step_texts)
   end

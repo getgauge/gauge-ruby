@@ -70,10 +70,19 @@ module Gauge
       @@steps_text_map.values
     end
 
+    def self.is_recoverable?(parameterized_step_text)
+      @@recoverable_steps.include? parameterized_step_text
+    end
+
+    def self.set_recoverable(parameterized_step_text)
+      @@recoverable_steps.push parameterized_step_text
+    end
+
     private
     @@steps_map = Hash.new
     @@steps_text_map = Hash.new
     @@steps_with_aliases = []
+    @@recoverable_steps = []
     @@before_suite_hooks = []
     @@after_suite_hooks = []
     @@before_spec_hooks = []
