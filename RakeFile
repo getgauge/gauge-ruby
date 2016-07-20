@@ -86,7 +86,7 @@ def binary_name(os, arch)
 end
 
 def run_for_all_os_arch
-    ["386", "amd64"].each {|arch|
+    ["x86", "x86_64"].each {|arch|
         ["darwin", "linux", "windows"].each {|os|
             ENV["GOOS"] = os
             ENV["GOARCH"] = arch
