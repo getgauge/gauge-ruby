@@ -20,13 +20,8 @@ require 'yard'
 require "bundler/gem_tasks"
 require 'zip'
 
-def nightly_suffix
-    ENV['NIGHTLY']=='true' ? ".nightly-#{DateTime.now.strftime('%Y-%m-%d')}" : ""
-end
-
-RAW_PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
+PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
 ARCH_MAP = {"386" => "x86", "amd64" => "x86_64"}
-PLUGIN_VERSION=RAW_PLUGIN_VERSION + nightly_suffix
 
 RSpec::Core::RakeTask.new(:spec)
 YARD::Rake::YardocTask.new
@@ -50,12 +45,12 @@ task :xcompile => [:fetch_common, :build] do
     }
 end
 
-desc "Create installable packages for all supported OS/Arch (set ENV['NIGHTLY'']=true for nightlies)"
+desc "Create installable packages for all supported OS/Arch"
 task :package_all => [:clobber, :xcompile] do
     run_for_all_os_arch {|os, arch| create_package(os, arch)}
 end
 
-desc "Create current OS/Arch specific installable packages (set ENV['NIGHTLY'']=true for nightly)"
+desc "Create current OS/Arch specific installable packages"
 task :package => [:clobber, :compile] do
     create_package
 end
