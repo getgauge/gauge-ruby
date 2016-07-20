@@ -27,7 +27,7 @@ module Gauge
         if execution_error == nil
           return handle_pass message, time_elapsed_since(start_time)
         else
-          return handle_failure message, execution_error, time_elapsed_since(start_time)
+          return handle_failure message, execution_error, time_elapsed_since(start_time), false
         end
       end
 
@@ -36,11 +36,11 @@ module Gauge
         Messages::Message.new(:messageType => Messages::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
       end
 
-      def handle_failure(message, exception, execution_time)
+      def handle_failure(message, exception, execution_time, recoverable)
         execution_status_response = 
           Messages::ExecutionStatusResponse.new(
             :executionResult => Messages::ProtoExecutionResult.new(:failed => true,
-             :recoverableError => false,
+             :recoverableError => recoverable,
              :errorMessage => exception.message,
              :stackTrace => exception.backtrace.join("\n")+"\n",
              :executionTime => execution_time,

@@ -29,7 +29,7 @@ module Gauge
       begin
         Executor.execute_step step_text, args
       rescue Exception => e
-        return handle_failure message, e, time_elapsed_since(start_time)
+        return handle_failure message, e, time_elapsed_since(start_time), MethodCache.is_recoverable?(step_text)
       end
       handle_pass message, time_elapsed_since(start_time)
     end
