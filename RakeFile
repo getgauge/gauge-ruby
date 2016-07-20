@@ -20,13 +20,8 @@ require 'yard'
 require "bundler/gem_tasks"
 require 'zip'
 
-def is_nightly_build
-    ENV['NIGHTLY']=='true'
-end
-
 def nightly_suffix
-    return ".nightly-#{DateTime.now.strftime('%Y-%m-%d')}" if is_nightly_build
-    ""
+    ENV['NIGHTLY']=='true' ? ".nightly-#{DateTime.now.strftime('%Y-%m-%d')}" : ""
 end
 
 RAW_PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
@@ -80,11 +75,6 @@ def create_package(os=nil, arch=nil)
     bin_dir = "#{deploy_dir}/bin"
     mkdir_p bin_dir
     cp_r binary_name(os, arch), bin_dir, preserve: true, verbose: true
-    if is_nightly_build
-        gems_deploy_dir="#{deploy_dir}/gems"
-        mkdir_p gems_deploy_dir
-        cp_r "pkg/gauge-ruby-#{RAW_PLUGIN_VERSION}.gem", gems_deploy_dir, verbose: true, preserve: true
-    end
     Dir.chdir(deploy_dir){
         system "zip -r ../#{dest_dir}.zip ."
     }
