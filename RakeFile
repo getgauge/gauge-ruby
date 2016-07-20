@@ -25,6 +25,7 @@ def nightly_suffix
 end
 
 RAW_PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
+ARCH_MAP = {"386" => "x86", "amd64" => "x86_64"}
 PLUGIN_VERSION=RAW_PLUGIN_VERSION + nightly_suffix
 
 RSpec::Core::RakeTask.new(:spec)
@@ -66,7 +67,7 @@ task :force_install => [:package] do
 end
 
 def create_package(os=nil, arch=nil)
-    dest_dir="gauge-ruby-#{PLUGIN_VERSION}-#{os}-#{arch}".chomp('-').chomp('-')
+    dest_dir="gauge-ruby-#{PLUGIN_VERSION}-#{os}-#{ARCH_MAP[arch]}".chomp('-').chomp('-')
     deploy_dir = "deploy/#{dest_dir}"
     mkdir_p deploy_dir
     ["skel", "ruby.json", "notice.md"].each {|f|
@@ -81,12 +82,12 @@ def create_package(os=nil, arch=nil)
 end
 
 def binary_name(os, arch)
-    os_subdir="/#{os}_#{arch}" unless os==nil
+    os_subdir="/#{os}_#{ARCH_MAP[arch]}" unless os==nil
     "pkg#{os_subdir}/gauge-ruby#{".exe" if os=="windows"}"
 end
 
 def run_for_all_os_arch
-    ["x86", "x86_64"].each {|arch|
+    ["386", "amd64"].each {|arch|
         ["darwin", "linux", "windows"].each {|os|
             ENV["GOOS"] = os
             ENV["GOARCH"] = arch
