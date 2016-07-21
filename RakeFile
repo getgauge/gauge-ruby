@@ -62,7 +62,7 @@ task :force_install => [:package] do
 end
 
 def create_package(os=nil, arch=nil)
-    dest_dir="gauge-ruby-#{PLUGIN_VERSION}-#{os}.#{ARCH_MAP[arch]}".chomp('-').chomp('-')
+    dest_dir="gauge-ruby-#{PLUGIN_VERSION}-#{os}.#{ARCH_MAP[arch]}".chomp('.').chomp('-')
     deploy_dir = "deploy/#{dest_dir}"
     mkdir_p deploy_dir
     ["skel", "ruby.json", "notice.md"].each {|f|
@@ -74,6 +74,7 @@ def create_package(os=nil, arch=nil)
     Dir.chdir(deploy_dir){
         system "zip -r ../#{dest_dir}.zip ."
     }
+    rm_rf deploy_dir
 end
 
 def binary_name(os, arch)
