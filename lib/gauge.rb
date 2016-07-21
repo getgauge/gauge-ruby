@@ -89,7 +89,18 @@ module Kernel
   #       puts x.columns.join("|")
   #       x.rows.each { |r| puts r.join("|") }
   #   end
+  # @example
+  #   # for a given step say
+  #   # setting :continue_on_failure=>true in implementation will not break on failure of this step
+  #   # and will continue to execute the next step in the scenario
+  #   # * say "hello" to "gauge"
+  #   step 'say <what> to <who>', :continue_on_failure => false do |what, who|
+  #     puts "say #{what} to #{who}"
+  #     raise "Some Failure"
+  #   end
+  #
   # @param step_texts [string, ...] the step text(s)
+  # @param opts [Hash] pass :continue_on_failure => true to tell Gauge not to break on failure for this step
   # @param block [block] the implementation block for given step.
   def step(*args, &block)
     opts = args.select {|x| x.is_a? Hash}
