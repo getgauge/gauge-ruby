@@ -22,7 +22,8 @@ module Gauge
   class << self
     # @api public
     # Custom configuration for Gauge
-    # Lets you configure modules that need to be included at runtime.
+    # - Lets you configure modules that need to be included at runtime.
+    # - Lets you define a custom screengrabber, which will be invoked to capture screenshot on failure.
     # 
     # @example
     #   # Given there are two modules defined
@@ -37,6 +38,12 @@ module Gauge
     #   Gauge.configure do |config|
     #     config.include Foo, Bar
     #   end
+    # @example
+    #   # Default behaviour is to capture the active desktop at the point of failure.
+    #   # The implementation should return a byte array of the image.
+    #   Gauge.configure do |config|
+    #     config.screengrabber =  -> { return File.binread("/path/to/screenshot")}
+    #   end
     def configure(&block)
       Configuration.instance.instance_eval &block
     end
@@ -46,6 +53,13 @@ module Gauge
   class Configuration
     def initialize
       @includes=[]
+      @screengrabber = -> {
+          file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
+          `gauge_screenshot #{file.path}`
+          file_content = File.binread(file.path)
+          File.delete file
+          return file_content
+      }
     end
 
     def self.instance
@@ -58,6 +72,14 @@ module Gauge
 
     def includes
       @includes
+    end
+
+    def screengrabber
+      @screengrabber
+    end
+
+    def screengrabber=(block)
+      @screengrabber=block
     end
 
     def self.include_configured_modules

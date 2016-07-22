@@ -52,12 +52,9 @@ module Gauge
       def screenshot_bytes
         return nil if (ENV['screenshot_enabled'] || "").downcase == "false" || which("gauge_screenshot").nil?
         begin
-          file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
-          `gauge_screenshot #{file.path}`
-          file_content = File.binread(file.path)
-          File.delete file
-          return file_content
-        rescue
+          Configuration.instance.screengrabber.call
+        rescue Exception => e
+          puts e
           return nil
         end
       end

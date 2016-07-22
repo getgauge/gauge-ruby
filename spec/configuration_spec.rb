@@ -53,5 +53,20 @@ describe Gauge::Configuration do
         expect(Gauge::Configuration.instance.includes).to include Foo, Bar, Baz
       end
     end
+
+    describe 'config.screenshot' do
+      before(:each) {
+        Gauge.configure { |c|  c.screengrabber = -> { puts "foo" }}
+      }
+      it 'should set custom screengrabber' do
+        expect(Gauge::Configuration.instance.screengrabber.source).to include 'puts "foo"'
+      end
+    end
+  end
+
+  context ".screenshot" do
+    it "invokes gauge_screenshot by default" do
+      expect(Gauge::Configuration.new.screengrabber.source).to include "`gauge_screenshot"
+    end
   end
 end
