@@ -34,30 +34,41 @@ Build from Source
 * [Gauge](http://getgauge.io)
 
 
+Running `rake -T` should give the list of all tasks available. Below sections detail some commonly used tasks.
+
 ###Compiling
 
+To build gauge-ruby.xxx.gem and the gauge-ruby executable for current platform use:
 ````
-go run make.go
+rake compile
 ````
 
-For cross platform compilation (launcher)
+To build gauge-ruby.xxx.gem and the gauge-ruby for all supported platforms use:
 
 ````
-go run make.go --all-platforms
+rake xcompile
 ````
 
 ###Installing
 
 After compiling
 
+TO install the gauge-ruby.xxx.gem use:
+
 ````
-go run make.go --install
+rake install
 ````
+
+To install gauge-ruby plugin use (Note, this will uninstall gauge-ruby before installing the compiled version):
+
+```
+rake force_install
+```
 
 Installing to a CUSTOM_LOCATION
 
 ````
-go run make.go --install --plugin-prefix CUSTOM_LOCATION
+rake force_install[CUSTOM_LOCATION]
 ````
 
 ###Creating distributable
@@ -66,13 +77,13 @@ go run make.go --install --plugin-prefix CUSTOM_LOCATION
 Note: Run after compiling
 
 ````
-go run make.go --distro
+rake package
 ````
 
 For distributable across platforms os, windows and linux for bith x86 and x86_64
 
 ````
-go run make.go --distro --all-platforms
+rake package_all
 ````
 
 New distribution details need to be updated in the ruby-install.json file in  [gauge plugin repository](https://github.com/getgauge/gauge-repository) for a new verison update.

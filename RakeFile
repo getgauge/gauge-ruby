@@ -56,9 +56,10 @@ task :package => [:clobber, :compile] do
 end
 
 desc "Install Gauge-ruby plugin"
-task :force_install => [:package] do
-    system "gauge --uninstall ruby --plugin-version #{PLUGIN_VERSION}"
-    system "gauge --install ruby -f deploy/gauge-ruby-#{PLUGIN_VERSION}.zip"
+task :force_install, [:prefix] => [:package] do |t, args|
+    env_vars = (args[:prefix] || "") == "" ? {} : {"GAUGE_HOME" => args[:prefix]}
+    system env_vars, "gauge --uninstall ruby --plugin-version #{PLUGIN_VERSION}"
+    system env_vars, "gauge --install ruby -f deploy/gauge-ruby-#{PLUGIN_VERSION}.zip"
 end
 
 def create_package(os=nil, arch=nil)
