@@ -19,14 +19,25 @@ describe Gauge::Table do
   let(:proto_table) { double('proto_table') }
   let(:row1) { double('row1')}
   let(:row2) { double('row2')}
-  let(:columns) { %w(Title ISBN Author Price)
+  let(:columns) { %w(Title ISBN Author Price) }
+  let(:table_str) {
+    '|Title         |ISBN          |Author       |Price|\n'\
+    '|--------------|--------------|-------------|-----|\n'\
+    '|Go Programming|978-1453636671|John P. Baugh|25.00|\n'\
+    '|The Way to Go |978-1469769165|Ivo Balbaert |20.00|'
   }
+
   before {
     allow(proto_table).to receive_message_chain(:headers, :cells) { columns }
     allow(row1).to receive_message_chain(:cells) { ['Go Programming', '978-1453636671', 'John P. Baugh', '25.00']}
     allow(row2).to receive_message_chain(:cells) { ['The Way to Go', '978-1469769165', 'Ivo Balbaert', '20.00']}
     allow(proto_table).to receive_message_chain(:rows) {[row1, row2]}
   }
+
+  describe ".to_s" do
+      subject { Gauge::Table.new(proto_table).to_s }
+      it { is_expected.to eq table_str }
+  end
 
   context '[] accessed value' do
     context 'with integer key' do

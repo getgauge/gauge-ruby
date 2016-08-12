@@ -55,6 +55,18 @@ module Gauge
       column_values_as_array(index)
     end
 
+    # Converts the table to the markdown equivalent string
+    def to_s
+        col_str = Array.new(@rows.length+2, '')
+        @columns.each{|c|
+            col_vals = column_values_as_array(c).unshift c
+            col_width = col_vals.map(&:length).max
+            col_vals.insert(1, '-' * col_width)
+            col_str = col_str.zip(col_vals.map{|x| '|' + x.ljust(col_width)}).map { |x| x[0] + x[1]}
+        }
+        col_str.join('|\n') + '|'
+    end
+
     private
 
     def column_values_as_array(col_name)
