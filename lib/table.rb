@@ -67,10 +67,6 @@ module Gauge
         col_str.join('|\n') + '|'
     end
 
-    def inspect
-        to_s
-    end
-
     private
 
     def column_values_as_array(col_name)
