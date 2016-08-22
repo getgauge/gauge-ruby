@@ -50,7 +50,7 @@ module Gauge
       end
 
       def screenshot_bytes
-        return nil if (ENV['screenshot_enabled'] || "").downcase == "false" || which("gauge_screenshot").nil?
+        return nil if (ENV['screenshot_on_failure'] || "").downcase == "false" || which("gauge_screenshot").nil?
         begin
           Configuration.instance.screengrabber.call
         rescue Exception => e
