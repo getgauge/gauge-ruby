@@ -37,7 +37,7 @@ module Gauge
       end
 
       def handle_failure(message, exception, execution_time, recoverable)
-        execution_status_response = 
+        execution_status_response =
           Messages::ExecutionStatusResponse.new(
             :executionResult => Messages::ProtoExecutionResult.new(:failed => true,
              :recoverableError => recoverable,
