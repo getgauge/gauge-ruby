@@ -249,7 +249,7 @@ func copyGaugeRubyFiles(destDir string) error {
 	files["ruby.json"] = ""
 	files[filepath.Join("skel", "step_implementation.rb")] = "skel"
 	files[filepath.Join("skel", "Gemfile")] = "skel"
-	files[filepath.Join("skel", "ruby.properties")] = filepath.Join("skel", "env")
+	files[filepath.Join("skel", "env", "ruby.properties")] = filepath.Join("skel", "env")
 	files[filepath.Join("notice.md")] = ""
 
 	copyFiles(files, destDir)
@@ -282,7 +282,7 @@ func installGaugeRubyFiles(installPath string) error {
 	files["ruby.json"] = ""
 	files[filepath.Join("skel", "step_implementation.rb")] = filepath.Join("skel")
 	files[filepath.Join("skel", "Gemfile")] = filepath.Join("skel")
-	files[filepath.Join("skel", "ruby.properties")] = filepath.Join("skel", "env")
+	files[filepath.Join("skel", "env", "ruby.properties")] = filepath.Join("skel", "env")
 
 	copyFiles(files, rubyRunnerRelativePath)
 	return nil
