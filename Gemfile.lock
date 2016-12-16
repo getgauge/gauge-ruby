@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    gauge-ruby (0.3.1)
+    gauge-ruby (0.2.2)
       method_source (~> 0.8.2)
       os (= 0.9.6)
-      parser (~> 2.3)
+      parser (2.3.1.2)
       ruby-protocol-buffers (= 1.5.1)
 
 GEM
@@ -51,4 +51,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.13.4
+   1.12.5
