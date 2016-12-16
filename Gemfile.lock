@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gauge-ruby (0.3.2)
+    gauge-ruby (0.3.1)
       method_source (~> 0.8.2)
       os (= 0.9.6)
       parser (~> 2.3)
