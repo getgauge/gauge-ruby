@@ -47,7 +47,7 @@ module Gauge
     class ExecutionStatusResponse < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ExecutionStatusResponse"
 
-      required ::Gauge::Messages::ProtoExecutionResult, :executionResult, 1
+      optional ::Gauge::Messages::ProtoExecutionResult, :executionResult, 1
     end
 
     class ExecutionStartingRequest < ::ProtocolBuffers::Message
@@ -110,32 +110,32 @@ module Gauge
     class SpecInfo < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.SpecInfo"
 
-      required :string, :name, 1
-      required :string, :fileName, 2
-      required :bool, :isFailed, 3
+      optional :string, :name, 1
+      optional :string, :fileName, 2
+      optional :bool, :isFailed, 3
       repeated :string, :tags, 4
     end
 
     class ScenarioInfo < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ScenarioInfo"
 
-      required :string, :name, 1
-      required :bool, :isFailed, 2
+      optional :string, :name, 1
+      optional :bool, :isFailed, 2
       repeated :string, :tags, 3
     end
 
     class StepInfo < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.StepInfo"
 
-      required ::Gauge::Messages::ExecuteStepRequest, :step, 1
-      required :bool, :isFailed, 2
+      optional ::Gauge::Messages::ExecuteStepRequest, :step, 1
+      optional :bool, :isFailed, 2
     end
 
     class ExecuteStepRequest < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ExecuteStepRequest"
 
-      required :string, :actualStepText, 1
-      required :string, :parsedStepText, 2
+      optional :string, :actualStepText, 1
+      optional :string, :parsedStepText, 2
       optional :bool, :scenarioFailing, 3
       repeated ::Gauge::Messages::Parameter, :parameters, 4
     end
@@ -143,8 +143,8 @@ module Gauge
     class StepValidateRequest < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.StepValidateRequest"
 
-      required :string, :stepText, 1
-      required :int32, :numberOfParameters, 2
+      optional :string, :stepText, 1
+      optional :int32, :numberOfParameters, 2
     end
 
     class StepValidateResponse < ::ProtocolBuffers::Message
@@ -162,7 +162,7 @@ module Gauge
 
       set_fully_qualified_name "gauge.messages.StepValidateResponse"
 
-      required :bool, :isValid, 1
+      optional :bool, :isValid, 1
       optional :string, :errorMessage, 2
       optional ::Gauge::Messages::StepValidateResponse::ErrorType, :errorType, 3
     end
@@ -170,7 +170,7 @@ module Gauge
     class SuiteExecutionResult < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.SuiteExecutionResult"
 
-      required ::Gauge::Messages::ProtoSuiteResult, :suiteResult, 1
+      optional ::Gauge::Messages::ProtoSuiteResult, :suiteResult, 1
     end
 
     class StepNamesRequest < ::ProtocolBuffers::Message
@@ -202,22 +202,22 @@ module Gauge
     class ParameterPosition < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ParameterPosition"
 
-      required :int32, :oldPosition, 1
-      required :int32, :newPosition, 2
+      optional :int32, :oldPosition, 1
+      optional :int32, :newPosition, 2
     end
 
     class RefactorRequest < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.RefactorRequest"
 
-      required ::Gauge::Messages::ProtoStepValue, :oldStepValue, 1
-      required ::Gauge::Messages::ProtoStepValue, :newStepValue, 2
+      optional ::Gauge::Messages::ProtoStepValue, :oldStepValue, 1
+      optional ::Gauge::Messages::ProtoStepValue, :newStepValue, 2
       repeated ::Gauge::Messages::ParameterPosition, :paramPositions, 3
     end
 
     class RefactorResponse < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.RefactorResponse"
 
-      required :bool, :success, 1
+      optional :bool, :success, 1
       optional :string, :error, 2
       repeated :string, :filesChanged, 3
     end
@@ -225,15 +225,15 @@ module Gauge
     class StepNameRequest < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.StepNameRequest"
 
-      required :string, :stepValue, 1
+      optional :string, :stepValue, 1
     end
 
     class StepNameResponse < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.StepNameResponse"
 
-      required :bool, :isStepPresent, 1
+      optional :bool, :isStepPresent, 1
       repeated :string, :stepName, 2
-      required :bool, :hasAlias, 3
+      optional :bool, :hasAlias, 3
     end
 
     class UnsupportedMessageResponse < ::ProtocolBuffers::Message
@@ -279,8 +279,8 @@ module Gauge
 
       set_fully_qualified_name "gauge.messages.Message"
 
-      required ::Gauge::Messages::Message::MessageType, :messageType, 1
-      required :int64, :messageId, 2
+      optional ::Gauge::Messages::Message::MessageType, :messageType, 1
+      optional :int64, :messageId, 2
       optional ::Gauge::Messages::ExecutionStartingRequest, :executionStartingRequest, 3
       optional ::Gauge::Messages::SpecExecutionStartingRequest, :specExecutionStartingRequest, 4
       optional ::Gauge::Messages::SpecExecutionEndingRequest, :specExecutionEndingRequest, 5

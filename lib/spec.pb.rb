@@ -26,15 +26,27 @@ module Gauge
     class ProtoSpecResult < ::ProtocolBuffers::Message; end
     class ProtoStepValue < ::ProtocolBuffers::Message; end
 
+    # enums
+    module ExecutionStatus
+      include ::ProtocolBuffers::Enum
+
+      set_fully_qualified_name "gauge.messages.ExecutionStatus"
+
+      NOTEXECUTED = 0
+      PASSED = 1
+      FAILED = 2
+      SKIPPED = 3
+    end
+
     class ProtoSpec < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoSpec"
 
-      required :string, :specHeading, 1
+      optional :string, :specHeading, 1
       repeated ::Gauge::Messages::ProtoItem, :items, 2
-      required :bool, :isTableDriven, 3
+      optional :bool, :isTableDriven, 3
       optional ::Gauge::Messages::ProtoHookFailure, :preHookFailure, 4
       optional ::Gauge::Messages::ProtoHookFailure, :postHookFailure, 5
-      required :string, :fileName, 6
+      optional :string, :fileName, 6
       repeated :string, :tags, 7
     end
 
@@ -47,18 +59,18 @@ module Gauge
 
         set_fully_qualified_name "gauge.messages.ProtoItem.ItemType"
 
-        Step = 1
-        Comment = 2
-        Concept = 3
-        Scenario = 4
-        TableDrivenScenario = 5
-        Table = 6
-        Tags = 7
+        Step = 0
+        Comment = 1
+        Concept = 2
+        Scenario = 3
+        TableDrivenScenario = 4
+        Table = 5
+        Tags = 6
       end
 
       set_fully_qualified_name "gauge.messages.ProtoItem"
 
-      required ::Gauge::Messages::ProtoItem::ItemType, :itemType, 1
+      optional ::Gauge::Messages::ProtoItem::ItemType, :itemType, 1
       optional ::Gauge::Messages::ProtoStep, :step, 2
       optional ::Gauge::Messages::ProtoConcept, :concept, 3
       optional ::Gauge::Messages::ProtoScenario, :scenario, 4
@@ -71,39 +83,41 @@ module Gauge
     class ProtoScenario < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoScenario"
 
-      required :string, :scenarioHeading, 1
-      required :bool, :failed, 2
+      optional :string, :scenarioHeading, 1
+      optional :bool, :failed, 2
       repeated ::Gauge::Messages::ProtoItem, :contexts, 3
       repeated ::Gauge::Messages::ProtoItem, :scenarioItems, 4
       optional ::Gauge::Messages::ProtoHookFailure, :preHookFailure, 5
       optional ::Gauge::Messages::ProtoHookFailure, :postHookFailure, 6
       repeated :string, :tags, 7
       optional :int64, :executionTime, 8
-      required :bool, :skipped, 9
+      optional :bool, :skipped, 9
       repeated :string, :skipErrors, 10
       optional :string, :ID, 11
       repeated ::Gauge::Messages::ProtoItem, :tearDownSteps, 12
       optional ::Gauge::Messages::Span, :span, 13
+      optional ::Gauge::Messages::ExecutionStatus, :executionStatus, 14
     end
 
     class Span < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.Span"
 
-      required :int64, :start, 1
-      required :int64, :end, 2
+      optional :int64, :start, 1
+      optional :int64, :end, 2
     end
 
     class ProtoTableDrivenScenario < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoTableDrivenScenario"
 
-      repeated ::Gauge::Messages::ProtoScenario, :scenarios, 1
+      optional ::Gauge::Messages::ProtoScenario, :scenario, 1
+      optional :int32, :tableRowIndex, 2
     end
 
     class ProtoStep < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoStep"
 
-      required :string, :actualText, 1
-      required :string, :parsedText, 2
+      optional :string, :actualText, 1
+      optional :string, :parsedText, 2
       repeated ::Gauge::Messages::Fragment, :fragments, 3
       optional ::Gauge::Messages::ProtoStepExecutionResult, :stepExecutionResult, 4
     end
@@ -111,7 +125,7 @@ module Gauge
     class ProtoConcept < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoConcept"
 
-      required ::Gauge::Messages::ProtoStep, :conceptStep, 1
+      optional ::Gauge::Messages::ProtoStep, :conceptStep, 1
       repeated ::Gauge::Messages::ProtoItem, :steps, 2
       optional ::Gauge::Messages::ProtoStepExecutionResult, :conceptExecutionResult, 3
     end
@@ -131,13 +145,13 @@ module Gauge
 
         set_fully_qualified_name "gauge.messages.Fragment.FragmentType"
 
-        Text = 1
-        Parameter = 2
+        Text = 0
+        Parameter = 1
       end
 
       set_fully_qualified_name "gauge.messages.Fragment"
 
-      required ::Gauge::Messages::Fragment::FragmentType, :fragmentType, 1
+      optional ::Gauge::Messages::Fragment::FragmentType, :fragmentType, 1
       optional :string, :text, 2
       optional ::Gauge::Messages::Parameter, :parameter, 3
     end
@@ -151,16 +165,16 @@ module Gauge
 
         set_fully_qualified_name "gauge.messages.Parameter.ParameterType"
 
-        Static = 1
-        Dynamic = 2
-        Special_String = 3
-        Special_Table = 4
-        Table = 5
+        Static = 0
+        Dynamic = 1
+        Special_String = 2
+        Special_Table = 3
+        Table = 4
       end
 
       set_fully_qualified_name "gauge.messages.Parameter"
 
-      required ::Gauge::Messages::Parameter::ParameterType, :parameterType, 1
+      optional ::Gauge::Messages::Parameter::ParameterType, :parameterType, 1
       optional :string, :value, 2
       optional :string, :name, 3
       optional ::Gauge::Messages::ProtoTable, :table, 4
@@ -169,13 +183,13 @@ module Gauge
     class ProtoComment < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoComment"
 
-      required :string, :text, 1
+      optional :string, :text, 1
     end
 
     class ProtoTable < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoTable"
 
-      required ::Gauge::Messages::ProtoTableRow, :headers, 1
+      optional ::Gauge::Messages::ProtoTableRow, :headers, 1
       repeated ::Gauge::Messages::ProtoTableRow, :rows, 2
     end
 
@@ -191,7 +205,7 @@ module Gauge
       optional ::Gauge::Messages::ProtoExecutionResult, :executionResult, 1
       optional ::Gauge::Messages::ProtoHookFailure, :preHookFailure, 2
       optional ::Gauge::Messages::ProtoHookFailure, :postHookFailure, 3
-      required :bool, :skipped, 4
+      optional :bool, :skipped, 4
       optional :string, :skippedReason, 5
     end
 
@@ -204,27 +218,27 @@ module Gauge
 
         set_fully_qualified_name "gauge.messages.ProtoExecutionResult.ErrorType"
 
-        ASSERTION = 1
-        VERIFICATION = 2
+        ASSERTION = 0
+        VERIFICATION = 1
       end
 
       set_fully_qualified_name "gauge.messages.ProtoExecutionResult"
 
-      required :bool, :failed, 1
+      optional :bool, :failed, 1
       optional :bool, :recoverableError, 2
       optional :string, :errorMessage, 3
       optional :string, :stackTrace, 4
       optional :bytes, :screenShot, 5
-      required :int64, :executionTime, 6
+      optional :int64, :executionTime, 6
       repeated :string, :message, 7
-      optional ::Gauge::Messages::ProtoExecutionResult::ErrorType, :errorType, 8, :default => ::Gauge::Messages::ProtoExecutionResult::ErrorType::ASSERTION
+      optional ::Gauge::Messages::ProtoExecutionResult::ErrorType, :errorType, 8
     end
 
     class ProtoHookFailure < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoHookFailure"
 
-      required :string, :stackTrace, 1
-      required :string, :errorMessage, 2
+      optional :string, :stackTrace, 1
+      optional :string, :errorMessage, 2
       optional :bytes, :screenShot, 3
     end
 
@@ -234,35 +248,36 @@ module Gauge
       repeated ::Gauge::Messages::ProtoSpecResult, :specResults, 1
       optional ::Gauge::Messages::ProtoHookFailure, :preHookFailure, 2
       optional ::Gauge::Messages::ProtoHookFailure, :postHookFailure, 3
-      required :bool, :failed, 4
-      required :int32, :specsFailedCount, 5
+      optional :bool, :failed, 4
+      optional :int32, :specsFailedCount, 5
       optional :int64, :executionTime, 6
-      required :float, :successRate, 7
+      optional :float, :successRate, 7
       optional :string, :environment, 8
       optional :string, :tags, 9
-      required :string, :projectName, 10
-      required :string, :timestamp, 11
-      required :int32, :specsSkippedCount, 12
+      optional :string, :projectName, 10
+      optional :string, :timestamp, 11
+      optional :int32, :specsSkippedCount, 12
     end
 
     class ProtoSpecResult < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoSpecResult"
 
-      required ::Gauge::Messages::ProtoSpec, :protoSpec, 1
-      required :int32, :scenarioCount, 2
-      required :int32, :scenarioFailedCount, 3
-      required :bool, :failed, 4
+      optional ::Gauge::Messages::ProtoSpec, :protoSpec, 1
+      optional :int32, :scenarioCount, 2
+      optional :int32, :scenarioFailedCount, 3
+      optional :bool, :failed, 4
       repeated :int32, :failedDataTableRows, 5
       optional :int64, :executionTime, 6
-      required :bool, :skipped, 7
-      required :int32, :scenarioSkippedCount, 9
+      optional :bool, :skipped, 7
+      optional :int32, :scenarioSkippedCount, 9
+      repeated :int32, :skippedDataTableRows, 10
     end
 
     class ProtoStepValue < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ProtoStepValue"
 
-      required :string, :stepValue, 1
-      required :string, :parameterizedStepValue, 2
+      optional :string, :stepValue, 1
+      optional :string, :parameterizedStepValue, 2
       repeated :string, :parameters, 3
     end
 
