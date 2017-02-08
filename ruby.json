@@ -1,6 +1,6 @@
 {
     "id" : "ruby",
-    "version" : "0.3.2",
+    "version" : "0.4.0",
 	"description": "ruby support for gauge",
     "install": {
         "windows": [],
@@ -18,7 +18,7 @@
         "darwin": ["bin/gauge-ruby", "--init"]
     },
     "gaugeVersionSupport": {
-        "minimum": "0.6.0",
+        "minimum": "0.8.0",
         "maximum": ""
     }
 }
