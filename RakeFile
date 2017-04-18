@@ -19,6 +19,7 @@ require 'rspec/core/rake_task'
 require 'yard'
 require "bundler/gem_tasks"
 require 'zip'
+require 'rake/clean'
 
 PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
 ARCH_MAP = {"386" => "x86", "amd64" => "x86_64"}
