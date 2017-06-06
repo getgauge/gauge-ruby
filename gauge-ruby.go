@@ -123,12 +123,45 @@ func createRubyPropertiesFile() {
 	}
 }
 
+func createOrAppendGitignore() {
+	destFile := path.Join(projectRoot, ".gitignore")
+	srcFile := path.Join(pluginDir, skelDir, ".gitignore")
+	if !common.FileExists(srcFile) {
+		showMessage("error", fmt.Sprintf(".gitignore does not exist at %s. \n", srcFile))
+		return
+	}
+	if common.FileExists(destFile) {
+		showMessage("append", destFile)
+		f, err := os.OpenFile(destFile, os.O_APPEND|os.O_WRONLY, 0666)
+		if err != nil {
+			showMessage("error", fmt.Sprintf("Failed to open %s. %s \n", destFile, err.Error()))
+		}
+
+		defer f.Close()
+
+		srcFileContent, err := common.ReadFileContents(srcFile)
+		if err != nil {
+			showMessage("error", fmt.Sprintf("Failed to read %s. %s \n", srcFile, err.Error()))
+		}
+
+		if _, err = f.WriteString(srcFileContent); err != nil {
+			showMessage("error", fmt.Sprintf("Failed to append from %s. %s \n", srcFile, err.Error()))
+		}
+	} else {
+		showMessage("create", destFile)
+		err := common.CopyFile(srcFile, destFile)
+		if err != nil {
+			showMessage("error", fmt.Sprintf("Failed to copy %s. %s \n", srcFile, err.Error()))
+		}
+	}
+}
+
 func printUsage() {
 	flag.PrintDefaults()
 	os.Exit(2)
 }
 
-func runCommand(cmdName ,errMsg string, arg ...string) {
+func runCommand(cmdName string, arg ...string) error {
 	cmd := exec.Command(cmdName, arg...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -136,10 +169,7 @@ func runCommand(cmdName ,errMsg string, arg ...string) {
 	//TODO: move to logs
 	//fmt.Println(cmd.Args)
 	err := cmd.Run()
-	if err != nil {
-		fmt.Printf(errMsg, err.Error())
-		os.Exit(1)
-	}
+	return err
 }
 
 func main() {
@@ -157,15 +187,23 @@ func main() {
 	}
 	if *start {
 		os.Chdir(projectRoot)
-		runCommand("ruby", "Ruby runner Failed. Reason: %s\n", "-e", "require 'gauge_runtime'")
+		err = runCommand("ruby", "-e", "require 'gauge_runtime'")
+		if err != nil {
+			fmt.Printf("Ruby runner Failed. Reason: %s\n", err.Error())
+			os.Exit(1)
+		}
 	} else if *initialize {
-		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createEnvDir, createRubyPropertiesFile, createOrAppendToGemFile}
+		funcs := []initializerFunc{createStepImplementationsDirectory, createStepImplementationFile, createEnvDir, createRubyPropertiesFile, createOrAppendToGemFile, createOrAppendGitignore}
 		for _, f := range funcs {
 			f()
 		}
 		os.Chdir(projectRoot)
 		fmt.Printf("Running bundle install.. in %s\n", projectRoot)
-		runCommand("bundle", "bundle install Failed. Reason: %s\n", "install")
+		err = runCommand("bundle", "install")
+		if err != nil {
+			fmt.Printf("bundle install Failed. Reason: %s\n", err.Error())
+			fmt.Printf("Consider running `bundle install` again.\n")
+		}
 	} else {
 		printUsage()
 	}

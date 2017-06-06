@@ -250,6 +250,7 @@ func copyGaugeRubyFiles(destDir string) error {
 	files[filepath.Join("skel", "step_implementation.rb")] = "skel"
 	files[filepath.Join("skel", "Gemfile")] = "skel"
 	files[filepath.Join("skel", "env", "ruby.properties")] = filepath.Join("skel", "env")
+	files[filepath.Join("skel", ".gitignore")] = filepath.Join("skel")
 	files[filepath.Join("notice.md")] = ""
 
 	copyFiles(files, destDir)
