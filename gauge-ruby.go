@@ -126,33 +126,9 @@ func createRubyPropertiesFile() {
 func createOrAppendGitignore() {
 	destFile := path.Join(projectRoot, ".gitignore")
 	srcFile := path.Join(pluginDir, skelDir, ".gitignore")
-	if !common.FileExists(srcFile) {
-		showMessage("error", fmt.Sprintf(".gitignore does not exist at %s. \n", srcFile))
-		return
-	}
-	if common.FileExists(destFile) {
-		showMessage("append", destFile)
-		f, err := os.OpenFile(destFile, os.O_APPEND|os.O_WRONLY, 0666)
-		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to open %s. %s \n", destFile, err.Error()))
-		}
-
-		defer f.Close()
-
-		srcFileContent, err := common.ReadFileContents(srcFile)
-		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to read %s. %s \n", srcFile, err.Error()))
-		}
-
-		if _, err = f.WriteString(srcFileContent); err != nil {
-			showMessage("error", fmt.Sprintf("Failed to append from %s. %s \n", srcFile, err.Error()))
-		}
-	} else {
-		showMessage("create", destFile)
-		err := common.CopyFile(srcFile, destFile)
-		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to copy %s. %s \n", srcFile, err.Error()))
-		}
+	showMessage("create", destFile)
+	if err := common.AppendToFile(srcFile, destFile); err != nil {
+		showMessage("error", err.Error())
 	}
 }
 
