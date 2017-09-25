@@ -37,16 +37,27 @@ module Gauge
       end
 
       def handle_failure(message, exception, execution_time, recoverable)
+        project_dir = File.basename(Dir.getwd)
+        stacktrace =  exception.backtrace.select {|x| x.match(project_dir)}.join("\n")+"\n"
+        filepath =  stacktrace.split("\n").first.split(":").first
+        lineNo =  stacktrace.split("\n").first.split("/").last.split(":")[1]
+        code_snippet = '> ' + get_code_snippet(filepath, lineNo.to_i)
         execution_status_response =
           Messages::ExecutionStatusResponse.new(
             :executionResult => Messages::ProtoExecutionResult.new(:failed => true,
              :recoverableError => recoverable,
              :errorMessage => exception.message,
-             :stackTrace => exception.backtrace.join("\n")+"\n",
+             :stackTrace => code_snippet + stacktrace,
              :executionTime => execution_time,
              :screenShot => screenshot_bytes))
         Messages::Message.new(:messageType => Messages::Message::MessageType::ExecutionStatusResponse,
           :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+      end
+
+      def get_code_snippet(filename, number)
+        return nil if number < 1
+        line = File.readlines(filename)[number-1]
+        number.to_s + " | " + line.strip + "\n"
       end
 
       def screenshot_bytes
