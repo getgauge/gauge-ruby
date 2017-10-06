@@ -1,6 +1,8 @@
 os:
   - osx
   - linux
+env:
+  - GOPATH=/tmp GAUGE_SOURCE_BUILD=true
 addons:
   apt:
     sources:
@@ -23,8 +25,8 @@ rvm:
 script:
   - ls
   - pwd
-  - bundle exec rake spec compile install force_install
+  - bundle exec rake spec install force_install
   - git clone --depth=1 https://github.com/getgauge/gauge-tests
   - cd gauge-tests
   - gauge install
-  - TAGS="!unimplemented" ./starttests.sh ruby
+  - TAGS="ruby" ./starttests.sh ruby
