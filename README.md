@@ -1,15 +1,15 @@
+# gauge-ruby
 
-gauge-ruby
-==========
-
- [ ![Download Nightly](https://api.bintray.com/packages/gauge/gauge-ruby/Nightly/images/download.svg) ](https://bintray.com/gauge/gauge-ruby/Nightly/_latestVersion)
+[![Build Status](https://travis-ci.org/getgauge/gauge-ruby.svg?branch=master)](https://travis-ci.org/getgauge/gauge-java)
+[![Gem](https://img.shields.io/gem/v/gauge-ruby.svg)](https://rubygems.org/gems/gauge-ruby)
+[![Download Nightly](https://api.bintray.com/packages/gauge/gauge-ruby/Nightly/images/download.svg) ](https://bintray.com/gauge/gauge-ruby/Nightly/_latestVersion)
 
 This is the ruby [language plugin](http://getgauge.io/documentation/user/current/plugins/README.html) for [gauge](http://getgauge.io).
 
 It contains a launcher component (gauge-ruby.go) written in golang which is used to start the plugin from gauge.
 
-Install through Gauge
----------------------
+## Install through Gauge
+
 ````
 gauge --install ruby
 ````
@@ -20,13 +20,13 @@ gauge --install ruby --plugin-version 0.0.6
 ```
 
 ### Offline installation
+
 * Download the plugin from [Releases](https://github.com/getgauge/gauge-ruby/releases)
 ```
 gauge --install ruby --file gauge-ruby-0.0.6-linux.x86_64.zip
 ```
 
-Build from Source
------------------
+## Build from Source
 
 ### Requirements
 * [Golang](http://golang.org/)
@@ -36,9 +36,10 @@ Build from Source
 
 Running `rake -T` should give the list of all tasks available. Below sections detail some commonly used tasks.
 
-###Compiling
+### Compiling
 
 To build gauge-ruby.xxx.gem and the gauge-ruby executable for current platform use:
+
 ````
 rake compile
 ````
@@ -49,7 +50,7 @@ To build gauge-ruby.xxx.gem and the gauge-ruby for all supported platforms use:
 rake xcompile
 ````
 
-###Installing
+### Installing
 
 After compiling
 
@@ -71,7 +72,7 @@ Installing to a CUSTOM_LOCATION
 rake force_install[CUSTOM_LOCATION]
 ````
 
-###Creating distributable
+### Creating distributable
 
 
 Note: Run after compiling
@@ -88,14 +89,12 @@ rake package_all
 
 New distribution details need to be updated in the ruby-install.json file in  [gauge plugin repository](https://github.com/getgauge/gauge-repository) for a new verison update.
 
-License
--------
+## License
 
 ![GNU Public License version 3.0](http://www.gnu.org/graphics/gplv3-127x51.png)
 Gauge-Ruby is released under [GNU Public License version 3.0](http://www.gnu.org/licenses/gpl-3.0.txt)
 
-Copyright
----------
+## Copyright
 
 Copyright 2015 ThoughtWorks, Inc.
 
