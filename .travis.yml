@@ -21,7 +21,7 @@ rvm:
   - 2.3.0
 
 script:
-  - rake spec compile force_install
+  - bundle exec rake spec compile force_install
   - git clone --depth=1 https://github.com/getgauge/gauge-tests
   - cd gauge-tests
   - gauge install
