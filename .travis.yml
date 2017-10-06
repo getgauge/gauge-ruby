@@ -16,6 +16,9 @@ install:
 
 language: ruby
 
+rvm:
+  - 2.3.0
+
 script:
   - rake test
   - rake compile force_install

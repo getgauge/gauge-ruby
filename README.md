@@ -1,6 +1,6 @@
 # gauge-ruby
 
-[![Build Status](https://travis-ci.org/getgauge/gauge-ruby.svg?branch=master)](https://travis-ci.org/getgauge/gauge-java)
+[![Build Status](https://travis-ci.org/getgauge/gauge-ruby.svg?branch=master)](https://travis-ci.org/getgauge/gauge-ruby)
 [![Gem](https://img.shields.io/gem/v/gauge-ruby.svg)](https://rubygems.org/gems/gauge-ruby)
 [![Download Nightly](https://api.bintray.com/packages/gauge/gauge-ruby/Nightly/images/download.svg) ](https://bintray.com/gauge/gauge-ruby/Nightly/_latestVersion)
 
