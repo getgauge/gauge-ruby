@@ -13,6 +13,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./install_latest_gauge_nightly.sh; fi
   - gauge version
   - echo "gauge_repository_url = https://raw.githubusercontent.com/getgauge/gauge-nightly-repository/master/" >> $HOME/.gauge/config/gauge.properties
+  - bundle install
 
 language: ruby
 
@@ -20,8 +21,7 @@ rvm:
   - 2.3.0
 
 script:
-  - rake test
-  - rake compile force_install
+  - rake spec compile force_install
   - git clone --depth=1 https://github.com/getgauge/gauge-tests
   - cd gauge-tests
   - gauge install
