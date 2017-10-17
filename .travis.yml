@@ -2,7 +2,7 @@ os:
   - osx
   - linux
 env:
-  - GOPATH=/tmp GAUGE_SOURCE_BUILD=true
+  - GOPATH=/tmp GAUGE_SOURCE_BUILD=true GAUGE_TELEMETRY_ENABLED=false
 addons:
   apt:
     sources:
