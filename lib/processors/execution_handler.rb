@@ -38,10 +38,10 @@ module Gauge
 
       def handle_failure(message, exception, execution_time, recoverable)
         project_dir = File.basename(Dir.getwd)
-        stacktrace =  exception.backtrace.select {|x| x.match(project_dir)}.join("\n")+"\n"
+        stacktrace =  exception.backtrace.select {|x| x.match(project_dir) && !x.match(File.join(project_dir, "vendor"))}.join("\n")+"\n"
         filepath =  stacktrace.split("\n").first.split(":").first
-        lineNo =  stacktrace.split("\n").first.split("/").last.split(":")[1]
-        code_snippet = '> ' + get_code_snippet(filepath, lineNo.to_i)
+        line_number =  stacktrace.split("\n").first.split("/").last.split(":")[1]
+        code_snippet = "\n" + '> ' + get_code_snippet(filepath, line_number.to_i)
         execution_status_response =
           Messages::ExecutionStatusResponse.new(
             :executionResult => Messages::ProtoExecutionResult.new(:failed => true,
@@ -57,7 +57,7 @@ module Gauge
       def get_code_snippet(filename, number)
         return nil if number < 1
         line = File.readlines(filename)[number-1]
-        number.to_s + " | " + line.strip + "\n"
+        number.to_s + " | " + line.strip + "\n\n"
       end
 
       def screenshot_bytes
