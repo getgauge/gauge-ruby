@@ -11,19 +11,19 @@ It contains a launcher component (gauge-ruby.go) written in golang which is used
 ## Install through Gauge
 
 ````
-gauge --install ruby
+gauge install ruby
 ````
 
 * Installing specific version
 ```
-gauge --install ruby --plugin-version 0.0.6
+gauge install ruby --version 0.4.2
 ```
 
 ### Offline installation
 
 * Download the plugin from [Releases](https://github.com/getgauge/gauge-ruby/releases)
 ```
-gauge --install ruby --file gauge-ruby-0.0.6-linux.x86_64.zip
+gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
 ```
 
 ## Build from Source
