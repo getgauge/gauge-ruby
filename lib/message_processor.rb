@@ -18,7 +18,7 @@
 require_relative 'messages.pb'
 require_relative 'executor'
 require_relative 'table'
-Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file }
+Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}
 
 module Gauge
   # @api private

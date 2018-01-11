@@ -24,14 +24,24 @@ module Gauge
   module StaticLoader
     def self.load_files(dir)
       Dir["#{dir}/**/*.rb"].each do |x|
-        ast = CodeParser.code_to_ast File.read x
-        load_steps(x, ast) if ast
+        load_steps(x, CodeParser.code_to_ast(File.read(x)))
+      end
+    end
+
+    def self.traverse(ast, &visitor)
+      return if ast.class != Parser::AST::Node
+      if ast && step_node?(ast)
+        visitor.call(ast)
+      elsif ast&.children
+        ast.children.each {|node|
+          traverse(node, &visitor)
+        }
       end
     end
 
     def self.load_steps(file, ast)
-      ast.children.each do |node|
-        process_node(file, node) if step_node? node
+      traverse ast do |node|
+        process_node(file, node)
       end
     end
 

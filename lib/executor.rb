@@ -20,8 +20,8 @@ require_relative 'gauge'
 module Gauge
   # @api private
   module Executor
-    def self.load_steps(steps_implementation_dir)
-      Dir["#{steps_implementation_dir}/**/*.rb"].each do |x|
+    def self.load_steps(dir)
+      Dir["#{dir}/**/*.rb"].each do |x|
         begin
           ENV['GAUGE_STEP_FILE'] = x
           require x
