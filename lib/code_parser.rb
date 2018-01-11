@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 #
 # This file is part of Gauge-Ruby.
 #
@@ -46,17 +46,17 @@ module Gauge
       }
       buffer = Parser::Source::Buffer.new '(rewriter)'
       buffer.source=code
-      
+
       ast = code_to_ast(code)
       new_params_string = "|#{new_params.join(', ')}|".gsub("||", "") # no params = empty string
-      
+
       rewriter = Parser::Source::Rewriter.new(buffer)
         .replace(ast.children[0].location.expression, "step '#{new_step_text}'")
-      
+
       # hack, could not find an easy way to manipulate the ast to include arguments, when none existed originally.
       # it's just easy to add arguments via string substitution.
       return include_args(rewriter.process, new_params_string) if ast.children[1].location.expression.nil?
-      
+
       #insert new arguments
       rewriter.replace(ast.children[1].location.expression, new_params_string).process
     end

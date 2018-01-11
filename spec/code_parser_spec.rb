@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -34,6 +34,7 @@ describe Gauge::CodeParser do
 
   describe 'self.refactor_args' do
     before(:each) do
+      Gauge::MethodCache.clear
       @parsed_step = 'say {} to {}'
       @parsed_step_no_args = 'say hello'
 

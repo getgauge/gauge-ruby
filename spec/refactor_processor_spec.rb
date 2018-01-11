@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -19,15 +19,15 @@ describe Gauge::Processors do
   let(:given_block) { -> { puts 'foo' } }
   context '.get_step' do
     describe 'should return step block' do
-      before { Gauge::MethodCache.add_step 'step_text', &given_block }
+      before { Gauge::MethodCache.add_step 'step_text', {block: given_block} }
       it 'should get registered <block>' do
         expect(subject.get_step('step_text')).to eq given_block
       end
     end
 
     describe 'should throw exception when duplicate step impl' do
-      before { Gauge::MethodCache.add_step 'step_text', &given_block }
-      before { Gauge::MethodCache.add_step 'step_text', &given_block }
+      before { Gauge::MethodCache.add_step 'step_text', {block: given_block} }
+      before { Gauge::MethodCache.add_step 'step_text', {block: given_block} }
       it {
         expect { subject.get_step('step_text') }.to raise_error("Multiple step implementations found for => 'step_text'")
       }

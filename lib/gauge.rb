@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -32,7 +32,7 @@ module Kernel
     #         puts "I am the $1 hook"
     #      end
     def hook(hook)
-      define_method hook do |options={}, &block|
+      define_method hook do |options = {}, &block|
         Gauge::MethodCache.send("add_#{hook}_hook".to_sym, options, &block)
       end
     end
@@ -104,31 +104,32 @@ module Kernel
   # @param block [block] the implementation block for given step.
   def step(*args, &block)
     opts = args.select {|x| x.is_a? Hash}
-    step_texts = args-opts
-    opts = {:continue_on_failure => false}.merge opts.reduce({}, :merge)
+    step_texts = args - opts
+    opts = { continue_on_failure: false }.merge opts.reduce({}, :merge)
     step_texts.each do |text|
-      parameterized_step_text = Gauge::Connector.step_value(text)
-      Gauge::MethodCache.add_step(parameterized_step_text, &block)
-      Gauge::MethodCache.add_step_text(parameterized_step_text, text)
-      Gauge::MethodCache.set_recoverable(parameterized_step_text) if opts[:continue_on_failure]
+      step_value = Gauge::Connector.step_value(text)
+      si = { location: { file: ENV['GAUGE_STEP_FILE'], span: {} },
+             block: block, step_text: text,
+             recoverable: opts[:continue_on_failure] }
+      Gauge::MethodCache.add_step(step_value, si)
     end
     Gauge::MethodCache.add_step_alias(*step_texts)
   end
 
   # Invoked before execution of every step.
-  tagged_hook "before_step"
+  tagged_hook 'before_step'
   # Invoked after execution of every step.
-  tagged_hook "after_step"
+  tagged_hook 'after_step'
   # Invoked before execution of every specification.
-  tagged_hook "before_spec"
+  tagged_hook 'before_spec'
   # Invoked after execution of every specification.
-  tagged_hook "after_spec"
+  tagged_hook 'after_spec'
   # Invoked before execution of every scenario.
-  tagged_hook "before_scenario"
+  tagged_hook 'before_scenario'
   # Invoked after execution of every scenario.
-  tagged_hook "after_scenario"
+  tagged_hook 'after_scenario'
   # Invoked before execution of the entire suite.
-  hook "before_suite"
+  hook 'before_suite'
   # Invoked after execution of the entire suite.
-  hook "after_suite"
+  hook 'after_suite'
 end

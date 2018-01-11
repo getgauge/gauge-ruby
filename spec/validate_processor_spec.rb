@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -21,7 +21,7 @@ describe Gauge::Processors do
   context '.process_step_validation_request' do
     describe 'should return valid response' do
       before {
-        Gauge::MethodCache.add_step 'step_text1', &given_block
+        Gauge::MethodCache.add_step 'step_text1', {block: given_block}
         allow(message).to receive_message_chain(:stepValidateRequest, :stepText => 'step_text1')
         allow(message).to receive(:messageId) { 1 }
       }
@@ -32,8 +32,8 @@ describe Gauge::Processors do
 
     describe 'should return error response when duplicate step impl' do
       before {
-        Gauge::MethodCache.add_step 'step_text2', &given_block
-        Gauge::MethodCache.add_step 'step_text2', &given_block
+        Gauge::MethodCache.add_step 'step_text2', {block: given_block}
+        Gauge::MethodCache.add_step 'step_text2', {block: given_block}
         allow(message).to receive_message_chain(:stepValidateRequest, :stepText => 'step_text2')
         allow(message).to receive(:messageId) { 1 }
       }

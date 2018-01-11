@@ -22,15 +22,14 @@ module Gauge
       is_valid = true
       msg = ''
       err_type = nil
-      blocks = MethodCache.get_steps(step_validate_request.stepText)
-      if blocks.length > 1
-        is_valid = false
-        msg = "Multiple step implementations found for => '#{step_validate_request.stepText}'"
-        err_type = Messages::StepValidateResponse::ErrorType::DUPLICATE_STEP_IMPLEMENTATION
-      elsif blocks.length == 0
+      if !MethodCache.valid_step? step_validate_request.stepText
         is_valid = false
         msg = 'Step implementation not found'
         err_type = Messages::StepValidateResponse::ErrorType::STEP_IMPLEMENTATION_NOT_FOUND
+      elsif MethodCache.multiple_implementation?(step_validate_request.stepText)
+        is_valid = false
+        msg = "Multiple step implementations found for => '#{step_validate_request.stepText}'"
+        err_type = Messages::StepValidateResponse::ErrorType::DUPLICATE_STEP_IMPLEMENTATION
       end
       step_validate_response = Messages::StepValidateResponse.new(:isValid => is_valid, :errorMessage => msg, :errorType => err_type)
       Messages::Message.new(:messageType => Messages::Message::MessageType::StepValidateResponse,

@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -20,6 +20,7 @@ require 'protocol_buffers'
 
 require_relative 'messages.pb'
 require_relative 'executor'
+require_relative 'static_loader'
 require_relative 'connector'
 require_relative 'message_processor'
 
@@ -27,7 +28,7 @@ require_relative 'message_processor'
 module Gauge
   # @api private
   module Runtime
-    DEFAULT_IMPLEMENTATIONS_DIR_PATH = File.join(Dir.pwd, 'step_implementations')
+    DEFAULT_IMPLEMENTATIONS_DIR_PATH = File.join(ENV["GAUGE_PROJECT_ROOT"], 'step_implementations')
 
     def self.dispatch_messages(socket)
       while (!socket.eof?)
@@ -51,7 +52,7 @@ module Gauge
         write_message(socket, message)
       else
         response = MessageProcessor.process_message message
-        write_message(socket, response)
+        write_message(socket, response) if response
       end
     end
 
@@ -72,7 +73,7 @@ module Gauge
 
     STDOUT.sync = true
     Connector.make_connections()
-    Executor.load_steps(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
+    StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
     dispatch_messages(Connector.executionSocket)
     exit(0)
   end

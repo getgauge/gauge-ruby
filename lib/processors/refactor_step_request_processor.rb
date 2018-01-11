@@ -36,9 +36,9 @@ module Gauge
     end
 
     def get_step(step_text)
-      blocks = MethodCache.get_steps step_text
-      raise "Multiple step implementations found for => '#{step_text}'" if blocks.length > 1
-      blocks[0]
+      md = MethodCache.multiple_implementation? step_text
+      raise "Multiple step implementations found for => '#{step_text}'" if md
+      MethodCache.get_step_info(step_text)[:block]
     end
   end
 end
