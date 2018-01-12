@@ -16,14 +16,14 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 describe Gauge::Processors do
-  let(:given_block) { -> { puts 'foo' } }
+  let(:given_block) {-> {puts 'foo'}}
   let(:message) {double('message')}
   context '.process_step_validation_request' do
     describe 'should return valid response' do
       before {
         Gauge::MethodCache.add_step 'step_text1', {block: given_block}
         allow(message).to receive_message_chain(:stepValidateRequest, :stepText => 'step_text1')
-        allow(message).to receive(:messageId) { 1 }
+        allow(message).to receive(:messageId) {1}
       }
       it 'should get registered <block>' do
         expect(subject.process_step_validation_request(message).stepValidateResponse.isValid).to eq true
@@ -35,7 +35,7 @@ describe Gauge::Processors do
         Gauge::MethodCache.add_step 'step_text2', {block: given_block}
         Gauge::MethodCache.add_step 'step_text2', {block: given_block}
         allow(message).to receive_message_chain(:stepValidateRequest, :stepText => 'step_text2')
-        allow(message).to receive(:messageId) { 1 }
+        allow(message).to receive(:messageId) {1}
       }
       it {
         response = subject.process_step_validation_request(message).stepValidateResponse
@@ -46,13 +46,18 @@ describe Gauge::Processors do
 
     describe 'should return error response when no step impl' do
       before {
-        allow(message).to receive_message_chain(:stepValidateRequest, :stepText => 'step_text3')
-        allow(message).to receive(:messageId) { 1 }
+        allow(message).to receive_message_chain(:stepValidateRequest, :stepValue, :stepValue => 'step_text3 {}')
+        allow(message).to receive_message_chain(:stepValidateRequest, :stepValue, :parameterizedStepValue => 'step_text3 <hello>')
+        allow(message).to receive_message_chain(:stepValidateRequest, :stepValue, :parameters => ['hello'])
+        allow(message).to receive_message_chain(:stepValidateRequest, :stepText, 'step_text3 {}')
+        allow(message).to receive(:messageId) {1}
       }
       it {
+        expected_suggestion = "step 'step_text3 <arg0>' do |arg0|\n\traise 'Unimplemented Step';\nend"
         response = subject.process_step_validation_request(message).stepValidateResponse
         expect(response.isValid).to eq false
         expect(response.errorMessage).to eq 'Step implementation not found'
+        expect(response.suggestion).to eq expected_suggestion
       }
     end
   end
