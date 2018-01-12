@@ -189,7 +189,7 @@ describe Gauge::MethodCache do
       before { step 'step_text', &given_block }
       describe ".get_step('parameterized_step_text')" do
         it 'should get registered <block>' do
-          expect(subject.get_step('parameterized_step_text')).to eq given_block
+          expect(subject.get_step('parameterized_step_text')[:block]).to eq given_block
         end
       end
 

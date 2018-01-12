@@ -16,20 +16,24 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 describe Gauge::Processors do
-  let(:given_block) { -> { puts 'foo' } }
+  block = <<-EOS
+        step 'say <what> to <who>' do |what, who|
+          puts 'hello'
+        end
+  EOS
   context '.get_step' do
     describe 'should return step block' do
-      before { Gauge::MethodCache.add_step 'step_text', {block: given_block} }
+      before {Gauge::MethodCache.add_step 'step_text', {block: block}}
       it 'should get registered <block>' do
-        expect(subject.get_step('step_text')).to eq given_block
+        expect(subject.get_step('step_text')[:block]).to eq block
       end
     end
 
     describe 'should throw exception when duplicate step impl' do
-      before { Gauge::MethodCache.add_step 'step_text', {block: given_block} }
-      before { Gauge::MethodCache.add_step 'step_text', {block: given_block} }
+      before {Gauge::MethodCache.add_step 'step_text', {block: block}}
+      before {Gauge::MethodCache.add_step 'step_text', {block: block}}
       it {
-        expect { subject.get_step('step_text') }.to raise_error("Multiple step implementations found for => 'step_text'")
+        expect {subject.get_step('step_text')}.to raise_error("Multiple step implementations found for => 'step_text'")
       }
     end
   end

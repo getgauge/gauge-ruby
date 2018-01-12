@@ -62,7 +62,7 @@ module Gauge
     def self.process_node(file, node)
       step_text = node.children[0].children[2].children[0]
       step_value = Gauge::Connector.step_value step_text
-      si = {location: {file: file, span: node.loc}, step_text: step_text}
+      si = {location: {file: file, span: node.loc}, step_text: step_text, block: node}
       Gauge::MethodCache.add_step(step_value, si)
     end
   end

@@ -20,17 +20,16 @@ require_relative '../code_parser'
 module Gauge
   module Processors
     def refactor_step(message)
-      oldStepValue = message.refactorRequest.oldStepValue.stepValue
-      newStep = message.refactorRequest.newStepValue
+      request = message.refactorRequest
       refactor_response = Messages::RefactorResponse.new(success: true)
       begin
-        stepBlock = get_step oldStepValue
-        CodeParser.refactor stepBlock, message.refactorRequest.paramPositions, newStep.parameters, newStep.parameterizedStepValue
-        file, _ = stepBlock.source_location
+        step_info = get_step request.oldStepValue.stepValue
+        CodeParser.refactor step_info, request.paramPositions, request.newStepValue
+        file, _ = step_info[:locations][0][:file]
         refactor_response.filesChanged = [file]
       rescue Exception => e
-        refactor_response.success=false
-        refactor_response.error=e.message
+        refactor_response.success = false
+        refactor_response.error = e.message
       end
       Messages::Message.new(:messageType => Messages::Message::MessageType::RefactorResponse, :messageId => message.messageId, refactorResponse: refactor_response)
     end
@@ -38,7 +37,7 @@ module Gauge
     def get_step(step_text)
       md = MethodCache.multiple_implementation? step_text
       raise "Multiple step implementations found for => '#{step_text}'" if md
-      MethodCache.get_step_info(step_text)[:block]
+      MethodCache.get_step_info(step_text)
     end
   end
 end
