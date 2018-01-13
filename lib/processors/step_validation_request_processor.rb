@@ -18,18 +18,18 @@
 module Gauge
   module Processors
     def process_step_validation_request(message)
-      step_validate_request = message.stepValidateRequest
+      request = message.stepValidateRequest
       is_valid = true
       msg,suggestion = ''
       err_type = nil
-      if !MethodCache.valid_step? step_validate_request.stepText
+      if !MethodCache.valid_step? request.stepText
         is_valid = false
         msg = 'Step implementation not found'
         err_type = Messages::StepValidateResponse::ErrorType::STEP_IMPLEMENTATION_NOT_FOUND
-        suggestion = create_suggestion step_validate_request.stepValue
-      elsif MethodCache.multiple_implementation?(step_validate_request.stepText)
+        suggestion = create_suggestion(request.stepValue) unless request.stepValue.stepValue.empty?
+      elsif MethodCache.multiple_implementation?(request.stepText)
         is_valid = false
-        msg = "Multiple step implementations found for => '#{step_validate_request.stepText}'"
+        msg = "Multiple step implementations found for => '#{request.stepText}'"
         err_type = Messages::StepValidateResponse::ErrorType::DUPLICATE_STEP_IMPLEMENTATION
         suggestion = ''
       end
