@@ -56,13 +56,47 @@ module Gauge
     end
 
     def self.step_node?(node)
-      node.type == :block && node.children[0].children.size > 2 && node.children[0].children[1] == :step
+      node.type == :block && node.children[0].children[1] == :step
     end
 
     def self.process_node(file, node)
-      step_text = node.children[0].children[2].children[0]
-      step_value = Gauge::Connector.step_value step_text
-      si = {location: {file: file, span: node.loc}, step_text: step_text, block: node}
+      if aliases?(node)
+        load_aliases(file, node)
+      else
+        step_text = node.children[0].children[2].children[0]
+        step_value = Gauge::Connector.step_value step_text
+        load_step(file, step_value, step_text, node, {recoverable: recoverable?(node)})
+      end
+    end
+
+    def self.aliases?(node)
+      return node.children[0].children.size > 3 && node.children[0].children[3].type == :str
+    end
+
+    def self.load_aliases(file, node)
+      recoverable = false
+      if recoverable? node
+        aliases = node.children[0].children.slice(2, node.children[0].children.length() - 3)
+        recoverable = true
+      else
+        aliases = node.children[0].children.slice(2, node.children[0].children.length() - 2)
+      end
+      Gauge::MethodCache.add_step_alias(*aliases.map {|x| x.children[0]})
+      aliases.each {|x|
+        sv = Gauge::Connector.step_value x.children[0]
+        load_step(file, sv, x.children[0], node, {recoverable: recoverable})
+      }
+    end
+
+    def self.recoverable?(node)
+      size = node.children[0].children.length
+      options = node.children[0].children[size - 1]
+      options.type == :hash && options.children[0].children[0].children[0] == :continue_on_failure
+    end
+
+    def self.load_step(file, step_value, step_text, block, options)
+      si = {location: {file: file, span: block.loc}, step_text: step_text,
+            block: block, recoverable: options[:recoverable]}
       Gauge::MethodCache.add_step(step_value, si)
     end
   end
