@@ -18,7 +18,7 @@
 require_relative 'messages.pb'
 require_relative 'executor'
 require_relative 'table'
-Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file }
+Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}
 
 module Gauge
   # @api private
@@ -43,6 +43,8 @@ module Gauge
     @processors[Messages::Message::MessageType::ScenarioDataStoreInit] = method(:process_datastore_init)
     @processors[Messages::Message::MessageType::StepNameRequest] = method(:process_step_name_request)
     @processors[Messages::Message::MessageType::RefactorRequest] = method(:refactor_step)
+    @processors[Messages::Message::MessageType::CacheFileRequest] = method(:process_cache_file_request)
+    # @processors[Messages::Message::MessageType::StepPositionsRequest] = method(:process_step_positions_request)
 
     def self.is_valid_message(message)
       return @processors.has_key? message.messageType

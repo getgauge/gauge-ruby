@@ -16,7 +16,6 @@ module Gauge
     class GetAllStepsResponse < ::ProtocolBuffers::Message; end
     class SpecsRequest < ::ProtocolBuffers::Message; end
     class SpecsResponse < ::ProtocolBuffers::Message; end
-    class Error < ::ProtocolBuffers::Message; end
     class GetAllConceptsRequest < ::ProtocolBuffers::Message; end
     class GetAllConceptsResponse < ::ProtocolBuffers::Message; end
     class ConceptInfo < ::ProtocolBuffers::Message; end
@@ -27,7 +26,6 @@ module Gauge
     class ErrorResponse < ::ProtocolBuffers::Message; end
     class PerformRefactoringRequest < ::ProtocolBuffers::Message; end
     class PerformRefactoringResponse < ::ProtocolBuffers::Message; end
-    class ExtractConceptInfoRequest < ::ProtocolBuffers::Message; end
     class ExtractConceptRequest < ::ProtocolBuffers::Message; end
     class TextInfo < ::ProtocolBuffers::Message; end
     class Step < ::ProtocolBuffers::Message; end
@@ -93,14 +91,6 @@ module Gauge
       repeated ::Gauge::Messages::SpecsResponse::SpecDetail, :details, 1
     end
 
-    class Error < ::ProtocolBuffers::Message
-      set_fully_qualified_name "gauge.messages.Error"
-
-      optional :string, :filename, 1
-      optional :int32, :lineNumber, 2
-      optional :string, :message, 3
-    end
-
     class GetAllConceptsRequest < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.GetAllConceptsRequest"
 
@@ -164,12 +154,6 @@ module Gauge
       optional :bool, :success, 1
       repeated :string, :errors, 2
       repeated :string, :filesChanged, 3
-    end
-
-    class ExtractConceptInfoRequest < ::ProtocolBuffers::Message
-      set_fully_qualified_name "gauge.messages.ExtractConceptInfoRequest"
-
-      optional :string, :text, 1
     end
 
     class ExtractConceptRequest < ::ProtocolBuffers::Message

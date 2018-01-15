@@ -163,7 +163,7 @@ func main() {
 	}
 	if *start {
 		os.Chdir(projectRoot)
-		err = runCommand("ruby", "-e", "require 'gauge_runtime'")
+		err = runCommand("bundle", "exec", "ruby", "-e", "require 'gauge_runtime'")
 		if err != nil {
 			fmt.Printf("Ruby runner Failed. Reason: %s\n", err.Error())
 			os.Exit(1)

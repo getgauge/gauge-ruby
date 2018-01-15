@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -15,23 +15,29 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative "execution_handler"
-
+require_relative '../static_loader'
+require_relative '../method_cache'
 module Gauge
+  # @api private
   module Processors
-    include ExecutionHandler
-
-    def process_execute_step_request(message)
-      step_text = message.executeStepRequest.parsedStepText
-      parameters = message.executeStepRequest.parameters
-      args = create_param_values parameters
-      start_time= Time.now
-      begin
-        Executor.execute_step step_text, args
-      rescue Exception => e
-        return handle_failure message, e, time_elapsed_since(start_time), MethodCache.recoverable?(step_text)
+    def process_cache_file_request(message)
+      if !message.cacheFileRequest.isClosed
+        ast = CodeParser.code_to_ast(message.cacheFileRequest.content)
+        StaticLoader.reload_steps(message.cacheFileRequest.filePath, ast)
+      else
+        load_from_disk message.cacheFileRequest.filePath
       end
-      handle_pass message, time_elapsed_since(start_time)
+      nil
     end
+
+    def load_from_disk(f)
+      if File.file? f
+        ast = CodeParser.code_to_ast File.read(f)
+        StaticLoader.reload_steps(f, ast)
+      else
+        StaticLoader.remove_steps(f)
+      end
+    end
+
   end
 end

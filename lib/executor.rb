@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -20,22 +20,23 @@ require_relative 'gauge'
 module Gauge
   # @api private
   module Executor
-    def self.load_steps(steps_implementation_dir)
-      Dir["#{steps_implementation_dir}/**/*.rb"].each { |x|
+    def self.load_steps(dir)
+      Dir["#{dir}/**/*.rb"].each do |x|
         begin
+          ENV['GAUGE_STEP_FILE'] = x
           require x
         rescue Exception => e
           puts "[ERROR] Cannot import #{x}. Reason: #{e.message}"
         end
-      }
+      end
     end
 
     def self.execute_step(step, args)
-      block = MethodCache.get_step step
+      si = MethodCache.get_step_info step
       if args.size == 1
-        block.call(args[0])
+        si[:block].call(args[0])
       else
-        block.call(args)
+        si[:block].call(args)
       end
     end
 

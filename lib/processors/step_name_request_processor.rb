@@ -18,12 +18,18 @@
 module Gauge
   module Processors
     def process_step_name_request(message)
-      parsed_step_text = message.stepNameRequest.stepValue
-      is_valid = MethodCache.valid_step?(parsed_step_text)
-      step_text = is_valid ? MethodCache.get_step_text(parsed_step_text) : ""
-      has_alias = MethodCache.has_alias?(step_text)
-      get_step_name_response = Messages::StepNameResponse.new(isStepPresent: is_valid, stepName: [step_text], hasAlias: has_alias)
-      Messages::Message.new(:messageType => Messages::Message::MessageType::StepNameResponse, :messageId => message.messageId, :stepNameResponse => get_step_name_response)
+      step_value = message.stepNameRequest.stepValue
+      if MethodCache.valid_step?(step_value)
+        step_text = MethodCache.get_step_text(step_value)
+        has_alias = MethodCache.has_alias?(step_text)
+        loc = MethodCache.get_step_info(step_value)[:locations][0]
+        span = Gauge::Messages::Span.new(start: loc[:span].begin.line, end: loc[:span].end.line, startChar: loc[:span].begin.column, endChar: loc[:span].end.column)
+        r = Messages::StepNameResponse.new(isStepPresent: true, stepName: [step_text], hasAlias: has_alias, fileName: loc[:file], span: span)
+        Messages::Message.new(:messageType => Messages::Message::MessageType::StepNameResponse, :messageId => message.messageId, :stepNameResponse => r)
+      else
+        r = Messages::StepNameResponse.new(isStepPresent: false, stepName: [''], hasAlias: false, fileName: '', span: nil)
+        Messages::Message.new(:messageType => Messages::Message::MessageType::StepNameResponse, :messageId => message.messageId, :stepNameResponse => r)
+      end
     end
   end
 end

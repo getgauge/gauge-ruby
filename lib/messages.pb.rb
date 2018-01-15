@@ -37,6 +37,9 @@ module Gauge
     class StepNameRequest < ::ProtocolBuffers::Message; end
     class StepNameResponse < ::ProtocolBuffers::Message; end
     class UnsupportedMessageResponse < ::ProtocolBuffers::Message; end
+    class CacheFileRequest < ::ProtocolBuffers::Message; end
+    class StepPositionsRequest < ::ProtocolBuffers::Message; end
+    class StepPositionsResponse < ::ProtocolBuffers::Message; end
     class Message < ::ProtocolBuffers::Message; end
 
     class KillProcessRequest < ::ProtocolBuffers::Message
@@ -129,6 +132,7 @@ module Gauge
 
       optional ::Gauge::Messages::ExecuteStepRequest, :step, 1
       optional :bool, :isFailed, 2
+      optional :string, :stackTrace, 3
     end
 
     class ExecuteStepRequest < ::ProtocolBuffers::Message
@@ -145,6 +149,7 @@ module Gauge
 
       optional :string, :stepText, 1
       optional :int32, :numberOfParameters, 2
+      optional ::Gauge::Messages::ProtoStepValue, :stepValue, 3
     end
 
     class StepValidateResponse < ::ProtocolBuffers::Message
@@ -165,6 +170,7 @@ module Gauge
       optional :bool, :isValid, 1
       optional :string, :errorMessage, 2
       optional ::Gauge::Messages::StepValidateResponse::ErrorType, :errorType, 3
+      optional :string, :suggestion, 4
     end
 
     class SuiteExecutionResult < ::ProtocolBuffers::Message
@@ -234,12 +240,46 @@ module Gauge
       optional :bool, :isStepPresent, 1
       repeated :string, :stepName, 2
       optional :bool, :hasAlias, 3
+      optional :string, :fileName, 4
+      optional ::Gauge::Messages::Span, :span, 5
     end
 
     class UnsupportedMessageResponse < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.UnsupportedMessageResponse"
 
       optional :string, :message, 1
+    end
+
+    class CacheFileRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.CacheFileRequest"
+
+      optional :string, :content, 1
+      optional :string, :filePath, 2
+      optional :bool, :isClosed, 3
+    end
+
+    class StepPositionsRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.StepPositionsRequest"
+
+      optional :string, :filePath, 1
+    end
+
+    class StepPositionsResponse < ::ProtocolBuffers::Message
+      # forward declarations
+      class StepPosition < ::ProtocolBuffers::Message; end
+
+      set_fully_qualified_name "gauge.messages.StepPositionsResponse"
+
+      # nested messages
+      class StepPosition < ::ProtocolBuffers::Message
+        set_fully_qualified_name "gauge.messages.StepPositionsResponse.StepPosition"
+
+        optional :string, :stepValue, 1
+        optional ::Gauge::Messages::Span, :span, 2
+      end
+
+      repeated ::Gauge::Messages::StepPositionsResponse::StepPosition, :stepPositions, 1
+      optional :string, :error, 2
     end
 
     class Message < ::ProtocolBuffers::Message
@@ -275,6 +315,9 @@ module Gauge
         RefactorRequest = 21
         RefactorResponse = 22
         UnsupportedMessageResponse = 23
+        CacheFileRequest = 24
+        StepPositionsRequest = 25
+        StepPositionsResponse = 26
       end
 
       set_fully_qualified_name "gauge.messages.Message"
@@ -305,6 +348,9 @@ module Gauge
       optional ::Gauge::Messages::RefactorRequest, :refactorRequest, 24
       optional ::Gauge::Messages::RefactorResponse, :refactorResponse, 25
       optional ::Gauge::Messages::UnsupportedMessageResponse, :unsupportedMessageResponse, 26
+      optional ::Gauge::Messages::CacheFileRequest, :cacheFileRequest, 27
+      optional ::Gauge::Messages::StepPositionsRequest, :stepPositionsRequest, 28
+      optional ::Gauge::Messages::StepPositionsResponse, :stepPositionsResponse, 29
     end
 
   end

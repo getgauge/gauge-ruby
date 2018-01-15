@@ -18,7 +18,7 @@
 module Gauge
   class Util
     def self.valid_variable_name?(var_name)
-      Object.new.instance_variable_set ('@'+var_name).to_sym, nil
+      Object.new.instance_variable_set ('@' + var_name).to_sym, nil
       true
     rescue NameError
       !!(var_name =~ /^[0-9]+$/)
@@ -26,12 +26,16 @@ module Gauge
 
     def self.remove_special_chars(param)
       new_param = ''
-      param.each_char { |c|
+      param.each_char {|c|
         if valid_variable_name? c
-           new_param += c
+          new_param += c
         end
       }
       return new_param
-      end
+    end
+
+    def self.get_step_implementation_dir
+      return File.join(ENV["GAUGE_PROJECT_ROOT"], 'step_implementations')
+    end
   end
 end

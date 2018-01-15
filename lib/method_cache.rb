@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -19,39 +19,44 @@ require_relative 'configuration'
 module Gauge
   # @api private
   class MethodCache
-    ["before_step", "after_step", "before_spec", "after_spec", "before_scenario", "after_scenario", "before_suite", "after_suite"].each { |hook|
-      define_singleton_method "add_#{hook}_hook" do |options={}, &block|
+    %w[before_step after_step before_spec after_spec before_scenario after_scenario before_suite after_suite].each { |hook|
+      define_singleton_method "add_#{hook}_hook" do |options = {}, &block|
         options = {operator: "AND", tags: []}.merge options
-        self.class_variable_get("@@#{hook}_hooks").push :block=>  block, :options=> options
+        class_variable_get("@@#{hook}_hooks").push :block => block, :options => options
       end
       define_singleton_method "get_#{hook}_hooks" do
-        self.class_variable_get("@@#{hook}_hooks")
+        class_variable_get("@@#{hook}_hooks")
       end
     }
 
     def self.clear_hooks(hook)
-      self.class_variable_get("@@#{hook}_hooks").clear
+      class_variable_get("@@#{hook}_hooks").clear
     end
 
-    def self.add_step(parameterized_step_text, &block)
-      @@steps_map[parameterized_step_text] = @@steps_map[parameterized_step_text] || []
-      @@steps_map[parameterized_step_text].push(block)
+    def self.clear()
+      class_variable_get("@@steps_map").clear
     end
 
-    def self.get_step(parameterized_step_text)
-      @@steps_map[parameterized_step_text][0]
+    def self.add_step(step_value, step_info)
+      if @@steps_map.key? step_value
+        @@steps_map[step_value][:locations].push(step_info[:location])
+      else
+        @@steps_map[step_value] = {
+            locations: [step_info[:location]],
+            block: step_info[:block],
+            step_text: step_info[:step_text],
+            recoverable: step_info[:recoverable]
+        }
+      end
     end
 
-    def self.get_steps(parameterized_step_text)
-      @@steps_map[parameterized_step_text] || []
+    def self.get_step_info(step_value)
+      @@steps_map[step_value]
     end
 
-    def self.add_step_text(parameterized_step_text, step_text)
-      @@steps_text_map[parameterized_step_text] = step_text
-    end
 
-    def self.get_step_text(parameterized_step_text)
-      @@steps_text_map[parameterized_step_text]
+    def self.get_step_text(step_value)
+      @@steps_map[step_value][:step_text]
     end
 
     def self.add_step_alias(*step_texts)
@@ -63,26 +68,31 @@ module Gauge
     end
 
     def self.valid_step?(step)
-      @@steps_map.has_key? step
+      @@steps_map.key? step
     end
 
     def self.all_steps
-      @@steps_text_map.values
+      @@steps_map.values.map { |si| si[:step_text] }
     end
 
-    def self.is_recoverable?(parameterized_step_text)
-      @@recoverable_steps.include? parameterized_step_text
+    def self.recoverable?(step_value)
+      @@steps_map[step_value][:recoverable]
     end
 
-    def self.set_recoverable(parameterized_step_text)
-      @@recoverable_steps.push parameterized_step_text
+    def self.remove_steps(file)
+      @@steps_map.each_pair do |step, info|
+        l = info[:locations].reject { |loc| loc[:file] == file }
+        l.empty? ? @@steps_map.delete(step) : @@steps_map[step][:locations] = l
+      end
+    end
+
+    def self.multiple_implementation?(step_value)
+      @@steps_map[step_value][:locations].length > 1
     end
 
     private
     @@steps_map = Hash.new
-    @@steps_text_map = Hash.new
     @@steps_with_aliases = []
-    @@recoverable_steps = []
     @@before_suite_hooks = []
     @@after_suite_hooks = []
     @@before_spec_hooks = []

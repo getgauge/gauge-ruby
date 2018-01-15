@@ -1,4 +1,4 @@
-# Copyright 2015 ThoughtWorks, Inc.
+# Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
 
@@ -189,7 +189,7 @@ describe Gauge::MethodCache do
       before { step 'step_text', &given_block }
       describe ".get_step('parameterized_step_text')" do
         it 'should get registered <block>' do
-          expect(subject.get_step('parameterized_step_text')).to eq given_block
+          expect(subject.get_step('parameterized_step_text')[:block]).to eq given_block
         end
       end
 
@@ -207,9 +207,10 @@ describe Gauge::MethodCache do
       end
     end
     context 'with :continue_on_failure => true' do
+      before { subject.clear }
       it 'should be marked as recoverable' do
         step 'step_text', continue_on_failure: true, &given_block
-        expect(subject.is_recoverable? 'parameterized_step_text').to eq true
+        expect(subject.recoverable? 'parameterized_step_text').to eq true
       end
     end
   end
