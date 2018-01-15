@@ -31,8 +31,13 @@ module Gauge
     end
 
     def load_from_disk(f)
-      ast = CodeParser.code_to_ast File.read(f)
-      File.file? f ? StaticLoader.reload_steps(f, ast) : StaticLoader.remove_steps(f)
+      if File.file? f
+        ast = CodeParser.code_to_ast File.read(f)
+        StaticLoader.reload_steps(f, ast)
+      else
+        StaticLoader.remove_steps(f)
+      end
     end
+
   end
 end

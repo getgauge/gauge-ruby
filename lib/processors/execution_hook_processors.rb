@@ -19,13 +19,14 @@ require_relative "execution_handler"
 require_relative "../gauge_messages"
 require_relative "../executor"
 require_relative "../method_cache"
+require_relative "../util"
 module Gauge
   module Processors
     include ExecutionHandler
 
     def process_execution_start_request(message)
       Gauge::MethodCache.clear
-      Executor.load_steps(File.join(ENV["GAUGE_PROJECT_ROOT"], 'step_implementations'))
+      Executor.load_steps(Util.get_step_implementation_dir)
       handle_hooks_execution(MethodCache.get_before_suite_hooks, message, message.executionStartingRequest.currentExecutionInfo,false)
     end
 
