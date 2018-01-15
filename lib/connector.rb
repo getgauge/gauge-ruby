@@ -22,20 +22,15 @@ module Gauge
   # @api private
   module Connector
     GAUGE_PORT_ENV = "GAUGE_INTERNAL_PORT"
-    API_PORT_ENV = "GAUGE_API_PORT"
     HOST_NAME = 'localhost'
     @@executionSocket = nil
-    @@apiSocket = nil
 
-    def self.apiSocket
-      @@apiSocket
-    end
 
-    def self.executionSocket
+    def self.execution_socket
       @@executionSocket
     end
 
-    def self.make_connections
+    def self.make_connection
       @@executionSocket = TCPSocket.open(HOST_NAME, Runtime.port_from_env_variable(GAUGE_PORT_ENV))
     end
 
