@@ -33,6 +33,7 @@ module Gauge
     class SuiteDataStoreInitRequest < ::ProtocolBuffers::Message; end
     class ParameterPosition < ::ProtocolBuffers::Message; end
     class RefactorRequest < ::ProtocolBuffers::Message; end
+    class FileChanges < ::ProtocolBuffers::Message; end
     class RefactorResponse < ::ProtocolBuffers::Message; end
     class StepNameRequest < ::ProtocolBuffers::Message; end
     class StepNameResponse < ::ProtocolBuffers::Message; end
@@ -218,6 +219,14 @@ module Gauge
       optional ::Gauge::Messages::ProtoStepValue, :oldStepValue, 1
       optional ::Gauge::Messages::ProtoStepValue, :newStepValue, 2
       repeated ::Gauge::Messages::ParameterPosition, :paramPositions, 3
+      optional :bool, :saveChanges, 4
+    end
+
+    class FileChanges < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.FileChanges"
+
+      optional :string, :fileName, 1
+      optional :string, :fileContent, 2
     end
 
     class RefactorResponse < ::ProtocolBuffers::Message
@@ -226,6 +235,7 @@ module Gauge
       optional :bool, :success, 1
       optional :string, :error, 2
       repeated :string, :filesChanged, 3
+      repeated ::Gauge::Messages::FileChanges, :fileChanges, 4
     end
 
     class StepNameRequest < ::ProtocolBuffers::Message
