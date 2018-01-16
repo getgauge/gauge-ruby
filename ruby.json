@@ -20,5 +20,6 @@
     "gaugeVersionSupport": {
         "minimum": "0.8.0",
         "maximum": ""
-    }
+    },
+    "lspLangId" : "ruby"
 }
