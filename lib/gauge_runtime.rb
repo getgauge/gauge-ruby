@@ -73,9 +73,9 @@ module Gauge
     end
 
     STDOUT.sync = true
-    Connector.make_connections
+    Connector.make_connection
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
-    dispatch_messages(Connector.executionSocket)
+    dispatch_messages(Connector.execution_socket)
     exit(0)
   end
 end

@@ -18,7 +18,8 @@
         "darwin": ["bin/gauge-ruby", "--init"]
     },
     "gaugeVersionSupport": {
-        "minimum": "0.8.0",
+        "minimum": "0.9.8",
         "maximum": ""
-    }
+    },
+    "lspLangId" : "ruby"
 }

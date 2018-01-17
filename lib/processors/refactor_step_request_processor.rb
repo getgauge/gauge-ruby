@@ -24,9 +24,11 @@ module Gauge
       refactor_response = Messages::RefactorResponse.new(success: true)
       begin
         step_info = get_step request.oldStepValue.stepValue
-        CodeParser.refactor step_info, request.paramPositions, request.newStepValue
-        file, _ = step_info[:locations][0][:file]
+        refactored_code = CodeParser.refactor step_info, request.paramPositions, request.newStepValue
+        file = step_info[:locations][0][:file]
+        File.write file, refactored_code if request.saveChanges
         refactor_response.filesChanged = [file]
+        refactor_response.fileChanges = [Messages::FileChanges.new(:fileName => file, :fileContent => refactored_code)]
       rescue Exception => e
         refactor_response.success = false
         refactor_response.error = e.message

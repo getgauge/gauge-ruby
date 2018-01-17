@@ -80,8 +80,7 @@ module Gauge
 
     def self.refactor(step_info, param_positions, new_step)
       ast = code_to_ast File.read(step_info[:locations][0][:file])
-      refactored_code = refactor_args(step_info[:step_text], ast, param_positions, new_step.parameters, new_step.parameterizedStepValue)
-      File.write step_info[:locations][0][:file], refactored_code
+      refactor_args(step_info[:step_text], ast, param_positions, new_step.parameters, new_step.parameterizedStepValue)
     end
 
     private

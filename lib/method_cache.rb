@@ -90,6 +90,18 @@ module Gauge
       @@steps_map[step_value][:locations].length > 1
     end
 
+    def self.step_positions(file)
+      step_positions = []
+      @@steps_map.each_pair do |step, info|
+        info[:locations].each do |location|
+          if location[:file] == file
+            step_positions.push({stepValue: step, span: location[:span]})
+          end
+        end
+      end
+      step_positions
+    end
+
     private
     @@steps_map = Hash.new
     @@steps_with_aliases = []
