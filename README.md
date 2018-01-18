@@ -31,6 +31,7 @@ gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
 ### Requirements
 * [Golang](http://golang.org/)
 * [Ruby](https://www.ruby-lang.org/en/)
+* [Bundler](http://bundler.io/)
 * [Gauge](http://getgauge.io)
 
 
