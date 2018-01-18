@@ -35,7 +35,7 @@ module Gauge
     end
 
     def self.get_step_implementation_dir
-      return File.join(ENV["GAUGE_PROJECT_ROOT"], 'step_implementations')
+      return File.join(ENV["GAUGE_PROJECT_ROOT"].gsub(/\\/, "/"), 'step_implementations')
     end
   end
 end
