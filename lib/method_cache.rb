@@ -34,7 +34,7 @@ module Gauge
     end
 
     def self.clear()
-      class_variable_get("@@steps_map").clear
+      @@steps_map.clear
     end
 
     def self.add_step(step_value, step_info)
@@ -81,7 +81,7 @@ module Gauge
 
     def self.remove_steps(file)
       @@steps_map.each_pair do |step, info|
-        l = info[:locations].reject { |loc| loc[:file] == file }
+        l = info[:locations].reject { |loc| File.identical? loc[:file], file }
         l.empty? ? @@steps_map.delete(step) : @@steps_map[step][:locations] = l
       end
     end
