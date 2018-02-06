@@ -36,13 +36,13 @@ end
 
 desc "Compile gauge-ruby.go for current OS/Arch"
 task :compile => [:fetch_common, :build] do
-    sh "go build -o pkg/gauge-ruby gauge-ruby.go"
+    sh "go build -o pkg/#{binary_name} gauge-ruby.go"
 end
 
 desc "X-Compile gauge-ruby.go for all supported OS/Arch"
 task :xcompile => [:fetch_common, :build] do
     run_for_all_os_arch {|os,arch|
-        sh "go build -o #{binary_name(os, arch)} gauge-ruby.go"
+        sh "go build -o #{binary_path(os, arch)} gauge-ruby.go"
     }
 end
 
@@ -72,16 +72,23 @@ def create_package(os=nil, arch=nil)
     }
     bin_dir = "#{deploy_dir}/bin"
     mkdir_p bin_dir
-    cp_r binary_name(os, arch), bin_dir, preserve: true, verbose: true
-    Dir.chdir(deploy_dir){
-        system "zip -r ../#{dest_dir}.zip ."
-    }
+    cp_r binary_path(os, arch), bin_dir, preserve: true, verbose: true
+    zf = ZipFileGenerator.new(deploy_dir, "#{deploy_dir}.zip")
+    zf.write()
     rm_rf deploy_dir
 end
 
-def binary_name(os, arch)
+def binary_path(os, arch)
     os_subdir="/#{os}_#{ARCH_MAP[arch]}" unless os==nil
-    "pkg#{os_subdir}/gauge-ruby#{".exe" if os=="windows"}"
+    "pkg#{os_subdir}/#{binary_name}"
+end
+
+def binary_name
+    if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+        "gauge-ruby.exe"
+    else
+        "gauge-ruby"
+    end
 end
 
 def run_for_all_os_arch
@@ -92,4 +99,34 @@ def run_for_all_os_arch
             yield os, arch
         }
     }
+end
+
+class ZipFileGenerator
+    def initialize(inputDir, outputFile)
+        @inputDir = inputDir
+        @outputFile = outputFile
+    end
+
+    def write()
+        entries = Dir.entries(@inputDir); entries.delete("."); entries.delete("..")
+        io = Zip::File.open(@outputFile, Zip::File::CREATE);
+        writeEntries(entries, "", io)
+        io.close();
+    end
+
+    private
+    def writeEntries(entries, path, io)
+        entries.each { |e|
+            zipFilePath = path == "" ? e : File.join(path, e)
+            diskFilePath = File.join(@inputDir, zipFilePath)
+            puts "Deflating " + diskFilePath
+            if  File.directory?(diskFilePath)
+                io.mkdir(zipFilePath)
+                subdir =Dir.entries(diskFilePath); subdir.delete("."); subdir.delete("..")
+                writeEntries(subdir, zipFilePath, io)
+            else
+                io.get_output_stream(zipFilePath) { |f| f.puts(File.open(diskFilePath, "rb").read())}
+            end
+        }
+    end
 end
