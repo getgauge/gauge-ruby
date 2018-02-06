@@ -23,11 +23,12 @@ describe Gauge::StaticLoader do
       subject.clear
     }
 
-    it 'should pupuplate method cache' do
+    it 'should populate method cache' do
       file = 'foo.rb'
       content = "step 'foo <vowels>' do |v|\nend"
       ast = Gauge::CodeParser.code_to_ast content
       Gauge::StaticLoader.load_steps(file, ast)
+
       expect(subject.valid_step? 'foo {}').to eq true
       expect(subject.get_step_text 'foo {}').to eq 'foo <vowels>'
     end
@@ -37,6 +38,7 @@ describe Gauge::StaticLoader do
       content = "step 'foo <vowels>','bar <vowels>' do |v|\nend"
       ast = Gauge::CodeParser.code_to_ast content
       Gauge::StaticLoader.load_steps(file, ast)
+
       expect(subject.valid_step? 'foo {}').to eq true
       expect(subject.get_step_text 'foo {}').to eq 'foo <vowels>'
       expect(subject.valid_step? 'bar {}').to eq true
@@ -48,6 +50,7 @@ describe Gauge::StaticLoader do
       content = "step 'foo <bar>', :continue_on_failure => true  do |v|\nend"
       ast = Gauge::CodeParser.code_to_ast content
       Gauge::StaticLoader.load_steps(file, ast)
+
       expect(subject.valid_step? 'foo {}').to eq true
       expect(subject.recoverable? 'foo {}').to eq true
     end
@@ -57,15 +60,12 @@ describe Gauge::StaticLoader do
       content = "step 'foo <vowels>','bar <vowels>','hey <vowels>', :continue_on_failure => true do |v|\nend"
       ast = Gauge::CodeParser.code_to_ast content
       Gauge::StaticLoader.load_steps(file, ast)
-      expect(subject.valid_step? 'foo {}').to eq true
-      expect(subject.recoverable? 'foo {}').to eq true
-      expect(subject.has_alias? 'foo <vowels>').to eq true
-      expect(subject.valid_step? 'bar {}').to eq true
-      expect(subject.recoverable? 'bar {}').to eq true
-      expect(subject.has_alias? 'bar <vowels>').to eq true
-      expect(subject.valid_step? 'hey {}').to eq true
-      expect(subject.recoverable? 'hey {}').to eq true
-      expect(subject.has_alias? 'hey <vowels>').to eq true
+
+      {'foo {}' => 'foo <vowels>', 'bar {}' => 'bar <vowels>', 'hey {}' => 'hey <vowels>'}.each {|k,v|
+        expect(subject.valid_step? k).to eq true
+        expect(subject.recoverable? k).to eq true
+        expect(subject.has_alias? v).to eq true
+      }
     end
 
     it 'should not load empty steps' do
@@ -73,20 +73,18 @@ describe Gauge::StaticLoader do
       content = "step '' do |v|\nend"
       ast = Gauge::CodeParser.code_to_ast content
       Gauge::StaticLoader.load_steps(file, ast)
+
       expect(subject.valid_step? 'foo {}').to eq false
     end
 
     it 'reload a given file' do
       file = 'foo.rb'
-      content = "step 'foo <vowels>' do |v|\nend"
-      ast = Gauge::CodeParser.code_to_ast content
+      ast = Gauge::CodeParser.code_to_ast "step 'foo <vowels>' do |v|\nend"
       Gauge::StaticLoader.load_steps(file, ast)
-      expect(subject.valid_step? 'foo {}').to eq true
-      expect(subject.get_step_text 'foo {}').to eq 'foo <vowels>'
-      content = "step 'hello <vowels>' do |v|\nend"
-      ast = Gauge::CodeParser.code_to_ast content
+      ast = Gauge::CodeParser.code_to_ast "step 'hello <vowels>' do |v|\nend"
       Gauge::StaticLoader.reload_steps(file, ast)
-      expect(subject.valid_step? 'foo {}').to eq false
+
+      expect(subject.valid_step? 'foo {}').to eq true
       expect(subject.valid_step? 'hello {}').to eq true
     end
   end
