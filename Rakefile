@@ -88,6 +88,7 @@ end
 def binary_name(os)
     if os == "windows" || (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
         return "gauge-ruby.exe"
+    end
     "gauge-ruby"
 end
 
