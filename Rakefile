@@ -37,14 +37,12 @@ end
 desc "Compile gauge-ruby.go for current OS/Arch"
 task :compile => [:fetch_common, :build] do
     sh "go build -o pkg/#{binary_name(nil)} gauge-ruby.go"
-    FileUtils.chmod 0755, "pkg/#{binary_name((nil))}"
 end
 
 desc "X-Compile gauge-ruby.go for all supported OS/Arch"
 task :xcompile => [:fetch_common, :build] do
     run_for_all_os_arch {|os,arch|
         sh "go build -o #{binary_path(os, arch)} gauge-ruby.go"
-        FileUtils.chmod 0755, binary_path(os, arch)
     }
 end
 
@@ -68,13 +66,13 @@ end
 def create_package(os=nil, arch=nil)
     dest_dir="gauge-ruby-#{PLUGIN_VERSION}-#{os}.#{ARCH_MAP[arch]}".chomp('.').chomp('-')
     deploy_dir = "deploy/#{dest_dir}"
-    mkdir_p deploy_dir
+    bin_dir = "#{deploy_dir}/bin"
+    mkdir_p bin_dir
     ["skel", "ruby.json", "notice.md"].each {|f|
         cp_r f, deploy_dir, verbose: true, preserve: true
     }
-    bin_dir = "#{deploy_dir}/bin"
-    mkdir_p bin_dir
     cp_r binary_path(os, arch), bin_dir, preserve: true, verbose: true
+    chmod_r 0755, deploy_dir
     zf = ZipFileGenerator.new(deploy_dir, "#{deploy_dir}.zip")
     zf.write()
     rm_rf deploy_dir
