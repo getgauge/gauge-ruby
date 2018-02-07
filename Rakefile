@@ -72,9 +72,14 @@ def create_package(os=nil, arch=nil)
         cp_r f, deploy_dir, verbose: true, preserve: true
     }
     cp_r binary_path(os, arch), bin_dir, preserve: true, verbose: true
-    chmod_R 0755, deploy_dir
-    zf = ZipFileGenerator.new(deploy_dir, "#{deploy_dir}.zip")
-    zf.write()
+    if windows?
+        zf = ZipFileGenerator.new(deploy_dir, "#{deploy_dir}.zip")
+        zf.write()
+    else
+        Dir.chdir(deploy_dir){
+            system "zip -r ../#{dest_dir}.zip ."
+        }
+    end
     rm_rf deploy_dir
 end
 
@@ -84,10 +89,14 @@ def binary_path(os, arch)
 end
 
 def binary_name(os)
-    if os == "windows" || (os==nil && (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil)
+    if os == "windows" || (os==nil && windows?)
         return "gauge-ruby.exe"
     end
     "gauge-ruby"
+end
+
+def windows?
+    (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
 end
 
 def run_for_all_os_arch
