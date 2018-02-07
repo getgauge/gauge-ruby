@@ -36,8 +36,8 @@ end
 
 desc "Compile gauge-ruby.go for current OS/Arch"
 task :compile => [:fetch_common, :build] do
-    sh "go build -o pkg/#{binary_name} gauge-ruby.go"
-    FileUtils.chmod 0755, "pkg/#{binary_name}"
+    sh "go build -o pkg/#{binary_name(nil)} gauge-ruby.go"
+    FileUtils.chmod 0755, "pkg/#{binary_name((nil))}"
 end
 
 desc "X-Compile gauge-ruby.go for all supported OS/Arch"
