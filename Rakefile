@@ -82,15 +82,13 @@ end
 
 def binary_path(os, arch)
     os_subdir="/#{os}_#{ARCH_MAP[arch]}" unless os==nil
-    "pkg#{os_subdir}/#{binary_name}"
+    "pkg#{os_subdir}/#{binary_name(os)}"
 end
 
-def binary_name
-    if (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
-        "gauge-ruby.exe"
-    else
-        "gauge-ruby"
-    end
+def binary_name(os)
+    if os == "windows" || (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+        return "gauge-ruby.exe"
+    "gauge-ruby"
 end
 
 def run_for_all_os_arch
