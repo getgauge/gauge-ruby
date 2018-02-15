@@ -26,7 +26,7 @@ module Gauge
       end
 
       def add_stub_impl_code_to_file_content(filePath, codes)
-        content = codes.reduce { |acc, elem| acc + "\n" + elem}
+        content = codes.join("\n")
         if File.file?(filePath)
             fileContent = File.read(filePath)
             content = fileContent + "\n" + content
