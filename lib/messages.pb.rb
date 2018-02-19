@@ -41,6 +41,9 @@ module Gauge
     class CacheFileRequest < ::ProtocolBuffers::Message; end
     class StepPositionsRequest < ::ProtocolBuffers::Message; end
     class StepPositionsResponse < ::ProtocolBuffers::Message; end
+    class ImplementationFileListRequest < ::ProtocolBuffers::Message; end
+    class ImplementationFileListResponse < ::ProtocolBuffers::Message; end
+    class StubImplementationCodeRequest < ::ProtocolBuffers::Message; end
     class Message < ::ProtocolBuffers::Message; end
 
     class KillProcessRequest < ::ProtocolBuffers::Message
@@ -134,6 +137,7 @@ module Gauge
       optional ::Gauge::Messages::ExecuteStepRequest, :step, 1
       optional :bool, :isFailed, 2
       optional :string, :stackTrace, 3
+      optional :string, :errorMessage, 4
     end
 
     class ExecuteStepRequest < ::ProtocolBuffers::Message
@@ -292,6 +296,24 @@ module Gauge
       optional :string, :error, 2
     end
 
+    class ImplementationFileListRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.ImplementationFileListRequest"
+
+    end
+
+    class ImplementationFileListResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.ImplementationFileListResponse"
+
+      repeated :string, :implementationFilePaths, 1
+    end
+
+    class StubImplementationCodeRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.StubImplementationCodeRequest"
+
+      optional :string, :implementationFilePath, 1
+      repeated :string, :codes, 2
+    end
+
     class Message < ::ProtocolBuffers::Message
       # forward declarations
 
@@ -328,6 +350,10 @@ module Gauge
         CacheFileRequest = 24
         StepPositionsRequest = 25
         StepPositionsResponse = 26
+        ImplementationFileListRequest = 27
+        ImplementationFileListResponse = 28
+        StubImplementationCodeRequest = 29
+        FileChanges = 30
       end
 
       set_fully_qualified_name "gauge.messages.Message"
@@ -361,6 +387,10 @@ module Gauge
       optional ::Gauge::Messages::CacheFileRequest, :cacheFileRequest, 27
       optional ::Gauge::Messages::StepPositionsRequest, :stepPositionsRequest, 28
       optional ::Gauge::Messages::StepPositionsResponse, :stepPositionsResponse, 29
+      optional ::Gauge::Messages::ImplementationFileListRequest, :implementationFileListRequest, 30
+      optional ::Gauge::Messages::ImplementationFileListResponse, :implementationFileListResponse, 31
+      optional ::Gauge::Messages::StubImplementationCodeRequest, :stubImplementationCodeRequest, 32
+      optional ::Gauge::Messages::FileChanges, :fileChanges, 33
     end
 
   end
