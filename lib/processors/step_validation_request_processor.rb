@@ -43,7 +43,7 @@ module Gauge
       count = -1
       step_text = step_value.stepValue.gsub(/{}/) {"<arg#{count += 1}>"}
       params = step_value.parameters.map.with_index {|v,i| "arg#{i}"}.join ", "
-      "step '#{step_text}' do |#{params}|\n\traise 'Unimplemented Step';\nend"
+      "step '#{step_text}' do |#{params}|\n\traise 'Unimplemented Step'\nend"
     end
   end
 end

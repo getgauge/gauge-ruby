@@ -18,20 +18,16 @@
 module Gauge
     module Processors
       def process_stub_implementation_code_request(message)
-        filePath = message.stubImplementationCodeRequest.implementationFilePath
+        file_path = message.stubImplementationCodeRequest.implementationFilePath
         codes = message.stubImplementationCodeRequest.codes
-        content = add_stub_impl_code_to_file_content(filePath, codes)
-        r = Messages::FileChanges.new(:fileName => filePath, :fileContent => content)
+        content = add_stub_impl_code_to_file_content(file_path, codes)
+        r = Messages::FileChanges.new(:fileName => file_path, :fileContent => content)
         Messages::Message.new(:messageType => Messages::Message::MessageType::FileChanges, :messageId => message.messageId, :fileChanges => r)
       end
 
-      def add_stub_impl_code_to_file_content(filePath, codes)
-        content = codes.join("\n")
-        if File.file?(filePath)
-            fileContent = File.read(filePath)
-            content = fileContent + "\n" + content
-        end
-        content
+      def add_stub_impl_code_to_file_content(file_path, codes)
+        codes.unshift(File.read(file_path)) if File.file?(file_path)
+        codes.reduce {|acc, code| "#{acc.strip}\n\n#{code.strip}"}
       end
     end
   end

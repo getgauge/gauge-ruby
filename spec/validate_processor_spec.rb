@@ -53,7 +53,7 @@ describe Gauge::Processors do
         allow(message).to receive(:messageId) {1}
       }
       it {
-        expected_suggestion = "step 'step_text3 <arg0>' do |arg0|\n\traise 'Unimplemented Step';\nend"
+        expected_suggestion = "step 'step_text3 <arg0>' do |arg0|\n\traise 'Unimplemented Step'\nend"
         response = subject.process_step_validation_request(message).stepValidateResponse
         expect(response.isValid).to eq false
         expect(response.errorMessage).to eq 'Step implementation not found'

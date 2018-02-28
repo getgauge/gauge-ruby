@@ -24,7 +24,7 @@ describe Gauge::Processors do
         allow(message).to receive_message_chain(:stubImplementationCodeRequest, :codes => ['code1', 'code2'])
         allow(message).to receive(:messageId) {1}
         fileContent = subject.process_stub_implementation_code_request(message).fileChanges.fileContent
-        expect(fileContent).to eq "code1\ncode2"
+        expect(fileContent).to eq "code1\n\ncode2"
       end
     end
   end
