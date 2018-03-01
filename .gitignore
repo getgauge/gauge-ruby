@@ -9,3 +9,4 @@ doc/*
 coverage/
 pkg
 .DS_Store
+vendor

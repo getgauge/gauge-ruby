@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
     s.add_runtime_dependency 'parser', '~> 2.3'
     s.add_runtime_dependency 'unparser', '~> 0.2.6'
     s.add_runtime_dependency 'method_source', '~> 0.8.2'
-
+    s.add_runtime_dependency 'ruby-debug-ide', '~>0.6.0'
+    s.add_runtime_dependency 'debase', '~>0.2.2'
     s.required_ruby_version = ">= 1.9" if s.respond_to? :required_ruby_version=
     s.required_rubygems_version = ">= 1.9" if s.respond_to? :required_rubygems_version=
 end

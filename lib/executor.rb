@@ -14,13 +14,18 @@
 
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
-
+require 'ruby-debug-ide'
 require_relative 'gauge'
 
 module Gauge
+  class DebugOptions
+    attr_accessor :host, :port, :notify_dispatcher
+  end
+
   # @api private
   module Executor
     def self.load_steps(dir)
+      start_debugger
       Dir["#{dir}/**/*.rb"].each do |x|
         begin
           ENV['GAUGE_STEP_FILE'] = x
@@ -28,6 +33,16 @@ module Gauge
         rescue Exception => e
           puts "[ERROR] Cannot import #{x}. Reason: #{e.message}"
         end
+      end
+    end
+
+    def self.start_debugger
+      if ENV['DEBUGGING']
+        options = DebugOptions.new
+        options.host = '127.0.0.1'
+        options.port = ENV["DEBUG_PORT"].to_i
+        options.notify_dispatcher = false
+        Debugger.prepare_debugger(options)
       end
     end
 
