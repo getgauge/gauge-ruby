@@ -34,21 +34,22 @@ gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
 * [Bundler](http://bundler.io/)
 * [Gauge](http://getgauge.io)
 
+Run `bundle install` to install all required gems.
 
-Running `rake -T` should give the list of all tasks available. Below sections detail some commonly used tasks.
+Running `bundle exec rake -T` should give the list of all tasks available. Below sections detail some commonly used tasks.
 
 ### Compiling
 
 To build gauge-ruby.xxx.gem and the gauge-ruby executable for current platform use:
 
 ````
-rake compile
+bundle exec rake compile
 ````
 
 To build gauge-ruby.xxx.gem and the gauge-ruby for all supported platforms use:
 
 ````
-rake xcompile
+bundle exec rake xcompile
 ````
 
 ### Installing
@@ -58,19 +59,19 @@ After compiling
 TO install the gauge-ruby.xxx.gem use:
 
 ````
-rake install
+bundle exec rake install
 ````
 
 To install gauge-ruby plugin use (Note, this will uninstall gauge-ruby before installing the compiled version):
 
 ```
-rake force_install
+bundle exec rake force_install
 ```
 
 Installing to a CUSTOM_LOCATION
 
 ````
-rake force_install[CUSTOM_LOCATION]
+bundle exec rake force_install[CUSTOM_LOCATION]
 ````
 
 ### Creating distributable
@@ -79,13 +80,13 @@ rake force_install[CUSTOM_LOCATION]
 Note: Run after compiling
 
 ````
-rake package
+bundle exec rake package
 ````
 
 For distributable across platforms os, windows and linux for bith x86 and x86_64
 
 ````
-rake package_all
+bundle exec rake package_all
 ````
 
 New distribution details need to be updated in the ruby-install.json file in  [gauge plugin repository](https://github.com/getgauge/gauge-repository) for a new verison update.
