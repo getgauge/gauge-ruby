@@ -20,11 +20,17 @@ describe Gauge::Processors do
   context '.process_stub_implementation_code_request' do
     describe 'should return filechanges' do
       it 'should give concatenated implementations for non existent file' do
-        allow(message).to receive_message_chain(:stubImplementationCodeRequest, :implementationFilePath => '')
-        allow(message).to receive_message_chain(:stubImplementationCodeRequest, :codes => ['code1', 'code2'])
+        allow(message).to receive_message_chain(:stubImplementationCodeRequest, implementationFilePath: "")
+        allow(message).to receive_message_chain(:stubImplementationCodeRequest, codes: ["code1", "code2"])
         allow(message).to receive(:messageId) {1}
-        fileContent = subject.process_stub_implementation_code_request(message).fileChanges.fileContent
-        expect(fileContent).to eq "code1\n\ncode2"
+
+        span = Gauge::Messages::Span.new(start: 0, end: 0, startChar: 0, endChar: 0)
+        text_diff = Gauge::Messages::TextDiff.new(span: span, content: "code1\ncode2")
+
+        response = subject.process_stub_implementation_code_request(message)
+
+        expect(response.fileDiff.textDiffs[0]).to eq text_diff
+        expect(response.fileDiff.filePath).to eq ''
       end
     end
   end

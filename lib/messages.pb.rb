@@ -44,6 +44,8 @@ module Gauge
     class ImplementationFileListRequest < ::ProtocolBuffers::Message; end
     class ImplementationFileListResponse < ::ProtocolBuffers::Message; end
     class StubImplementationCodeRequest < ::ProtocolBuffers::Message; end
+    class TextDiff < ::ProtocolBuffers::Message; end
+    class FileDiff < ::ProtocolBuffers::Message; end
     class Message < ::ProtocolBuffers::Message; end
 
     class KillProcessRequest < ::ProtocolBuffers::Message
@@ -314,6 +316,20 @@ module Gauge
       repeated :string, :codes, 2
     end
 
+    class TextDiff < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.TextDiff"
+
+      optional ::Gauge::Messages::Span, :span, 1
+      optional :string, :content, 2
+    end
+
+    class FileDiff < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.FileDiff"
+
+      optional :string, :filePath, 1
+      repeated ::Gauge::Messages::TextDiff, :textDiffs, 2
+    end
+
     class Message < ::ProtocolBuffers::Message
       # forward declarations
 
@@ -353,7 +369,7 @@ module Gauge
         ImplementationFileListRequest = 27
         ImplementationFileListResponse = 28
         StubImplementationCodeRequest = 29
-        FileChanges = 30
+        FileDiff = 30
       end
 
       set_fully_qualified_name "gauge.messages.Message"
@@ -390,7 +406,7 @@ module Gauge
       optional ::Gauge::Messages::ImplementationFileListRequest, :implementationFileListRequest, 30
       optional ::Gauge::Messages::ImplementationFileListResponse, :implementationFileListResponse, 31
       optional ::Gauge::Messages::StubImplementationCodeRequest, :stubImplementationCodeRequest, 32
-      optional ::Gauge::Messages::FileChanges, :fileChanges, 33
+      optional ::Gauge::Messages::FileDiff, :fileDiff, 33
     end
 
   end

@@ -16,18 +16,26 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 module Gauge
-    module Processors
-      def process_stub_implementation_code_request(message)
-        file_path = message.stubImplementationCodeRequest.implementationFilePath
-        codes = message.stubImplementationCodeRequest.codes
-        content = add_stub_impl_code_to_file_content(file_path, codes)
-        r = Messages::FileChanges.new(:fileName => file_path, :fileContent => content)
-        Messages::Message.new(:messageType => Messages::Message::MessageType::FileChanges, :messageId => message.messageId, :fileChanges => r)
-      end
+  module Processors
+    def process_stub_implementation_code_request(message)
+      file_path = message.stubImplementationCodeRequest.implementationFilePath
+      codes = message.stubImplementationCodeRequest.codes
+      content = File.file?(file_path) ? File.read(file_path) : ''
+      span = create_span content, codes
+      text_diffs = [Messages::TextDiff.new(span: span, content: codes.join("\n"))]
+      file_diff = Messages::FileDiff.new(filePath: file_path, textDiffs: text_diffs)
+      Messages::Message.new(messageType: Messages::Message::MessageType::FileDiff,
+                            messageId: message.messageId, fileDiff: file_diff)
+    end
 
-      def add_stub_impl_code_to_file_content(file_path, codes)
-        codes.unshift(File.read(file_path)) if File.file?(file_path)
-        codes.reduce {|acc, code| "#{acc.strip}\n\n#{code.strip}"}
+    def create_span(content, codes)
+      unless content.empty?
+        eof_char = content.strip.length == content.length ? "\n" : ''
+        codes.unshift(eof_char)
+        line = content.split("\n").length
+        return Messages::Span.new(start: line, startChar: 0, end: line, endChar: 0)
       end
+      Messages::Span.new(start: 0, startChar: 0, end: 0, endChar: 0)
     end
   end
+end
