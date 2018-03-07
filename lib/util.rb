@@ -37,5 +37,13 @@ module Gauge
     def self.get_step_implementation_dir
       return File.join(ENV["GAUGE_PROJECT_ROOT"].gsub(/\\/, "/"), 'step_implementations')
     end
+
+    def self.get_file_name(prefix = '', counter = 0)
+      name = "step_implementation#{prefix}.rb"
+      file_name = File.join(get_step_implementation_dir, name)
+      return file_name unless File.file? file_name
+      counter += 1
+      get_file_name("_#{counter}", counter)
+    end
   end
 end

@@ -45,7 +45,7 @@ module Gauge
         end
       }
       args = new_params.map {|v| Parser::AST::Node.new(:arg, [v])}
-      step = [node.children[0].children[0], node.children[0].children[1],Parser::AST::Node.new(:str, [new_step_text])]
+      step = [node.children[0].children[0], node.children[0].children[1], Parser::AST::Node.new(:str, [new_step_text])]
       c1 = Parser::AST::Node.new(:send, step)
       c2 = Parser::AST::Node.new(:args, args)
       Parser::AST::Node.new(:block, [c1, c2, node.children[2]])
@@ -86,11 +86,14 @@ module Gauge
     private
 
     def self.code_to_ast(code)
-      buffer = Parser::Source::Buffer.new '(string)'
-      buffer.source = code
-
-      parser = Parser::CurrentRuby.new
-      parser.parse(buffer)
+      begin
+        buffer = Parser::Source::Buffer.new '(string)'
+        buffer.source = code
+        parser = Parser::CurrentRuby.new
+        return parser.parse(buffer)
+      rescue Exception => e
+        puts e.message
+      end
     end
 
     def self.include_args(code_string, params)

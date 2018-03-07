@@ -15,17 +15,22 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
+require_relative '../../lib/util'
+
 module Gauge
   module Processors
     def process_stub_implementation_code_request(message)
-      file_path = message.stubImplementationCodeRequest.implementationFilePath
       codes = message.stubImplementationCodeRequest.codes
-      content = File.file?(file_path) ? File.read(file_path) : ''
-      span = create_span content, codes
-      text_diffs = [Messages::TextDiff.new(span: span, content: codes.join("\n"))]
+      file_path = message.stubImplementationCodeRequest.implementationFilePath
+      content = ''
+      if File.file? file_path
+        content = File.read(file_path)
+      else
+        file_path = Util.get_file_name
+      end
+      text_diffs = [Messages::TextDiff.new(span: create_span(content, codes), content: codes.join("\n"))]
       file_diff = Messages::FileDiff.new(filePath: file_path, textDiffs: text_diffs)
-      Messages::Message.new(messageType: Messages::Message::MessageType::FileDiff,
-                            messageId: message.messageId, fileDiff: file_diff)
+      Messages::Message.new(messageType: Messages::Message::MessageType::FileDiff, messageId: message.messageId, fileDiff: file_diff)
     end
 
     def create_span(content, codes)
