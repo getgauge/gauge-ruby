@@ -24,6 +24,7 @@ require_relative 'static_loader'
 require_relative 'connector'
 require_relative 'message_processor'
 require_relative 'util'
+require_relative 'log'
 
 
 module Gauge
@@ -47,7 +48,7 @@ module Gauge
 
     def self.handle_message(socket, message)
       if !MessageProcessor.is_valid_message(message)
-        puts "Invalid message received : #{message}"
+        Gauge::Log.error "Invalid message received : #{message}"
         execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => true, :executionTime => 0))
         message = Messages::Message.new(:messageType => Messages::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
         write_message(socket, message)
@@ -73,6 +74,7 @@ module Gauge
     end
 
     STDOUT.sync = true
+    GaugeLog.init
     Connector.make_connection
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
     dispatch_messages(Connector.execution_socket)
