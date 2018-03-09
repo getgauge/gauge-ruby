@@ -40,14 +40,14 @@ gauge run specs
 gauge install ruby --version 0.4.2
 ```
 
-### Offline installation
+#### Offline installation
 
 * Download the plugin from [Releases](https://github.com/getgauge/gauge-ruby/releases)
 ```
 gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
 ```
 
-##### Nightly installation
+#### Nightly installation
 
 To install ruby nightly, download the latest nightly from [here](https://bintray.com/gauge/gauge-ruby/Nightly).
 
@@ -56,9 +56,9 @@ Once you have the downloaded nightly gauge-ruby-version.nightly-yyyy-mm-dd.zip, 
     gauge install ruby -f gauge-ruby-version.nightly-yyyy-mm-dd.zip
 
 
-## Build from Source
+#### Build from Source
 
-### Requirements
+##### Requirements
 * [Golang](http://golang.org/)
 * [Ruby](https://www.ruby-lang.org/en/)
 * [Bundler](http://bundler.io/)
@@ -68,7 +68,7 @@ Run `bundle install` to install all required gems.
 
 Running `bundle exec rake -T` should give the list of all tasks available. Below sections detail some commonly used tasks.
 
-### Compiling
+##### Compiling
 
 To build gauge-ruby.xxx.gem and the gauge-ruby executable for current platform use:
 
@@ -82,7 +82,7 @@ To build gauge-ruby.xxx.gem and the gauge-ruby for all supported platforms use:
 bundle exec rake xcompile
 ````
 
-### Installing
+##### Installing
 
 After compiling
 
@@ -104,7 +104,7 @@ Installing to a CUSTOM_LOCATION
 bundle exec rake force_install[CUSTOM_LOCATION]
 ````
 
-### Creating distributable
+##### Creating distributable
 
 Note: Run after compiling
 
