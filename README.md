@@ -1,19 +1,40 @@
-# gauge-ruby
+# Gauge-ruby
 
 [![Build Status](https://travis-ci.org/getgauge/gauge-ruby.svg?branch=master)](https://travis-ci.org/getgauge/gauge-ruby)
 [![Gem](https://img.shields.io/gem/v/gauge-ruby.svg)](https://rubygems.org/gems/gauge-ruby)
 [![Download Nightly](https://api.bintray.com/packages/gauge/gauge-ruby/Nightly/images/download.svg) ](https://bintray.com/gauge/gauge-ruby/Nightly/_latestVersion)
 
-This is the ruby [language plugin](http://getgauge.io/documentation/user/current/plugins/README.html) for [gauge](http://getgauge.io).
+This project adds ruby [language plugin](https://docs.gauge.org/plugins.html#language-reporting-plugins) for [gauge](http://getgauge.io).
 
-It contains a launcher component (gauge-ruby.go) written in golang which is used to start the plugin from gauge.
+The plugin is authored in [Ruby](https://en.wikipedia.org/wiki/Ruby_(programming_language)). It contains a launcher component (gauge-ruby.go) written in golang which is used to start the plugin from [gauge](https://github.com/getgauge/gauge).
 
-## Install through Gauge
+## Getting started
 
-````
+### Pre-requisite
+
+- [Install Gauge](https://docs.gauge.org/installing.html#installation)
+
+### Installation
+
+```
 gauge install ruby
-````
+```
 
+### Create a gauge-java project
+
+```
+gauge init java
+```
+
+### Run tests
+
+```
+gauge run specs
+```
+
+### Alternate Installation options
+
+#### Install specific version
 * Installing specific version
 ```
 gauge install ruby --version 0.4.2
@@ -26,7 +47,7 @@ gauge install ruby --version 0.4.2
 gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
 ```
 
-##### Nightly
+##### Nightly installation
 
 To install ruby nightly, download the latest nightly from [here](https://bintray.com/gauge/gauge-ruby/Nightly).
 
@@ -84,7 +105,6 @@ bundle exec rake force_install[CUSTOM_LOCATION]
 ````
 
 ### Creating distributable
-
 
 Note: Run after compiling
 
