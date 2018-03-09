@@ -26,6 +26,15 @@ gauge install ruby --version 0.4.2
 gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
 ```
 
+##### Nightly
+
+To install ruby nightly, download the latest nightly from [here](https://bintray.com/gauge/gauge-ruby/Nightly).
+
+Once you have the downloaded nightly gauge-ruby-version.nightly-yyyy-mm-dd.zip, install using:
+
+    gauge install ruby -f gauge-ruby-version.nightly-yyyy-mm-dd.zip
+
+
 ## Build from Source
 
 ### Requirements
