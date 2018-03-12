@@ -65,7 +65,7 @@ module Gauge
         begin
           Configuration.instance.screengrabber.call
         rescue Exception => e
-          puts e
+          Gauge::Log.error e
           return nil
         end
       end
