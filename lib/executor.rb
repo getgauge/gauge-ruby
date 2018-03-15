@@ -17,6 +17,8 @@
 require 'ruby-debug-ide'
 require_relative 'gauge'
 
+ATTACH_DEBUGGER_EVENT = "Runner Ready for Debugging"
+
 module Gauge
   class DebugOptions
     attr_accessor :host, :port, :notify_dispatcher
@@ -42,6 +44,7 @@ module Gauge
         options.host = '127.0.0.1'
         options.port = ENV["DEBUG_PORT"].to_i
         options.notify_dispatcher = false
+        Gauge::Log.info ATTACH_DEBUGGER_EVENT
         Debugger.prepare_debugger(options)
       end
     end
