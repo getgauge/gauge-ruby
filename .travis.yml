@@ -10,6 +10,7 @@ addons:
       - maven
 install:
   - curl -sSfL https://raw.githubusercontent.com/getgauge/infrastructure/master/nightly_scripts/install_latest_gauge_nightly.sh | bash
+  - export PATH=/tmp/bin:$PATH
   - gauge version
   - echo "gauge_repository_url = https://raw.githubusercontent.com/getgauge/gauge-nightly-repository/master/" >> $HOME/.gauge/config/gauge.properties
   - bundle install
