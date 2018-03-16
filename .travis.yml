@@ -2,17 +2,14 @@ os:
   - osx
   - linux
 env:
-  - GOPATH=/tmp GAUGE_SOURCE_BUILD=true GAUGE_TELEMETRY_ENABLED=false
+  - GOPATH=/tmp GAUGE_SOURCE_BUILD=true GAUGE_TELEMETRY_ENABLED=false GAUGE_PREFIX=/tmp
 addons:
   apt:
-    sources:
-      - sourceline: 'deb https://dl.bintray.com/gauge/gauge-deb nightly main'
     packages:
       - oracle-java8-set-default
       - maven
-      - gauge
 install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./install_latest_gauge_nightly.sh; fi
+  - curl -sSfL https://raw.githubusercontent.com/getgauge/infrastructure/master/nightly_scripts/install_latest_gauge_nightly.sh | bash
   - gauge version
   - echo "gauge_repository_url = https://raw.githubusercontent.com/getgauge/gauge-nightly-repository/master/" >> $HOME/.gauge/config/gauge.properties
   - bundle install
