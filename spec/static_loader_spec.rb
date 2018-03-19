@@ -84,7 +84,7 @@ describe Gauge::StaticLoader do
       ast = Gauge::CodeParser.code_to_ast "step 'hello <vowels>' do |v|\nend"
       Gauge::StaticLoader.reload_steps(file, ast)
 
-      expect(subject.valid_step? 'foo {}').to eq true
+      expect(subject.valid_step? 'foo {}').to eq false
       expect(subject.valid_step? 'hello {}').to eq true
     end
   end

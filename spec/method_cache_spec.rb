@@ -214,4 +214,22 @@ describe Gauge::MethodCache do
       end
     end
   end
+  context 'remove_steps' do
+    before { subject.clear }
+    it 'should remove all steps in a file' do
+      subject.add_step("step {}", {:step_text =>  "step <param>",:location => {:file => "foo.bar"}})
+      subject.add_step("step ", {:step_text =>  "step ",:location => {:file => "foo.bar"}})
+      subject.remove_steps("foo.bar")
+      expect(subject.valid_step? "step {}").to eq false
+      expect(subject.valid_step? "step").to eq false
+    end
+    it 'should retain duplicate file locations when one file is removed' do
+      subject.add_step("step {}", {:step_text =>  "step <param>",:location => {:file => "foo.bar"}})
+      subject.add_step("step {}", {:step_text =>  "step <some>",:location => {:file => "foo1.bar"}})
+      subject.remove_steps("foo.bar")
+      expect(subject.valid_step? "step {}").to eq true
+      step_info = (subject.get_step_info "step {}")[:locations]
+      expect(step_info[0][:file]).to eq "foo1.bar"
+    end
+  end
 end

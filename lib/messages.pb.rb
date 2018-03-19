@@ -267,11 +267,27 @@ module Gauge
     end
 
     class CacheFileRequest < ::ProtocolBuffers::Message
+      # forward declarations
+
+      # enums
+      module FileStatus
+        include ::ProtocolBuffers::Enum
+
+        set_fully_qualified_name "gauge.messages.CacheFileRequest.FileStatus"
+
+        CHANGED = 0
+        CLOSED = 1
+        CREATED = 2
+        DELETED = 3
+        OPENED = 4
+      end
+
       set_fully_qualified_name "gauge.messages.CacheFileRequest"
 
       optional :string, :content, 1
       optional :string, :filePath, 2
       optional :bool, :isClosed, 3
+      optional ::Gauge::Messages::CacheFileRequest::FileStatus, :status, 4
     end
 
     class StepPositionsRequest < ::ProtocolBuffers::Message
