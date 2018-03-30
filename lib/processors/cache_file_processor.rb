@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright 2018 ThoughtWorks, Inc.
 
 # This file is part of Gauge-Ruby.
@@ -21,21 +23,26 @@ module Gauge
   # @api private
   module Processors
     def process_cache_file_request(message)
+      cache_file(message.cacheFileRequest)
+      nil
+    end
+
+    def cache_file(_request)
       f = message.cacheFileRequest.filePath
       status = message.cacheFileRequest.status
-      if status == Messages::CacheFileRequest::FileStatus::CHANGED or status == Messages::CacheFileRequest::FileStatus::OPENED
+      if (status == Messages::CacheFileRequest::FileStatus::CHANGED) || (status == Messages::CacheFileRequest::FileStatus::OPENED)
         ast = CodeParser.code_to_ast(message.cacheFileRequest.content)
         StaticLoader.reload_steps(f, ast)
       elsif status == Messages::CacheFileRequest::FileStatus::CREATED
         ast = CodeParser.code_to_ast File.read(f)
         StaticLoader.reload_steps(f, ast)
-      elsif status == Messages::CacheFileRequest::FileStatus::CLOSED and File.file? f
+      elsif (status == Messages::CacheFileRequest::FileStatus::CLOSED) && File.file?(f)
         ast = CodeParser.code_to_ast File.read(f)
         StaticLoader.reload_steps(f, ast)
       else
         StaticLoader.remove_steps(f)
       end
-      nil
+      Messages::Empty.new
     end
   end
 end

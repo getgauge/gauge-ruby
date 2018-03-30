@@ -17,6 +17,7 @@
 
 require 'socket'
 require 'protocol_buffers'
+require 'grpc'
 
 require_relative 'messages.pb'
 require_relative 'executor'
@@ -75,9 +76,16 @@ module Gauge
 
     STDOUT.sync = true
     GaugeLog.init
-    Connector.make_connection
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
-    dispatch_messages(Connector.execution_socket)
+    if ENV.has_key? "GAUGE_LSP_GRPC"
+      server = GRPC::RpcServer.new
+      server.add_http2_port("127.0.0.1:0", :this_port_is_insecure)
+      server.handle(::LspServer.new)
+      server.run_till_terminated
+    else
+      Connector.make_connection
+      dispatch_messages(Connector.execution_socket)
+    end
     exit(0)
   end
 end

@@ -20,8 +20,13 @@ require_relative '../../lib/util'
 module Gauge
   module Processors
     def process_stub_implementation_code_request(message)
-      codes = message.stubImplementationCodeRequest.codes
-      file_path = message.stubImplementationCodeRequest.implementationFilePath
+      file_diff = implement_stub(message.stubImplementationCodeRequest)
+      Messages::Message.new(messageType: Messages::Message::MessageType::FileDiff, messageId: message.messageId, fileDiff: file_diff)
+    end
+
+    def implement_stub(request)
+      codes = request.codes
+      file_path = request.implementationFilePath
       content = ''
       if File.file? file_path
         content = File.read(file_path)
@@ -29,10 +34,10 @@ module Gauge
         file_path = Util.get_file_name
       end
       text_diffs = [Messages::TextDiff.new(span: create_span(content, codes), content: codes.join("\n"))]
-      file_diff = Messages::FileDiff.new(filePath: file_path, textDiffs: text_diffs)
-      Messages::Message.new(messageType: Messages::Message::MessageType::FileDiff, messageId: message.messageId, fileDiff: file_diff)
+      Messages::FileDiff.new(filePath: file_path, textDiffs: text_diffs)
     end
 
+    private
     def create_span(content, codes)
       unless content.empty?
         eof_char = content.strip.length == content.length ? "\n" : ''
