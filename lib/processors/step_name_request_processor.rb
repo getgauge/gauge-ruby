@@ -19,7 +19,7 @@ module Gauge
   module Processors
     def process_step_name_request(message)
       r = step_name_response(message.stepNameRequest)
-      Messages::Message.new(:messageType => Messages::Message::MessageType::StepNameResponse, :messageId => message.messageId, :stepNameResponse => r)
+      Messages::Message.new(:messageType => :StepNameResponse, :messageId => message.messageId, :stepNameResponse => r)
     end
 
     def step_name_response(request)

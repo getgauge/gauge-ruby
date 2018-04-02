@@ -19,7 +19,7 @@ require_relative 'lsp_pb'
 Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}
 
 module Gauge
-    class LSPServer < Gauge::Messages::LspService
+    class LSPServer < Gauge::Messages::LspService::Service
         def get_step_names(request)
             Gauge::Processors::step_name_response(request)
         end

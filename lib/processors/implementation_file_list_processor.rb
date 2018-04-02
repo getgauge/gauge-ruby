@@ -21,7 +21,7 @@ module Gauge
   module Processors
     def process_implementation_file_list_request(message)
       r = implementation_files()
-      Messages::Message.new(:messageType => Messages::Message::MessageType::ImplementationFileListResponse, :messageId => message.messageId, :implementationFileListResponse => r)
+      Messages::Message.new(:messageType => :ImplementationFileListResponse, :messageId => message.messageId, :implementationFileListResponse => r)
     end
 
     def implementation_files()

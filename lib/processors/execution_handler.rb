@@ -33,7 +33,7 @@ module Gauge
 
       def handle_pass(message, execution_time)
         execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => false, :executionTime => execution_time))
-        Messages::Message.new(:messageType => Messages::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+        Messages::Message.new(:messageType => :ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
       end
 
       def handle_failure(message, exception, execution_time, recoverable)
@@ -50,7 +50,7 @@ module Gauge
              :stackTrace => code_snippet + stacktrace,
              :executionTime => execution_time,
              :screenShot => screenshot_bytes))
-        Messages::Message.new(:messageType => Messages::Message::MessageType::ExecutionStatusResponse,
+        Messages::Message.new(:messageType => :ExecutionStatusResponse,
           :messageId => message.messageId, :executionStatusResponse => execution_status_response)
       end
 
@@ -77,7 +77,7 @@ module Gauge
       def create_param_values parameters
         params = []
         parameters.each do |param|
-          if ((param.parameterType == Messages::Parameter::ParameterType::Table) ||(param.parameterType == Messages::Parameter::ParameterType::Special_Table))
+          if ((param.parameterType == :Table) ||(param.parameterType == :Special_Table))
             gtable = Gauge::Table.new(param.table)
             params.push gtable
           else

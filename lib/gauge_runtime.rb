@@ -37,9 +37,9 @@ module Gauge
       while (!socket.eof?)
         len = Connector.message_length(socket)
         data = socket.read len
-        message = Messages::Message.parse(data)
+        message = Messages::Message.decode(data)
         handle_message(socket, message)
-        if message.messageType == Messages::Message::MessageType::KillProcessRequest || message.messageType == Messages::Message::MessageType::ExecutionEnding
+        if message.messageType == :KillProcessRequest || message.messageType == :ExecutionEnding
           socket.close
           return
         end
@@ -51,7 +51,7 @@ module Gauge
       if !MessageProcessor.is_valid_message(message)
         Gauge::Log.error "Invalid message received : #{message}"
         execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => true, :executionTime => 0))
-        message = Messages::Message.new(:messageType => Messages::Message::MessageType::ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+        message = Messages::Message.new(:messageType => :ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
         write_message(socket, message)
       else
         response = MessageProcessor.process_message message
@@ -60,7 +60,7 @@ module Gauge
     end
 
     def self.write_message(socket, message)
-      serialized_message = message.to_s
+      serialized_message = Messages::Message.encode(message)
       size = serialized_message.bytesize
       ProtocolBuffers::Varint.encode(socket, size)
       socket.write serialized_message
@@ -79,14 +79,13 @@ module Gauge
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
     if ENV.has_key? "GAUGE_LSP_GRPC"
       server = GRPC::RpcServer.new
-      port = Runtime.port_from_env_variable("GAUGE_INTERNAL_PORT")
-      server.add_http2_port("127.0.0.1:#{port}", :this_port_is_insecure)
+      p = server.add_http2_port("127.0.0.1:0", :this_port_is_insecure)
       server.handle(::LspServer.new)
+      puts "Listening on port:#{p}"
       server.run_till_terminated
-    else
-      Connector.make_connection
-      dispatch_messages(Connector.execution_socket)
     end
+    Connector.make_connection
+    dispatch_messages(Connector.execution_socket)
     exit(0)
   end
 end

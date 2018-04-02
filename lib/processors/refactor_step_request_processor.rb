@@ -33,7 +33,7 @@ module Gauge
         refactor_response.success = false
         refactor_response.error = e.message
       end
-      Messages::Message.new(:messageType => Messages::Message::MessageType::RefactorResponse, :messageId => message.messageId, refactorResponse: refactor_response)
+      Messages::Message.new(:messageType => :RefactorResponse, :messageId => message.messageId, refactorResponse: refactor_response)
     end
 
     def get_step(step_text)

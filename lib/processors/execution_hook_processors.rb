@@ -57,7 +57,7 @@ module Gauge
 
     def process_step_execution_end_request(message)
       response = handle_hooks_execution(MethodCache.get_after_step_hooks, message, message.stepExecutionEndingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.message = Gauge::GaugeMessages.instance.get
+      response.executionStatusResponse.executionResult.message = Google::Protobuf::RepeatedField.new(:string, Gauge::GaugeMessages.instance.get)
       return response
     end
   end

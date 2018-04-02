@@ -19,22 +19,21 @@ module Gauge
   module Processors
     def process_step_validation_request(message)
       request = message.stepValidateRequest
-      is_valid = true
-      msg,suggestion = ''
-      err_type = nil
+      step_validate_response = Messages::StepValidateResponse.new(isValid: true)
       if !MethodCache.valid_step? request.stepText
-        is_valid = false
-        msg = 'Step implementation not found'
-        err_type = Messages::StepValidateResponse::ErrorType::STEP_IMPLEMENTATION_NOT_FOUND
-        suggestion = create_suggestion(request.stepValue) unless request.stepValue.stepValue.empty?
+        suggestion = request.stepValue.stepValue.empty? ? "" : create_suggestion(request.stepValue)
+        step_validate_response = Messages::StepValidateResponse.new(
+            isValid: false,
+            errorMessage: 'Step implementation not found',
+            errorType: Messages::StepValidateResponse::ErrorType::STEP_IMPLEMENTATION_NOT_FOUND,
+            suggestion: suggestion)
       elsif MethodCache.multiple_implementation?(request.stepText)
-        is_valid = false
-        msg = "Multiple step implementations found for => '#{request.stepText}'"
-        err_type = Messages::StepValidateResponse::ErrorType::DUPLICATE_STEP_IMPLEMENTATION
-        suggestion = ''
+        step_validate_response = Messages::StepValidateResponse.new(
+          isValid: false,
+          errorMessage: "Multiple step implementations found for => '#{request.stepText}'",
+          errorType: Messages::StepValidateResponse::ErrorType::DUPLICATE_STEP_IMPLEMENTATION)
       end
-      step_validate_response = Messages::StepValidateResponse.new(:isValid => is_valid, :errorMessage => msg, :errorType => err_type, :suggestion => suggestion)
-      Messages::Message.new(:messageType => Messages::Message::MessageType::StepValidateResponse,
+      Messages::Message.new(:messageType => :StepValidateResponse,
                             :messageId => message.messageId,
                             :stepValidateResponse => step_validate_response)
     end

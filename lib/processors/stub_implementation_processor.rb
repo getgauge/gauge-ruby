@@ -21,7 +21,7 @@ module Gauge
   module Processors
     def process_stub_implementation_code_request(message)
       file_diff = implement_stub(message.stubImplementationCodeRequest)
-      Messages::Message.new(messageType: Messages::Message::MessageType::FileDiff, messageId: message.messageId, fileDiff: file_diff)
+      Messages::Message.new(messageType: :FileDiff, messageId: message.messageId, fileDiff: file_diff)
     end
 
     def implement_stub(request)
