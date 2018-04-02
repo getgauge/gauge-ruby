@@ -63,6 +63,11 @@ task :force_install, [:prefix] => [:package] do |t, args|
     system env_vars, "gauge install ruby -f deploy/gauge-ruby-#{PLUGIN_VERSION}.zip"
 end
 
+desc "Generate protobuf stubs"
+task :gen_proto do
+    system "grpc_tools_ruby_protoc -I gauge-proto --ruby_out=lib --grpc_out=lib  gauge-proto/*.proto"
+end
+
 def create_package(os=nil, arch=nil)
     dest_dir="gauge-ruby-#{PLUGIN_VERSION}-#{os}.#{ARCH_MAP[arch]}".chomp('.').chomp('-')
     deploy_dir = "deploy/#{dest_dir}"

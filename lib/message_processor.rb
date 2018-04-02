@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative 'messages.pb'
+require_relative 'messages_pb'
 require_relative 'executor'
 require_relative 'table'
 Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}

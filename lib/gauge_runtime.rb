@@ -19,7 +19,7 @@ require 'socket'
 require 'protocol_buffers'
 require 'grpc'
 
-require_relative 'messages.pb'
+require_relative 'messages_pb'
 require_relative 'executor'
 require_relative 'static_loader'
 require_relative 'connector'

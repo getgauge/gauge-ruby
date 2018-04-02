@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative 'lsp.pb'
+require_relative 'lsp_pb'
 Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}
 
 module Gauge

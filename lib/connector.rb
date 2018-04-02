@@ -16,7 +16,7 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'protocol_buffers'
-require_relative 'api.pb'
+require_relative 'api_pb'
 
 module Gauge
   # @api private
