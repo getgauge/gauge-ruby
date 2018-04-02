@@ -79,7 +79,8 @@ module Gauge
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
     if ENV.has_key? "GAUGE_LSP_GRPC"
       server = GRPC::RpcServer.new
-      server.add_http2_port("127.0.0.1:0", :this_port_is_insecure)
+      port = Runtime.port_from_env_variable("GAUGE_INTERNAL_PORT")
+      server.add_http2_port("127.0.0.1:#{port}", :this_port_is_insecure)
       server.handle(::LspServer.new)
       server.run_till_terminated
     else
