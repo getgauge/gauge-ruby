@@ -51,6 +51,8 @@ module Gauge
       repeated :string, :tags, 7
       repeated :string, :preHookMessages, 8
       repeated :string, :postHookMessages, 9
+      repeated :string, :preHookMessage, 10
+      repeated :string, :postHookMessage, 11
     end
 
     class ProtoItem < ::ProtocolBuffers::Message
@@ -102,6 +104,8 @@ module Gauge
       optional ::Gauge::Messages::ExecutionStatus, :executionStatus, 14
       repeated :string, :preHookMessages, 15
       repeated :string, :postHookMessages, 16
+      repeated :string, :preHookMessage, 17
+      repeated :string, :postHookMessage, 18
     end
 
     class Span < ::ProtocolBuffers::Message
@@ -269,6 +273,8 @@ module Gauge
       optional :int32, :specsSkippedCount, 12
       repeated :string, :preHookMessages, 13
       repeated :string, :postHookMessages, 14
+      repeated :string, :preHookMessage, 15
+      repeated :string, :postHookMessage, 16
     end
 
     class ProtoSpecResult < ::ProtocolBuffers::Message

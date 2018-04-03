@@ -46,6 +46,7 @@ module Gauge
     @processors[Messages::Message::MessageType::CacheFileRequest] = method(:process_cache_file_request)
     @processors[Messages::Message::MessageType::StepPositionsRequest] = method(:process_step_positions_request)
     @processors[Messages::Message::MessageType::ImplementationFileListRequest] = method(:process_implementation_file_list_request)
+    @processors[Messages::Message::MessageType::ImplementationFileGlobPatternRequest] = method(:process_implementation_glob_pattern_request)
     @processors[Messages::Message::MessageType::StubImplementationCodeRequest] = method(:process_stub_implementation_code_request)
 
     def self.is_valid_message(message)

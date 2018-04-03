@@ -41,6 +41,8 @@ module Gauge
     class CacheFileRequest < ::ProtocolBuffers::Message; end
     class StepPositionsRequest < ::ProtocolBuffers::Message; end
     class StepPositionsResponse < ::ProtocolBuffers::Message; end
+    class ImplementationFileGlobPatternRequest < ::ProtocolBuffers::Message; end
+    class ImplementationFileGlobPatternResponse < ::ProtocolBuffers::Message; end
     class ImplementationFileListRequest < ::ProtocolBuffers::Message; end
     class ImplementationFileListResponse < ::ProtocolBuffers::Message; end
     class StubImplementationCodeRequest < ::ProtocolBuffers::Message; end
@@ -314,6 +316,17 @@ module Gauge
       optional :string, :error, 2
     end
 
+    class ImplementationFileGlobPatternRequest < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.ImplementationFileGlobPatternRequest"
+
+    end
+
+    class ImplementationFileGlobPatternResponse < ::ProtocolBuffers::Message
+      set_fully_qualified_name "gauge.messages.ImplementationFileGlobPatternResponse"
+
+      repeated :string, :globPatterns, 1
+    end
+
     class ImplementationFileListRequest < ::ProtocolBuffers::Message
       set_fully_qualified_name "gauge.messages.ImplementationFileListRequest"
 
@@ -386,6 +399,8 @@ module Gauge
         ImplementationFileListResponse = 28
         StubImplementationCodeRequest = 29
         FileDiff = 30
+        ImplementationFileGlobPatternRequest = 31
+        ImplementationFileGlobPatternResponse = 32
       end
 
       set_fully_qualified_name "gauge.messages.Message"
@@ -423,6 +438,8 @@ module Gauge
       optional ::Gauge::Messages::ImplementationFileListResponse, :implementationFileListResponse, 31
       optional ::Gauge::Messages::StubImplementationCodeRequest, :stubImplementationCodeRequest, 32
       optional ::Gauge::Messages::FileDiff, :fileDiff, 33
+      optional ::Gauge::Messages::ImplementationFileGlobPatternRequest, :implementationFileGlobPatternRequest, 34
+      optional ::Gauge::Messages::ImplementationFileGlobPatternResponse, :implementationFileGlobPatternResponse, 35
     end
 
   end
