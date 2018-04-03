@@ -33,7 +33,7 @@ module Gauge
         self.unmarshal_class_method = :decode
         self.service_name = 'gauge.messages.lspService'
 
-        rpc :GetStepNames, StepNameRequest, StepNameResponse
+        rpc :GetStepNames, StepNamesRequest, StepNamesResponse
         rpc :CacheFile, CacheFileRequest, Empty
         rpc :GetStepPositions, StepPositionsRequest, StepPositionsResponse
         rpc :GetImplementationFiles, Empty, ImplementationFileListResponse

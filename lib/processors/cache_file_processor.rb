@@ -23,7 +23,7 @@ module Gauge
   # @api private
   module Processors
     def process_cache_file_request(message)
-      cache_file(message.cacheFileRequest)
+      cache_file_response(message.cacheFileRequest)
       nil
     end
 

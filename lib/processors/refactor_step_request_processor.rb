@@ -27,13 +27,13 @@ module Gauge
         refactored_code = CodeParser.refactor step_info, request.paramPositions, request.newStepValue
         file = step_info[:locations][0][:file]
         File.write file, refactored_code if request.saveChanges
-        refactor_response.filesChanged = [file]
-        refactor_response.fileChanges = [Messages::FileChanges.new(:fileName => file, :fileContent => refactored_code)]
+        refactor_response.filesChanged = Google::Protobuf::RepeatedField.new(:string, [file])
+        refactor_response.fileChanges = [Messages::FileChanges.new(fileName: file, fileContent: refactored_code)]
       rescue Exception => e
         refactor_response.success = false
         refactor_response.error = e.message
       end
-      Messages::Message.new(:messageType => :RefactorResponse, :messageId => message.messageId, refactorResponse: refactor_response)
+      Messages::Message.new(messageType: :RefactorResponse, messageId: message.messageId, refactorResponse: refactor_response)
     end
 
     def get_step(step_text)
