@@ -15,29 +15,35 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative 'lsp_pb'
-Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}
+require_relative 'lsp_services_pb'
+require_relative 'processors/step_positions_request_processor'
+require_relative 'processors/cache_file_processor'
+require_relative 'processors/step_name_request_processor'
+require_relative 'processors/stub_implementation_processor'
+require_relative 'processors/implementation_file_list_processor'
 
 module Gauge
-    class LSPServer < Gauge::Messages::LspService::Service
-        def get_step_names(request)
-            Gauge::Processors::step_name_response(request)
-        end
+  class LSPServer < Gauge::Messages::LspService::Service
+    include Gauge::Processors
 
-        def cache_file
-            Gauge::Processors::cache_file(request)
-        end
-
-        def get_step_positions
-            Gauge::Processors::step_positions(request)
-        end
-
-        def get_implementation_files
-            Gauge::Processors::implementation_files()
-        end
-
-        def implement_stub
-            Gauge::Processors::implement_stub(request)
-        end
+    def get_step_names(request, _call)
+      step_name_response(request)
     end
+
+    def cache_file(request, _call)
+      cache_file(request)
+    end
+
+    def get_step_positions(request, _call)
+      step_positions(request)
+    end
+
+    def get_implementation_files(_request, _call)
+      implementation_files
+    end
+
+    def implement_stub(request, _call)
+      implement_stub(request)
+    end
+  end
 end

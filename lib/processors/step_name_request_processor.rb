@@ -19,14 +19,14 @@ module Gauge
   module Processors
     def process_step_name_request(message)
       r = step_name_response(message.stepNameRequest)
-      Messages::Message.new(:messageType => :StepNameResponse, :messageId => message.messageId, :stepNameResponse => r)
+      Messages::Message.new(messageType: :StepNameResponse, messageId: message.messageId, stepNameResponse: r)
     end
 
     def step_name_response(request)
       step_value = request.stepValue
-      if !MethodCache.valid_step?(step_value)
+      unless MethodCache.valid_step?(step_value)
         return Messages::StepNameResponse.new(isStepPresent: false, stepName: [''], hasAlias: false, fileName: '', span: nil)
-      end      
+      end
       step_text = MethodCache.get_step_text(step_value)
       has_alias = MethodCache.has_alias?(step_text)
       loc = MethodCache.get_step_info(step_value)[:locations][0]

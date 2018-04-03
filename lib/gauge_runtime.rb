@@ -26,7 +26,7 @@ require_relative 'connector'
 require_relative 'message_processor'
 require_relative 'util'
 require_relative 'log'
-
+require_relative 'lsp_server'
 
 module Gauge
   # @api private
@@ -34,7 +34,7 @@ module Gauge
     DEFAULT_IMPLEMENTATIONS_DIR_PATH = Util.get_step_implementation_dir
 
     def self.dispatch_messages(socket)
-      while (!socket.eof?)
+      until socket.eof?
         len = Connector.message_length(socket)
         data = socket.read len
         message = Messages::Message.decode(data)
@@ -46,12 +46,11 @@ module Gauge
       end
     end
 
-
     def self.handle_message(socket, message)
       if !MessageProcessor.is_valid_message(message)
         Gauge::Log.error "Invalid message received : #{message}"
-        execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => true, :executionTime => 0))
-        message = Messages::Message.new(:messageType => :ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+        execution_status_response = Messages::ExecutionStatusResponse.new(executionResult: Messages::ProtoExecutionResult.new(failed: true, executionTime: 0))
+        message = Messages::Message.new(messageType: :ExecutionStatusResponse, messageId: message.messageId, executionStatusResponse: execution_status_response)
         write_message(socket, message)
       else
         response = MessageProcessor.process_message message
@@ -68,24 +67,28 @@ module Gauge
 
     def self.port_from_env_variable(env_variable)
       port = ENV[env_variable]
-      if port.nil?
-        raise RuntimeError, "Could not find Env variable :#{env_variable}"
-      end
-      return port
+      raise "Could not find Env variable :#{env_variable}" if port.nil?
+      port
     end
 
     STDOUT.sync = true
     GaugeLog.init
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
-    if ENV.has_key? "GAUGE_LSP_GRPC"
-      server = GRPC::RpcServer.new
-      p = server.add_http2_port("127.0.0.1:0", :this_port_is_insecure)
-      server.handle(::LspServer.new)
-      puts "Listening on port:#{p}"
-      server.run_till_terminated
+    conn_threads = []
+    if ENV.key? 'GAUGE_LSP_GRPC'
+      conn_threads << Thread.new do
+        server = GRPC::RpcServer.new
+        p = server.add_http2_port('127.0.0.1:54545', :this_port_is_insecure)
+        server.handle(Gauge::LSPServer.new)
+        puts "Listening on port:#{p}"
+        server.run_till_terminated
+      end
     end
-    Connector.make_connection
-    dispatch_messages(Connector.execution_socket)
+    conn_threads << Thread.new do
+      Connector.make_connection
+      dispatch_messages(Connector.execution_socket)
+    end
+    conn_threads.each(&:join)
     exit(0)
   end
 end
