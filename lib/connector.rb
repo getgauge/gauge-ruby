@@ -22,7 +22,7 @@ module Gauge
   # @api private
   module Connector
     GAUGE_PORT_ENV = "GAUGE_INTERNAL_PORT"
-    HOST_NAME = 'localhost'
+    HOST_NAME = '127.0.0.1'
     @@executionSocket = nil
 
 
