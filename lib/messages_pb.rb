@@ -149,6 +149,11 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :stepValue, :string, 1
     optional :span, :message, 2, "gauge.messages.Span"
   end
+  add_message "gauge.messages.ImplementationFileGlobPatternRequest" do
+  end
+  add_message "gauge.messages.ImplementationFileGlobPatternResponse" do
+    repeated :globPatterns, :string, 1
+  end
   add_message "gauge.messages.ImplementationFileListRequest" do
   end
   add_message "gauge.messages.ImplementationFileListResponse" do
@@ -200,6 +205,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :implementationFileListResponse, :message, 31, "gauge.messages.ImplementationFileListResponse"
     optional :stubImplementationCodeRequest, :message, 32, "gauge.messages.StubImplementationCodeRequest"
     optional :fileDiff, :message, 33, "gauge.messages.FileDiff"
+    optional :implementationFileGlobPatternRequest, :message, 34, "gauge.messages.ImplementationFileGlobPatternRequest"
+    optional :implementationFileGlobPatternResponse, :message, 35, "gauge.messages.ImplementationFileGlobPatternResponse"
   end
   add_enum "gauge.messages.Message.MessageType" do
     value :ExecutionStarting, 0
@@ -233,6 +240,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     value :ImplementationFileListResponse, 28
     value :StubImplementationCodeRequest, 29
     value :FileDiff, 30
+    value :ImplementationFileGlobPatternRequest, 31
+    value :ImplementationFileGlobPatternResponse, 32
   end
 end
 
@@ -274,6 +283,8 @@ module Gauge
     StepPositionsRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.StepPositionsRequest").msgclass
     StepPositionsResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.StepPositionsResponse").msgclass
     StepPositionsResponse::StepPosition = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.StepPositionsResponse.StepPosition").msgclass
+    ImplementationFileGlobPatternRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.ImplementationFileGlobPatternRequest").msgclass
+    ImplementationFileGlobPatternResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.ImplementationFileGlobPatternResponse").msgclass
     ImplementationFileListRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.ImplementationFileListRequest").msgclass
     ImplementationFileListResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.ImplementationFileListResponse").msgclass
     StubImplementationCodeRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("gauge.messages.StubImplementationCodeRequest").msgclass

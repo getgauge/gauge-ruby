@@ -21,19 +21,25 @@ module Gauge
   module Processors
     def refactor_step(message)
       request = message.refactorRequest
-      refactor_response = Messages::RefactorResponse.new(success: true)
+      response = refactor_response(request)
+      Messages::Message.new(messageType: :RefactorResponse, messageId: message.messageId, refactorResponse: response)
+    end
+
+    def refactor_response(request)
+      response = Messages::RefactorResponse.new(success: true)
       begin
         step_info = get_step request.oldStepValue.stepValue
         refactored_code = CodeParser.refactor step_info, request.paramPositions, request.newStepValue
         file = step_info[:locations][0][:file]
         File.write file, refactored_code if request.saveChanges
-        refactor_response.filesChanged = Google::Protobuf::RepeatedField.new(:string, [file])
-        refactor_response.fileChanges = [Messages::FileChanges.new(fileName: file, fileContent: refactored_code)]
+        response.filesChanged.push(file)
+        changes = Messages::FileChanges.new(fileName: file, fileContent: refactored_code)
+        response.fileChanges.push(changes)
       rescue Exception => e
-        refactor_response.success = false
-        refactor_response.error = e.message
+        response.success = false
+        response.error = e.message
       end
-      Messages::Message.new(messageType: :RefactorResponse, messageId: message.messageId, refactorResponse: refactor_response)
+      response
     end
 
     def get_step(step_text)

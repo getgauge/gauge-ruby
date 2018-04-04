@@ -21,6 +21,9 @@ require_relative 'processors/cache_file_processor'
 require_relative 'processors/step_names_request_processor'
 require_relative 'processors/stub_implementation_processor'
 require_relative 'processors/implementation_file_list_processor'
+require_relative 'processors/step_validation_request_processor'
+require_relative 'processors/refactor_step_request_processor'
+require_relative 'processors/step_name_request_processor'
 
 module Gauge
   class LSPServer < Gauge::Messages::LspService::Service
@@ -44,6 +47,18 @@ module Gauge
 
     def implement_stub(request, _call)
       implement_stub_response(request)
+    end
+
+    def validate_step(request, _call)
+      step_validate_response(request)
+    end
+
+    def refactor(request, _call)
+      refactor_response(request)
+    end
+
+    def get_step_name(request, _call)
+      step_name_response(request)
     end
   end
 end

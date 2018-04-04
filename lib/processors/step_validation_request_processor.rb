@@ -19,29 +19,35 @@ module Gauge
   module Processors
     def process_step_validation_request(message)
       request = message.stepValidateRequest
-      step_validate_response = Messages::StepValidateResponse.new(isValid: true)
+      Messages::Message.new(messageType: :StepValidateResponse,
+                            messageId: message.messageId,
+                            stepValidateResponse: step_validate_response(request))
+    end
+
+    def step_validate_response(request)
+      response = Messages::StepValidateResponse.new(isValid: true)
       if !MethodCache.valid_step? request.stepText
-        suggestion = request.stepValue.stepValue.empty? ? "" : create_suggestion(request.stepValue)
-        step_validate_response = Messages::StepValidateResponse.new(
-            isValid: false,
-            errorMessage: 'Step implementation not found',
-            errorType: Messages::StepValidateResponse::ErrorType::STEP_IMPLEMENTATION_NOT_FOUND,
-            suggestion: suggestion)
+        suggestion = request.stepValue.stepValue.empty? ? '' : create_suggestion(request.stepValue)
+        response = Messages::StepValidateResponse.new(
+          isValid: false,
+          errorMessage: 'Step implementation not found',
+          errorType: Messages::StepValidateResponse::ErrorType::STEP_IMPLEMENTATION_NOT_FOUND,
+          suggestion: suggestion
+        )
       elsif MethodCache.multiple_implementation?(request.stepText)
-        step_validate_response = Messages::StepValidateResponse.new(
+        response = Messages::StepValidateResponse.new(
           isValid: false,
           errorMessage: "Multiple step implementations found for => '#{request.stepText}'",
-          errorType: Messages::StepValidateResponse::ErrorType::DUPLICATE_STEP_IMPLEMENTATION)
+          errorType: Messages::StepValidateResponse::ErrorType::DUPLICATE_STEP_IMPLEMENTATION
+        )
       end
-      Messages::Message.new(:messageType => :StepValidateResponse,
-                            :messageId => message.messageId,
-                            :stepValidateResponse => step_validate_response)
+      response
     end
 
     def create_suggestion(step_value)
       count = -1
-      step_text = step_value.stepValue.gsub(/{}/) {"<arg#{count += 1}>"}
-      params = step_value.parameters.map.with_index {|v,i| "arg#{i}"}.join ", "
+      step_text = step_value.stepValue.gsub(/{}/) { "<arg#{count += 1}>" }
+      params = step_value.parameters.map.with_index { |_v, i| "arg#{i}" }.join ', '
       "step '#{step_text}' do |#{params}|\n\traise 'Unimplemented Step'\nend"
     end
   end
