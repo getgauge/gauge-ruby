@@ -20,9 +20,17 @@ require_relative '../util'
 module Gauge
   module Processors
     def process_implementation_glob_pattern_request(message)
+      r = implementation_glob_pattern_response
+      Messages::Message.new(
+        messageType: Messages::Message::MessageType::ImplementationFileGlobPatternResponse,
+        messageId: message.messageId,
+        implementationFileGlobPatternResponse: r
+      )
+    end
+
+    def implementation_glob_pattern_response
       implPath = Util.get_step_implementation_dir
-      r = Messages::ImplementationFileGlobPatternResponse.new(:globPatterns => ["#{implPath}/**/*.rb"])
-      Messages::Message.new(:messageType => Messages::Message::MessageType::ImplementationFileGlobPatternResponse, :messageId => message.messageId, :implementationFileGlobPatternResponse => r)
+      Messages::ImplementationFileGlobPatternResponse.new(globPatterns: ["#{implPath}/**/*.rb"])
     end
   end
 end

@@ -38,6 +38,11 @@ module Gauge
         rpc :GetStepPositions, StepPositionsRequest, StepPositionsResponse
         rpc :GetImplementationFiles, Empty, ImplementationFileListResponse
         rpc :ImplementStub, StubImplementationCodeRequest, FileDiff
+        rpc :ValidateStep, StepValidateRequest, StepValidateResponse
+        rpc :Refactor, RefactorRequest, RefactorResponse
+        rpc :GetStepName, StepNameRequest, StepNameResponse
+        rpc :GetGlobPatterns, Empty, ImplementationFileGlobPatternResponse
+        rpc :KillProcess, KillProcessRequest, Empty
       end
 
       Stub = Service.rpc_stub_class

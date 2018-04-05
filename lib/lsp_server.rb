@@ -24,10 +24,15 @@ require_relative 'processors/implementation_file_list_processor'
 require_relative 'processors/step_validation_request_processor'
 require_relative 'processors/refactor_step_request_processor'
 require_relative 'processors/step_name_request_processor'
+require_relative 'processors/implementation_glob_pattern_processor'
 
 module Gauge
   class LSPServer < Gauge::Messages::LspService::Service
     include Gauge::Processors
+
+    def initialize(server)
+      @server = server
+    end
 
     def get_step_names(_request, _call)
       step_names_response
@@ -59,6 +64,15 @@ module Gauge
 
     def get_step_name(request, _call)
       step_name_response(request)
+    end
+
+    def get_glob_patterns(_request, _call)
+      implementation_glob_pattern_response
+    end
+
+    def kill_process(_request, _call)
+      @server.stop
+      exit(0)
     end
   end
 end

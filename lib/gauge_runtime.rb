@@ -74,21 +74,16 @@ module Gauge
     STDOUT.sync = true
     GaugeLog.init
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
-    conn_threads = []
     if ENV.key? 'GAUGE_LSP_GRPC'
-      conn_threads << Thread.new do
-        server = GRPC::RpcServer.new
-        p = server.add_http2_port('127.0.0.1:54545', :this_port_is_insecure)
-        server.handle(Gauge::LSPServer.new)
-        puts "Listening on port:#{p}"
-        server.run_till_terminated
-      end
-    end
-    conn_threads << Thread.new do
+      server = GRPC::RpcServer.new
+      p = server.add_http2_port('127.0.0.1:54545', :this_port_is_insecure)
+      server.handle(Gauge::LSPServer.new(server))
+      puts "Listening on port:#{p}"
+      server.run_till_terminated
+    else
       Connector.make_connection
       dispatch_messages(Connector.execution_socket)
     end
-    conn_threads.each(&:join)
     exit(0)
   end
 end
