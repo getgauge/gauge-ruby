@@ -21,23 +21,21 @@ module Gauge
   # @api private
   module Processors
     def process_cache_file_request(message)
-      if !message.cacheFileRequest.isClosed
+      f = message.cacheFileRequest.filePath
+      status = message.cacheFileRequest.status
+      if status == Messages::CacheFileRequest::FileStatus::CHANGED or status == Messages::CacheFileRequest::FileStatus::OPENED
         ast = CodeParser.code_to_ast(message.cacheFileRequest.content)
-        StaticLoader.reload_steps(message.cacheFileRequest.filePath, ast)
-      else
-        load_from_disk message.cacheFileRequest.filePath
-      end
-      nil
-    end
-
-    def load_from_disk(f)
-      if File.file? f
+        StaticLoader.reload_steps(f, ast)
+      elsif status == Messages::CacheFileRequest::FileStatus::CREATED
+        ast = CodeParser.code_to_ast File.read(f)
+        StaticLoader.reload_steps(f, ast)
+      elsif status == Messages::CacheFileRequest::FileStatus::CLOSED and File.file? f
         ast = CodeParser.code_to_ast File.read(f)
         StaticLoader.reload_steps(f, ast)
       else
         StaticLoader.remove_steps(f)
       end
+      nil
     end
-
   end
 end

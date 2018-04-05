@@ -81,7 +81,7 @@ module Gauge
 
     def self.remove_steps(file)
       @@steps_map.each_pair do |step, info|
-        l = info[:locations].reject { |loc| File.identical? loc[:file], file }
+        l = info[:locations].reject { |loc| File.fnmatch? loc[:file], file }
         l.empty? ? @@steps_map.delete(step) : @@steps_map[step][:locations] = l
       end
     end
