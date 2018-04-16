@@ -29,7 +29,7 @@ module Gauge
 
     def cache_file_response(request)
       f = request.filePath
-      status = request.status
+      status =  Messages::CacheFileRequest::FileStatus.resolve(request.status)
       if (status == Messages::CacheFileRequest::FileStatus::CHANGED) || (status == Messages::CacheFileRequest::FileStatus::OPENED)
         ast = CodeParser.code_to_ast(request.content)
         StaticLoader.reload_steps(f, ast)

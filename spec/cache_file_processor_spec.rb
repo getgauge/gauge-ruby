@@ -11,7 +11,7 @@ describe Gauge::Processors do
         ast = Gauge::CodeParser.code_to_ast content
         Gauge::StaticLoader.load_steps 'foo.rb', ast
         allow(message).to receive_message_chain(:cacheFileRequest, :filePath => 'foo.rb')
-        allow(message).to receive_message_chain(:cacheFileRequest, :status => Gauge::Messages::CacheFileRequest::FileStatus::OPENED)
+        allow(message).to receive_message_chain(:cacheFileRequest, :status =>  :OPENED)
         allow(message).to receive_message_chain(:cacheFileRequest, :content => "step 'foo <vowels>' do |v|\nend")
         allow(message).to receive(:messageId) {1}
       }
@@ -27,7 +27,7 @@ describe Gauge::Processors do
         ast = Gauge::CodeParser.code_to_ast content
         Gauge::StaticLoader.load_steps 'foo.rb', ast
         allow(message).to receive_message_chain(:cacheFileRequest, :filePath => 'foo.rb')
-        allow(message).to receive_message_chain(:cacheFileRequest, :status => Gauge::Messages::CacheFileRequest::FileStatus::OPENED)
+        allow(message).to receive_message_chain(:cacheFileRequest, :status => :OPENED)
         allow(message).to receive_message_chain(:cacheFileRequest, :content => "step 'foo <vowels>' do |v|\nend")
         allow(message).to receive(:messageId) {1}
       }
@@ -42,7 +42,7 @@ describe Gauge::Processors do
         content = "step 'foo' do\n\tputs 'hello'\nend\n"
         allow(File).to receive(:read).with('foo.rb').and_return(content)
         allow(message).to receive_message_chain(:cacheFileRequest, :filePath => 'foo.rb')
-        allow(message).to receive_message_chain(:cacheFileRequest, :status => Gauge::Messages::CacheFileRequest::FileStatus::CREATED)
+        allow(message).to receive_message_chain(:cacheFileRequest, :status => :CREATED)
         allow(message).to receive(:messageId) {1}
       }
       it 'should reload step cache from file system' do
@@ -57,7 +57,7 @@ describe Gauge::Processors do
         allow(File).to receive(:file?).with('foo.rb').and_return(true)
         allow(File).to receive(:read).with('foo.rb').and_return("step 'foo <vowels>' do |v|\nend")
         allow(message).to receive_message_chain(:cacheFileRequest, :filePath => 'foo.rb')
-        allow(message).to receive_message_chain(:cacheFileRequest, :status => Gauge::Messages::CacheFileRequest::FileStatus::CLOSED)
+        allow(message).to receive_message_chain(:cacheFileRequest, :status => :CLOSED)
         allow(message).to receive(:messageId) {1}
       }
       it 'should reload step cache from file system' do
@@ -71,7 +71,7 @@ describe Gauge::Processors do
         ast = Gauge::CodeParser.code_to_ast "step 'foo' do\n\tputs 'hello'\nend\n"
         Gauge::StaticLoader.load_steps 'foo.rb', ast
         allow(message).to receive_message_chain(:cacheFileRequest, :filePath => 'foo.rb')
-        allow(message).to receive_message_chain(:cacheFileRequest, :status => Gauge::Messages::CacheFileRequest::FileStatus::DELETED)
+        allow(message).to receive_message_chain(:cacheFileRequest, :status => :DELETED)
         allow(message).to receive(:messageId) {1}
       }
       it 'should reload step cache from file system' do
