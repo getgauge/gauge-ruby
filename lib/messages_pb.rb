@@ -105,6 +105,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "gauge.messages.FileChanges" do
     optional :fileName, :string, 1
     optional :fileContent, :string, 2
+    repeated :diffs, :message, 3, "gauge.messages.TextDiff"
   end
   add_message "gauge.messages.RefactorResponse" do
     optional :success, :bool, 1

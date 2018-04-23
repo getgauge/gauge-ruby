@@ -46,7 +46,7 @@ describe Gauge::CodeParser do
         step 'say <what> to <who>' do |what, who|
           puts 'hello'
         end
-        
+
         step 'say hello' do
           puts 'say hello'
         end
@@ -59,7 +59,7 @@ describe Gauge::CodeParser do
 
     it 'replaces step text' do
       new_step_text = 'new step text'
-      refactored_code = described_class.refactor_args('say <what> to <who>',step_node, [], [], new_step_text)
+      refactored_code = described_class.refactor_args('say <what> to <who>',step_node, [], [], new_step_text)[:content]
       refactored_code_ast = described_class.code_to_ast(refactored_code)
       refactored_step_text = refactored_code_ast.children[0].children[2].children[0]
       expect(refactored_step_text).to eq new_step_text
@@ -67,7 +67,7 @@ describe Gauge::CodeParser do
 
     it 'reorders arguments' do
       param_positions = [Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: 0, newPosition: 1)]
-      refactored_code = described_class.refactor_args('say <what> to <who>',step_node, param_positions, %w(who what), 'say <who> to <what>')
+      refactored_code = described_class.refactor_args('say <what> to <who>',step_node, param_positions, %w(who what), 'say <who> to <what>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
       expect(new_args.to_s).to eq '[s(:arg, :who), s(:arg, :what)]'
@@ -75,7 +75,7 @@ describe Gauge::CodeParser do
 
     it 'removes arguments' do
       param_positions = [Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 0)]
-      refactored_code = described_class.refactor_args('say <what> to <who>', step_node, param_positions, ['who'], 'say <who>')
+      refactored_code = described_class.refactor_args('say <what> to <who>', step_node, param_positions, ['who'], 'say <who>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
       expect(new_args.to_s).to eq '[s(:arg, :who)]'
@@ -85,7 +85,7 @@ describe Gauge::CodeParser do
       param_positions = [Gauge::Messages::ParameterPosition.new(oldPosition: 0, newPosition: 0),
                          Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1),
                          Gauge::Messages::ParameterPosition.new(oldPosition: 1, newPosition: 2)]
-      refactored_code = described_class.refactor_args('say <what> to <who>',step_node, param_positions, %w(what where who), 'say <what> to <who> at <where>')
+      refactored_code = described_class.refactor_args('say <what> to <who>',step_node, param_positions, %w(what where who), 'say <what> to <who> at <where>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
       expect(new_args.to_s).to eq '[s(:arg, :what), s(:arg, :arg_where), s(:arg, :who)]'
@@ -93,7 +93,7 @@ describe Gauge::CodeParser do
 
     it 'inserts arguments when none existed' do
       param_positions = [Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
-      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(what who), 'say <what> to <who>')
+      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(what who), 'say <what> to <who>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
       expect(new_args.to_s).to eq '[s(:arg, :arg_what), s(:arg, :arg_who)]'
@@ -101,7 +101,7 @@ describe Gauge::CodeParser do
 
     it 'inserts arguments with keywords' do
       param_positions = [Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0)]
-      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, ['1'], 'say <1>')
+      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, ['1'], 'say <1>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
       expect(new_args.to_s).to eq '[s(:arg, :arg_1)]'
@@ -109,7 +109,7 @@ describe Gauge::CodeParser do
 
     it 'ignores special characters in param names' do
       param_positions = [Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
-      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(what@ who&1), 'say <what@> to <who&1>')
+      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(what@ who&1), 'say <what@> to <who&1>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
       expect(new_args.to_s).to eq '[s(:arg, :arg_what), s(:arg, :arg_who1)]'
@@ -117,7 +117,7 @@ describe Gauge::CodeParser do
 
     it 'adds param index to param name if it only has a special character' do
       param_positions = [Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 0), Gauge::Messages::ParameterPosition.new(oldPosition: -1, newPosition: 1)]
-      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(@ *), 'say <@> to <*>')
+      refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(@ *), 'say <@> to <*>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
       expect(new_args.to_s).to eq '[s(:arg, :arg_0), s(:arg, :arg_1)]'
