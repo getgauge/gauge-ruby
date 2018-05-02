@@ -48,7 +48,6 @@ module Gauge
              :recoverableError => recoverable,
              :errorMessage => exception.message,
              :stackTrace => code_snippet + stacktrace,
-             :executionTime => execution_time,
              :executionTime => execution_time))
         screenshot = screenshot_bytes
         execution_status_response.executionResult.screenShot = screenshot if !screenshot.nil?
