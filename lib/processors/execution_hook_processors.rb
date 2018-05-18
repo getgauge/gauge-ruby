@@ -27,37 +27,51 @@ module Gauge
     def process_execution_start_request(message)
       Gauge::MethodCache.clear
       Executor.load_steps(Util.get_step_implementation_dir)
-      handle_hooks_execution(MethodCache.get_before_suite_hooks, message, message.executionStartingRequest.currentExecutionInfo,false)
+      response = handle_hooks_execution(MethodCache.get_before_suite_hooks, message,false)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
+      return response
     end
 
     def process_execution_end_request(message)
-      handle_hooks_execution(MethodCache.get_after_suite_hooks, message, message.executionEndingRequest.currentExecutionInfo, false)
+      response = handle_hooks_execution(MethodCache.get_after_suite_hooks, message, false)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
+      return response
     end
 
     def process_spec_execution_start_request(message)
-      handle_hooks_execution(MethodCache.get_before_spec_hooks, message, message.specExecutionStartingRequest.currentExecutionInfo)
+      response = handle_hooks_execution(MethodCache.get_before_spec_hooks, message)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
+      return response
     end
 
     def process_spec_execution_end_request(message)
-      handle_hooks_execution(MethodCache.get_after_spec_hooks, message, message.specExecutionEndingRequest.currentExecutionInfo)
+      response = handle_hooks_execution(MethodCache.get_after_spec_hooks, message)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
+      return response
     end
 
     def process_scenario_execution_start_request(message)
-      handle_hooks_execution(MethodCache.get_before_scenario_hooks, message, message.scenarioExecutionStartingRequest.currentExecutionInfo)
+      response = handle_hooks_execution(MethodCache.get_before_scenario_hooks, message)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
+      return response
     end
 
+
     def process_scenario_execution_end_request(message)
-      handle_hooks_execution(MethodCache.get_after_scenario_hooks, message, message.scenarioExecutionEndingRequest.currentExecutionInfo)
+      response = handle_hooks_execution(MethodCache.get_after_scenario_hooks, message)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
+      return response
     end
 
     def process_step_execution_start_request(message)
-      Gauge::GaugeMessages.instance.clear
-      handle_hooks_execution(MethodCache.get_before_step_hooks, message, message.stepExecutionStartingRequest.currentExecutionInfo)
+      response = handle_hooks_execution(MethodCache.get_before_step_hooks, message)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
+      return response
     end
 
     def process_step_execution_end_request(message)
-      response = handle_hooks_execution(MethodCache.get_after_step_hooks, message, message.stepExecutionEndingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.message = Google::Protobuf::RepeatedField.new(:string, Gauge::GaugeMessages.instance.get)
+      response = handle_hooks_execution(MethodCache.get_after_step_hooks, message)
+      response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
   end

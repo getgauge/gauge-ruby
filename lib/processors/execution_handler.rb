@@ -21,7 +21,8 @@ module Gauge
   module Processors
     # @api private
     module ExecutionHandler
-      def handle_hooks_execution(hooks, message, currentExecutionInfo, should_filter=true)
+      def handle_hooks_execution(hooks, message, should_filter=true)
+        currentExecutionInfo = message.executionEndingRequest.currentExecutionInfo
         start_time= Time.now
         execution_error = Executor.execute_hooks(hooks, currentExecutionInfo, should_filter)
         if execution_error == nil
