@@ -1,7 +1,5 @@
 describe 'Execute Hook' do
 
-  let(:input) { {executionStartingRequest: {currentExecutionInfo: " "}} }
-
   before(:each) {
     Gauge::Util.stub(:get_step_implementation_dir)
     Gauge::Executor.stub(:load_steps)
@@ -12,6 +10,7 @@ describe 'Execute Hook' do
 
   context 'before suite' do
     it 'should add custom message from before suite' do
+      input = Gauge::Messages::Message.new(:executionStartingRequest => Gauge::Messages::ExecutionStartingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('before suite')
       response = Gauge::Processors.process_execution_start_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'before suite'
@@ -20,6 +19,7 @@ describe 'Execute Hook' do
 
   context 'after suite' do
     it 'should add custom message from after suite' do
+      input = Gauge::Messages::Message.new(:executionEndingRequest => Gauge::Messages::ExecutionEndingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('after suite')
       response = Gauge::Processors.process_execution_end_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'after suite'
@@ -28,6 +28,7 @@ describe 'Execute Hook' do
 
   context 'before spec' do
     it 'should add custom message from before spec' do
+      input = Gauge::Messages::Message.new(:specExecutionStartingRequest => Gauge::Messages::SpecExecutionStartingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('before spec')
       response = Gauge::Processors.process_spec_execution_start_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'before spec'
@@ -36,6 +37,7 @@ describe 'Execute Hook' do
 
   context 'after spec' do
     it 'should add custom message from after spec' do
+      input = Gauge::Messages::Message.new(:specExecutionEndingRequest => Gauge::Messages::SpecExecutionEndingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('after spec')
       response = Gauge::Processors.process_spec_execution_end_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'after spec'
@@ -44,6 +46,7 @@ describe 'Execute Hook' do
 
   context 'before scenario' do
     it 'should add custom message from before scenario' do
+      input = Gauge::Messages::Message.new(:scenarioExecutionStartingRequest => Gauge::Messages::ScenarioExecutionStartingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('before scenario')
       response = Gauge::Processors.process_scenario_execution_start_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'before scenario'
@@ -52,6 +55,7 @@ describe 'Execute Hook' do
 
   context 'after scenario' do
     it 'should add custom message from after scenario' do
+      input = Gauge::Messages::Message.new(:scenarioExecutionEndingRequest => Gauge::Messages::ScenarioExecutionEndingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('after scenario')
       response = Gauge::Processors.process_scenario_execution_end_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'after scenario'
@@ -60,6 +64,7 @@ describe 'Execute Hook' do
 
   context 'before step' do
     it 'should add custom message from before step' do
+      input = Gauge::Messages::Message.new(:stepExecutionStartingRequest => Gauge::Messages::StepExecutionStartingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('before step')
       response = Gauge::Processors.process_step_execution_start_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'before step'
@@ -68,6 +73,7 @@ describe 'Execute Hook' do
 
   context 'after step' do
     it 'should add custom message from after step' do
+      input = Gauge::Messages::Message.new(:stepExecutionEndingRequest => Gauge::Messages::StepExecutionEndingRequest.new(:currentExecutionInfo => nil))
       Gauge::GaugeMessages.instance.write('after step')
       response = Gauge::Processors.process_step_execution_end_request(input)
       expect(response.executionStatusResponse.executionResult.message).to include 'after step'
