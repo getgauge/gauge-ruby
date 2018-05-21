@@ -21,6 +21,7 @@ require 'method_source'
 require 'fileutils'
 require 'tempfile'
 require 'util'
+require 'messages_pb'
 
 module Gauge
   # @api private
@@ -33,18 +34,16 @@ module Gauge
     def self.process_node(node, param_positions, new_param_values, new_step_text)
       new_params = []
       args = step_args_from_code node
-      param_positions.sort_by!(&:newPosition).each.with_index {|e, i|
+      param_positions.sort_by!(&:newPosition).each.with_index do |e, i|
         if e.oldPosition == -1
           param = Util.remove_special_chars new_param_values[e.newPosition].downcase.split.join('_')
-          if param == ''
-            param = i
-          end
+          param = i if param == ''
           new_params[e.newPosition] = "arg_#{param}"
         else
           new_params[e.newPosition] = args[e.oldPosition].children[0]
         end
-      }
-      args = new_params.map {|v| Parser::AST::Node.new(:arg, [v])}
+      end
+      args = new_params.map { |v| Parser::AST::Node.new(:arg, [v]) }
       step = [node.children[0].children[0], node.children[0].children[1], Parser::AST::Node.new(:str, [new_step_text])]
       c1 = Parser::AST::Node.new(:send, step)
       c2 = Parser::AST::Node.new(:args, args)
@@ -56,9 +55,9 @@ module Gauge
       if ast && step_node?(ast)
         visitor.call(ast)
       else
-        children = ast.children.map {|node|
+        children = ast.children.map do |node|
           replace(node, &visitor)
-        }
+        end
         return ast.updated(nil, children, nil)
       end
     end
@@ -67,37 +66,62 @@ module Gauge
       node.type == :block && node.children[0].children.size > 2 && node.children[0].children[1] == :step
     end
 
+    def self.create_params_diff(old_node, new_node)
+      params_loc = old_node.children[1].loc
+      text = Unparser.unparse new_node.children[1]
+      if old_node.children[1].children.size > 1
+        span = Messages::Span.new(start: params_loc.begin.line, startChar: params_loc.begin.column + 1,
+                                  end: params_loc.end.line, endChar: params_loc.end.column)
+      else
+        span = Messages::Span.new(start: old_node.loc.begin.line, startChar: old_node.loc.begin.column,
+                                  end: old_node.children[2].loc.line, endChar: old_node.children[2].loc.column)
+        text = "do#{text.empty? ? text : " |#{text}|"}\n\t"
+      end
+      Messages::TextDiff.new(content: text, span: span)
+    end
+
+    def self.create_diffs(old_node, new_node)
+      step_loc = old_node.children[0].children[2].loc
+      step_text = new_node.children[0].children[2].children[0]
+      span = Messages::Span.new(start: step_loc.begin.line,
+                                end: step_loc.end.line,
+                                startChar: step_loc.begin.column + 1,
+                                endChar: step_loc.end.column)
+      [Messages::TextDiff.new(content: step_text, span: span), create_params_diff(old_node, new_node)]
+    end
+
     def self.refactor_args(step_text, ast, param_positions, new_param_values, new_step_text)
+      diffs = nil
       new_ast = replace ast do |node|
         if node.children[0].children[2].children[0] == step_text
-          process_node(node, param_positions, new_param_values, new_step_text)
-        else
+          old_node = node.clone
+          node = process_node(node, param_positions, new_param_values, new_step_text)
+          diffs = create_diffs(old_node, node)
+        end
           node
         end
+      code = Unparser.unparse new_ast
+      { content: code, diffs: diffs }
       end
-      Unparser.unparse new_ast
-    end
 
     def self.refactor(step_info, param_positions, new_step)
       ast = code_to_ast File.read(step_info[:locations][0][:file])
-      refactor_args(step_info[:step_text], ast, param_positions, new_step.parameters, new_step.parameterizedStepValue)
+      refactor_args(step_info[:step_text], ast, param_positions,
+                    new_step.parameters,
+                    new_step.parameterizedStepValue)
     end
 
-    private
+    private_class_method
 
     def self.code_to_ast(code)
       begin
         buffer = Parser::Source::Buffer.new '(string)'
         buffer.source = code
         parser = Parser::CurrentRuby.new
-        return parser.parse(buffer)
+      parser.parse(buffer)
       rescue Exception => e
         Gauge::Log.error e.message
       end
-    end
-
-    def self.include_args(code_string, params)
-      code_string.gsub("do", "do #{params}")
     end
   end
 end
