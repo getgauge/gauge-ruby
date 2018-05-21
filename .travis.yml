@@ -28,4 +28,6 @@ script:
   - cd gauge-tests
   - gauge install
   - gauge version
+  - java -version
+  - mvn --version
   - TAGS="ruby" ./starttests.sh ruby
