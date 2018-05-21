@@ -31,7 +31,7 @@ module Gauge
         step_info = get_step request.oldStepValue.stepValue
         refactored_info = CodeParser.refactor step_info, request.paramPositions, request.newStepValue
         file = step_info[:locations][0][:file]
-        File.write file, refactored_info.content if request.saveChanges
+        File.write file, refactored_info[:content] if request.saveChanges
         response.filesChanged.push(file)
         changes = Messages::FileChanges.new(fileName: file, fileContent: refactored_info[:content], diffs: refactored_info[:diffs])
         response.fileChanges.push(changes)
