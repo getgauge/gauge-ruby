@@ -88,7 +88,7 @@ describe Gauge::CodeParser do
       refactored_code = described_class.refactor_args('say <what> to <who>',step_node, param_positions, %w(what where who), 'say <what> to <who> at <where>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
-      expect(new_args.to_s).to eq '[s(:arg, :what), s(:arg, :arg_where), s(:arg, :who)]'
+      expect(new_args.to_s).to eq '[s(:arg, :what), s(:arg, :arg_1), s(:arg, :who)]'
     end
 
     it 'inserts arguments when none existed' do
@@ -96,7 +96,7 @@ describe Gauge::CodeParser do
       refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(what who), 'say <what> to <who>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
-      expect(new_args.to_s).to eq '[s(:arg, :arg_what), s(:arg, :arg_who)]'
+      expect(new_args.to_s).to eq '[s(:arg, :arg_0), s(:arg, :arg_1)]'
     end
 
     it 'inserts arguments with keywords' do
@@ -104,7 +104,7 @@ describe Gauge::CodeParser do
       refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, ['1'], 'say <1>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
-      expect(new_args.to_s).to eq '[s(:arg, :arg_1)]'
+      expect(new_args.to_s).to eq '[s(:arg, :arg_0)]'
     end
 
     it 'ignores special characters in param names' do
@@ -112,7 +112,7 @@ describe Gauge::CodeParser do
       refactored_code = described_class.refactor_args('say hello',step_node_no_args, param_positions, %w(what@ who&1), 'say <what@> to <who&1>')[:content]
       refactored_ast = described_class.code_to_ast refactored_code
       new_args = described_class.step_args_from_code(refactored_ast)
-      expect(new_args.to_s).to eq '[s(:arg, :arg_what), s(:arg, :arg_who1)]'
+      expect(new_args.to_s).to eq '[s(:arg, :arg_0), s(:arg, :arg_1)]'
     end
 
     it 'adds param index to param name if it only has a special character' do

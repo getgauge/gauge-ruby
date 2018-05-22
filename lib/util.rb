@@ -17,21 +17,10 @@
 
 module Gauge
   class Util
-    def self.valid_variable_name?(var_name)
-      Object.new.instance_variable_set ('@' + var_name).to_sym, nil
-      true
-    rescue NameError
-      !!(var_name =~ /^[0-9]+$/)
-    end
-
-    def self.remove_special_chars(param)
-      new_param = ''
-      param.each_char {|c|
-        if valid_variable_name? c
-          new_param += c
-        end
-      }
-      return new_param
+    def self.get_param_name(params, index)
+      name = "arg_#{index}"
+      return name unless params.include? name
+      get_param_name(params, index + 1)
     end
 
     def self.get_step_implementation_dir

@@ -36,9 +36,7 @@ module Gauge
       args = step_args_from_code node
       param_positions.sort_by!(&:newPosition).each.with_index do |e, i|
         if e.oldPosition == -1
-          param = Util.remove_special_chars new_param_values[e.newPosition].downcase.split.join('_')
-          param = i if param == ''
-          new_params[e.newPosition] = "arg_#{param}"
+          new_params[e.newPosition] = Util.get_param_name(new_params, i)
         else
           new_params[e.newPosition] = args[e.oldPosition].children[0]
         end
