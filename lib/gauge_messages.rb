@@ -39,6 +39,12 @@ module Gauge
       @gauge_messages ||= GaugeMessages.new
     end
 
+    def pending_messages()
+        pending_messages = @messages
+        @messages = []
+        pending_messages
+    end  
+
     def write(message)
       @messages.push(message)
     end
