@@ -31,12 +31,13 @@ module Gauge
       arg_node.children
     end
 
-    def self.process_node(node, param_positions, new_param_values, new_step_text)
+    def self.process_node(node, param_positions, _new_param_values, new_step_text)
       new_params = []
       args = step_args_from_code node
+      old_params = args.map { |arg| Unparser.unparse arg }
       param_positions.sort_by!(&:newPosition).each.with_index do |e, i|
         if e.oldPosition == -1
-          new_params[e.newPosition] = Util.get_param_name(new_params, i)
+          new_params[e.newPosition] = Util.get_param_name(old_params, i)
         else
           new_params[e.newPosition] = args[e.oldPosition].children[0]
         end
