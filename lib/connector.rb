@@ -32,6 +32,7 @@ module Gauge
 
     def self.make_connection
       @@executionSocket = TCPSocket.open(HOST_NAME, Runtime.port_from_env_variable(GAUGE_PORT_ENV))
+      @@executionSocket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
     end
 
     def self.message_length(socket)
