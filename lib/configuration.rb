@@ -53,6 +53,7 @@ module Gauge
   class Configuration
     def initialize
       @includes=[]
+      @custom_screengrabber=false
       @screengrabber = -> {
           file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
           `gauge_screenshot #{file.path}`
@@ -61,6 +62,8 @@ module Gauge
           return file_content
       }
     end
+
+    attr_reader :custom_screengrabber
 
     def self.instance
       @configuration ||= Configuration.new
@@ -79,6 +82,7 @@ module Gauge
     end
 
     def screengrabber=(block)
+      @custom_screengrabber=true
       @screengrabber=block
     end
 
