@@ -34,7 +34,7 @@ describe ExecutionHandler do
       }
     end
 
-    context 'on failure in windows' do
+    context 'on failure for windows filepath' do
       before {
         allow(ExecutionHandler).to receive(:get_code_snippet).and_return("11 | assert_equal(expected_count.to_i, 4)\n")
         allow(message).to receive(:messageId) {1}
