@@ -34,6 +34,21 @@ describe ExecutionHandler do
       }
     end
 
+    context 'on failure for windows filepath' do
+      before {
+        allow(ExecutionHandler).to receive(:get_code_snippet).and_return("11 | assert_equal(expected_count.to_i, 4)\n")
+        allow(message).to receive(:messageId) {1}
+        allow(exception).to receive(:message) {"error message"}
+        allow(exception).to receive_message_chain(:backtrace, :select, :join => 'C:/abc/xyz/gauge-ruby/step_implementations/step_implementation.rb:11:in block in <top (required)>')
+      }
+      it {
+        response = subject.handle_failure(message, exception, ((Time.now-Time.now) * 1000).round, false).executionStatusResponse
+        expect(response.executionResult.failed).to eq true
+        expect(response.executionResult.errorMessage).to eq "error message"
+        expect(response.executionResult.stackTrace).to eq "> 11 | assert_equal(expected_count.to_i, 4)\nC:/abc/xyz/gauge-ruby/step_implementations/step_implementation.rb:11:in block in <top (required)>\n"
+      }
+    end
+
     context 'on success' do
       before {
         allow(ExecutionHandler).to receive(:get_code_snippet).and_return("29 | assert_fail_assertion()\n")

@@ -36,10 +36,17 @@ module Gauge
         Messages::Message.new(:messageType => :ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
       end
 
+      def get_filepath(stacktrace)
+        dirname = File.dirname(stacktrace).split(":").last
+        filename = File.basename(stacktrace)
+        filepath = File.join(dirname,filename)
+        return filepath
+    end
+    
       def handle_failure(message, exception, execution_time, recoverable)
         project_dir = File.basename(Dir.getwd)
         stacktrace =  exception.backtrace.select {|x| x.match(project_dir) && !x.match(File.join(project_dir, "vendor"))}.join("\n")+"\n"
-        filepath =  stacktrace.split("\n").first.split(":").first
+        filepath = get_filepath(stacktrace)
         line_number =  stacktrace.split("\n").first.split("/").last.split(":")[1]
         code_snippet = "\n" + '> ' + get_code_snippet(filepath, line_number.to_i)
         execution_status_response =
