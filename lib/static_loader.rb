@@ -40,7 +40,6 @@ module Gauge
     end
 
     def self.load_steps(file, ast)
-      Gauge::MethodCache.clear()
       traverse ast do |node|
         process_node(file, node)
       end
