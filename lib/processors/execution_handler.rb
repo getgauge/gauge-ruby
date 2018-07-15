@@ -37,10 +37,8 @@ module Gauge
       end
 
       def get_filepath(stacktrace)
-        project_root =  Pathname.new(ENV['GAUGE_PROJECT_ROOT'])
         toptrace = stacktrace.split("\n").first
-        filename = Pathname.new(toptrace).relative_path_from(project_root)
-        return project_root.join(filename)
+        return MethodCache.relative_filepath toptrace
       end
     
       def handle_failure(message, exception, execution_time, recoverable)
