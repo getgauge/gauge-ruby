@@ -223,7 +223,7 @@ describe Gauge::MethodCache do
       expect(subject.valid_step? "step {}").to eq false
       expect(subject.valid_step? "step").to eq false
     end
-    it 'should remove all steps in a file in windows' do
+    it 'should remove all steps in a file in windows', :if => OS.windows? do
       ENV['GAUGE_PROJECT_ROOT'] = "c:/temp"
       subject.add_step("step {}", {:step_text =>  "step <param>",:location => {:file => "c:/temp/foo.bar"}})
       subject.add_step("step ", {:step_text =>  "step ",:location => {:file => "c:/temp/foo.bar"}})
