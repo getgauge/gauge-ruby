@@ -82,7 +82,7 @@ module Gauge
     def self.relative_filepath(file)
       project_root =  Pathname.new(ENV['GAUGE_PROJECT_ROOT'])
       filename = Pathname.new(file).relative_path_from(project_root)
-      return project_root.join(filename)
+      return project_root.join(filename.to_s.split(":").first)
     end
 
     def self.remove_steps(file)
