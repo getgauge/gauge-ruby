@@ -50,7 +50,7 @@ module Gauge
              :stackTrace => code_snippet + stacktrace,
              :executionTime => execution_time))
         screenshot = screenshot_bytes
-        execution_status_response.executionResult.screenShot = screenshot if !screenshot.nil?
+        execution_status_response.executionResult.screenShot.push(screenshot) if !screenshot.nil?
         Messages::Message.new(:messageType => :ExecutionStatusResponse,
           :messageId => message.messageId, :executionStatusResponse => execution_status_response)
       end

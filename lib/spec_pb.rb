@@ -126,7 +126,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :recoverableError, :bool, 2
     optional :errorMessage, :string, 3
     optional :stackTrace, :string, 4
-    optional :screenShot, :bytes, 5
+    repeated :screenShot, :bytes, 5
     optional :executionTime, :int64, 6
     repeated :message, :string, 7
     optional :errorType, :enum, 8, "gauge.messages.ProtoExecutionResult.ErrorType"

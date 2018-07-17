@@ -17,6 +17,7 @@
 
 require_relative "execution_handler"
 require_relative "../gauge_messages"
+require_relative "../gauge_screenshot"
 require_relative "../executor"
 require_relative "../method_cache"
 require_relative "../util"
@@ -71,6 +72,7 @@ module Gauge
 
     def process_step_execution_end_request(message)
       response = handle_hooks_execution(MethodCache.get_after_step_hooks, message,message.stepExecutionEndingRequest.currentExecutionInfo)
+      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
