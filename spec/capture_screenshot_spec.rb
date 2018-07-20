@@ -15,22 +15,21 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-describe Gauge do   
+describe Gauge do
+    before(:each) {
+        Gauge.configure { |c|  c.screengrabber = -> { return "foo" }}
+      }
     context 'capture screenshot' do
-        it 'should not have screenshot' do 
-            expect(Gauge::GaugeScreenshot.instance.get.length).to eq 0
-        end
-        it 'should have screenshot' do
-            Gauge.capture()
-            expect(Gauge::GaugeScreenshot.instance.get.length).to eq 1
+        it "should have a screenshot" do
+            Gauge.capture
+            expect(Gauge::GaugeScreenshot.instance.pending_screenshot).to match_array ["foo"]
         end
     end
     context 'clear screenshot' do
-        it 'should remove screenshot' do
-            Gauge.capture()
-            expect(Gauge::GaugeScreenshot.instance.get.length).to eq 2
-            Gauge::GaugeScreenshot.instance.clear
-            expect(Gauge::GaugeScreenshot.instance.get.length).to eq 0
+        it "should clear screenshot after collecting them" do
+            Gauge.capture
+            expect(Gauge::GaugeScreenshot.instance.pending_screenshot).to match_array ["foo"]
+            expect(Gauge::GaugeScreenshot.instance.pending_screenshot).to match_array []
         end
     end
 end
