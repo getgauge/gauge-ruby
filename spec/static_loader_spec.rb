@@ -78,12 +78,11 @@ describe Gauge::StaticLoader do
     end
 
     it 'reload a given file' do
-      file = 'foo.rb'
+      file = '/temp/foo.rb'
       ast = Gauge::CodeParser.code_to_ast "step 'foo <vowels>' do |v|\nend"
       Gauge::StaticLoader.load_steps(file, ast)
       ast = Gauge::CodeParser.code_to_ast "step 'hello <vowels>' do |v|\nend"
       Gauge::StaticLoader.reload_steps(file, ast)
-
       expect(subject.valid_step? 'foo {}').to eq false
       expect(subject.valid_step? 'hello {}').to eq true
     end

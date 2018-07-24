@@ -79,9 +79,15 @@ module Gauge
       @@steps_map[step_value][:recoverable]
     end
 
+    def self.relative_filepath(file)
+      project_root =  Pathname.new(ENV['GAUGE_PROJECT_ROOT'])
+      filename = Pathname.new(file).relative_path_from(project_root)
+      return project_root.join(filename.to_s.split(":").first)
+    end
+
     def self.remove_steps(file)
       @@steps_map.each_pair do |step, info|
-        l = info[:locations].reject { |loc| File.fnmatch? loc[:file], file }
+        l = info[:locations].reject { |loc| relative_filepath(loc[:file]).eql? relative_filepath(file) }
         l.empty? ? @@steps_map.delete(step) : @@steps_map[step][:locations] = l
       end
     end
