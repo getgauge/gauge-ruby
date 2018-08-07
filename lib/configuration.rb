@@ -55,11 +55,11 @@ module Gauge
       @includes=[]
       @custom_screengrabber=false
       @screengrabber = -> {
-          file = File.open("#{Dir.tmpdir}/screenshot.png", "w+")
-          `gauge_screenshot #{file.path}`
-          file_content = File.binread(file.path)
-          File.delete file
-          return file_content
+        file_name = "#{Dir.tmpdir}/screenshot.png"
+        `gauge_screenshot #{file_name}`
+        file_content = File.binread(file_name)
+        File.delete file_name
+        return file_content
       }
     end
 
