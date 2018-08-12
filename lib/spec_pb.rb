@@ -16,6 +16,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     repeated :postHookMessages, :string, 9
     repeated :preHookMessage, :string, 10
     repeated :postHookMessage, :string, 11
+    repeated :preHookScreenshots, :bytes, 12
+    repeated :postHookScreenshots, :bytes, 13
   end
   add_message "gauge.messages.ProtoItem" do
     optional :itemType, :enum, 1, "gauge.messages.ProtoItem.ItemType"
@@ -55,6 +57,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     repeated :postHookMessages, :string, 16
     repeated :preHookMessage, :string, 17
     repeated :postHookMessage, :string, 18
+    repeated :preHookScreenshots, :bytes, 19
+    repeated :postHookScreenshots, :bytes, 20
   end
   add_message "gauge.messages.Span" do
     optional :start, :int64, 1
@@ -73,6 +77,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :stepExecutionResult, :message, 4, "gauge.messages.ProtoStepExecutionResult"
     repeated :preHookMessages, :string, 5
     repeated :postHookMessages, :string, 6
+    repeated :preHookScreenshots, :bytes, 7
+    repeated :postHookScreenshots, :bytes, 8
   end
   add_message "gauge.messages.ProtoConcept" do
     optional :conceptStep, :message, 1, "gauge.messages.ProtoStep"
@@ -126,10 +132,12 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :recoverableError, :bool, 2
     optional :errorMessage, :string, 3
     optional :stackTrace, :string, 4
-    repeated :screenShot, :bytes, 5
+    optional :screenShot, :bytes, 5
     optional :executionTime, :int64, 6
     repeated :message, :string, 7
     optional :errorType, :enum, 8, "gauge.messages.ProtoExecutionResult.ErrorType"
+    optional :failedScreenshot, :bytes, 9
+    repeated :screenshots, :bytes, 10
   end
   add_enum "gauge.messages.ProtoExecutionResult.ErrorType" do
     value :ASSERTION, 0
@@ -140,6 +148,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :errorMessage, :string, 2
     optional :screenShot, :bytes, 3
     optional :tableRowIndex, :int32, 4
+    optional :failedScreenshot, :bytes, 5
   end
   add_message "gauge.messages.ProtoSuiteResult" do
     repeated :specResults, :message, 1, "gauge.messages.ProtoSpecResult"
@@ -158,6 +167,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     repeated :postHookMessages, :string, 14
     repeated :preHookMessage, :string, 15
     repeated :postHookMessage, :string, 16
+    repeated :preHookScreenshots, :bytes, 17
+    repeated :postHookScreenshots, :bytes, 18
   end
   add_message "gauge.messages.ProtoSpecResult" do
     optional :protoSpec, :message, 1, "gauge.messages.ProtoSpec"

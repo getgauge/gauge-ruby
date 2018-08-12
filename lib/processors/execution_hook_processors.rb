@@ -29,35 +29,35 @@ module Gauge
       Gauge::MethodCache.clear
       Executor.load_steps(Util.get_step_implementation_dir)
       response = handle_hooks_execution(MethodCache.get_before_suite_hooks, message,message.executionStartingRequest.currentExecutionInfo,false)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
 
     def process_execution_end_request(message)
       response = handle_hooks_execution(MethodCache.get_after_suite_hooks, message,message.executionEndingRequest.currentExecutionInfo, false)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
 
     def process_spec_execution_start_request(message)
       response = handle_hooks_execution(MethodCache.get_before_spec_hooks, message,message.specExecutionStartingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
 
     def process_spec_execution_end_request(message)
       response = handle_hooks_execution(MethodCache.get_after_spec_hooks, message,message.specExecutionEndingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
 
     def process_scenario_execution_start_request(message)
       response = handle_hooks_execution(MethodCache.get_before_scenario_hooks, message,message.scenarioExecutionStartingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
@@ -65,21 +65,21 @@ module Gauge
 
     def process_scenario_execution_end_request(message)
       response = handle_hooks_execution(MethodCache.get_after_scenario_hooks, message,message.scenarioExecutionEndingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
 
     def process_step_execution_start_request(message)
       response = handle_hooks_execution(MethodCache.get_before_step_hooks, message,message.stepExecutionStartingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
 
     def process_step_execution_end_request(message)
       response = handle_hooks_execution(MethodCache.get_after_step_hooks, message,message.stepExecutionEndingRequest.currentExecutionInfo)
-      response.executionStatusResponse.executionResult.screenShot += Gauge::GaugeScreenshot.instance.pending_screenshot
+      response.executionStatusResponse.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
       response.executionStatusResponse.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
       return response
     end
