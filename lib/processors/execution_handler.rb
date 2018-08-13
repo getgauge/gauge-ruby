@@ -59,7 +59,7 @@ module Gauge
         screenshot = screenshot_bytes
         if screenshot 
           execution_status_response.executionResult.screenShot = screenshot
-          execution_status_response.executionResult.failedScreenshot = screenshot
+          execution_status_response.executionResult.failureScreenshot = screenshot
         end
         execution_status_response.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
         execution_status_response.executionResult.message += Gauge::GaugeMessages.instance.pending_messages

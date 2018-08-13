@@ -136,7 +136,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :executionTime, :int64, 6
     repeated :message, :string, 7
     optional :errorType, :enum, 8, "gauge.messages.ProtoExecutionResult.ErrorType"
-    optional :failedScreenshot, :bytes, 9
+    optional :failureScreenshot, :bytes, 9
     repeated :screenshots, :bytes, 10
   end
   add_enum "gauge.messages.ProtoExecutionResult.ErrorType" do
@@ -148,7 +148,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :errorMessage, :string, 2
     optional :screenShot, :bytes, 3
     optional :tableRowIndex, :int32, 4
-    optional :failedScreenshot, :bytes, 5
+    optional :failureScreenshot, :bytes, 5
   end
   add_message "gauge.messages.ProtoSuiteResult" do
     repeated :specResults, :message, 1, "gauge.messages.ProtoSpecResult"
