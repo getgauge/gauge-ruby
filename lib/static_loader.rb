@@ -29,10 +29,10 @@ module Gauge
     end
 
     def self.traverse(ast, &visitor)
-      return if ast.class != Parser::AST::Node
-      if ast && step_node?(ast)
+      return if !ast || ast.class != Parser::AST::Node
+      if step_node?(ast)
         visitor.call(ast)
-      elsif ast&.children
+      elsif ast.children
         ast.children.each {|node|
           traverse(node, &visitor)
         }
