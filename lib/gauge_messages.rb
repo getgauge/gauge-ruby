@@ -40,17 +40,17 @@ module Gauge
     end
 
     def pending_messages()
-        pending_messages = @messages
+        pending_messages = @messages.select { |m| m != nil}
         @messages = []
         pending_messages
-    end  
+    end
 
     def write(message)
       @messages.push(message)
     end
 
     def get
-      @messages
+      @messages.select { |m| m != nil}
     end
 
     def clear

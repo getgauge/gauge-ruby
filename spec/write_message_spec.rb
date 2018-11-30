@@ -23,6 +23,15 @@ describe Gauge do
     it { expect(Gauge::GaugeMessages.instance.get).to match_array messages }
   end
 
+  context '.pending_messages' do
+    it 'should not contain nil messages' do
+      Gauge::GaugeMessages.instance.clear
+      ["message1",nil, "message2",nil].each { |m| Gauge.write_message m}
+
+      expect(Gauge::GaugeMessages.instance.get).to match_array ['message1', 'message2']
+    end
+  end
+
   context '.clear_messages' do
     it 'should clear all gauge_messages' do
       Gauge.write_message 'custom1'
