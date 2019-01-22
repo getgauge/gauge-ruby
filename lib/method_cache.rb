@@ -92,6 +92,15 @@ module Gauge
       end
     end
 
+    def self.is_file_cached(file)
+      @@steps_map.each_pair do |step, info|
+        if info[:locations].any? { |loc| relative_filepath(loc[:file]).eql? relative_filepath(file) }
+          return true
+        end
+      end
+      return false
+    end
+
     def self.multiple_implementation?(step_value)
       @@steps_map[step_value][:locations].length > 1
     end

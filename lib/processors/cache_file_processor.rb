@@ -34,8 +34,10 @@ module Gauge
         ast = CodeParser.code_to_ast(request.content)
         StaticLoader.reload_steps(f, ast)
       elsif status == Messages::CacheFileRequest::FileStatus::CREATED
-        ast = CodeParser.code_to_ast File.read(f)
-        StaticLoader.reload_steps(f, ast)
+        if !Gauge::MethodCache.is_file_cached f
+          ast = CodeParser.code_to_ast File.read(f)
+          StaticLoader.reload_steps(f, ast)
+        end
       elsif (status == Messages::CacheFileRequest::FileStatus::CLOSED) && File.file?(f)
         ast = CodeParser.code_to_ast File.read(f)
         StaticLoader.reload_steps(f, ast)
