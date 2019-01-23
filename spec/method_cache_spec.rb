@@ -242,4 +242,18 @@ describe Gauge::MethodCache do
       expect(step_info[0][:file]).to eq "/temp/foo1.bar"
     end
   end
+  context 'is_file_cached' do
+    before { subject.clear }
+    it 'should check if file is already cached' do
+      subject.add_step("step {}", {:step_text =>  "step <param>",:location => {:file => "/temp/foo.bar"}})
+      expect(subject.is_file_cached("/temp/foo.bar")).to eq true
+      expect(subject.is_file_cached("/tmp/foo1.bar")).to eq false
+    end
+    it 'should check if file is already cached in windows', :if => OS.windows? do
+      ENV['GAUGE_PROJECT_ROOT'] = "c:/temp"
+      subject.add_step("step {}", {:step_text =>  "step <param>",:location => {:file => "c:/temp/foo.bar"}})
+      expect(subject.is_file_cached("c:/temp/foo.bar")).to eq true
+      expect(subject.is_file_cached("c:/temp/foo1.bar")).to eq false
+    end
+  end
 end

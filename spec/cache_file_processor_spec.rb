@@ -51,6 +51,21 @@ describe Gauge::Processors do
         expect(Gauge::MethodCache.valid_step? "foo").to eq true
       end
     end
+    context 'on Cache file request with CREATED status when file is already cached' do
+      before {
+        ast = Gauge::CodeParser.code_to_ast "step 'foo' do\n\tputs 'hello'\nend\n"
+        Gauge::StaticLoader.load_steps '/temp/foo.rb', ast
+        allow(File).to receive(:file?).with('/temp/foo.rb').and_return(true)
+        allow(File).to receive(:read).with('/temp/foo.rb').and_return("")
+        allow(message).to receive_message_chain(:cacheFileRequest, :filePath => '/temp/foo.rb')
+        allow(message).to receive_message_chain(:cacheFileRequest, :status => :CREATED)
+        allow(message).to receive(:messageId) {1}
+      }
+      it 'should reload step cache from file system' do
+        subject.process_cache_file_request(message)
+        expect(Gauge::MethodCache.valid_step? "foo").to eq true
+      end
+    end
     context 'on Cache file request with CLOSED status' do
       before {
         ast = Gauge::CodeParser.code_to_ast "step 'foo' do\n\tputs 'hello'\nend\n"
