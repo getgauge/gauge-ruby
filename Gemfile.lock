@@ -83,7 +83,7 @@ GEM
     ruby-debug-ide (0.6.1)
       rake (>= 0.8.1)
     ruby-protocol-buffers (1.5.1)
-    rubyzip (1.2.1)
+    rubyzip (1.2.2)
     signet (0.8.1)
       addressable (~> 2.3)
       faraday (~> 0.9)
@@ -113,7 +113,7 @@ DEPENDENCIES
   grpc-tools (~> 1.10, >= 1.10.0)
   rake
   rspec
-  rubyzip
+  rubyzip (>= 1.2.2)
   simplecov
   yard
 

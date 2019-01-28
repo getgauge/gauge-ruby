@@ -6,5 +6,5 @@ group :development, :test do
 	gem 'rspec'
 	gem 'yard'
 	gem 'simplecov', :require => false
-	gem 'rubyzip'
+	gem 'rubyzip', ">= 1.2.2"
 end
