@@ -7,13 +7,11 @@ addons:
   apt:
     packages:
       - oracle-java8-set-default
-      - maven
 install:
   - curl -sSfL https://raw.githubusercontent.com/getgauge/infrastructure/master/nightly_scripts/install_latest_gauge_nightly.sh | bash
   - export PATH=/tmp/bin:$PATH
   - gauge install screenshot
-  - gauge version
-  - echo "gauge_repository_url = https://raw.githubusercontent.com/getgauge/gauge-nightly-repository/master/" >> $HOME/.gauge/config/gauge.properties
+  - gauge config gauge_repository_url  https://raw.githubusercontent.com/getgauge/gauge-nightly-repository/master/
   - bundle install
 
 language: ruby
@@ -22,13 +20,10 @@ rvm:
   - 2.3.0
 
 script:
-  - ls
-  - pwd
   - bundle exec rake spec install force_install
   - git clone --depth=1 https://github.com/getgauge/gauge-tests
   - cd gauge-tests
   - gauge install
   - gauge version
   - java -version
-  - mvn --version
-  - TAGS="ruby" ./starttests.sh ruby
+  - ./gradlew clean rubyFT
