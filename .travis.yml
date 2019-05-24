@@ -2,16 +2,16 @@ os:
   - osx
   - linux
 env:
-  - GOPATH=/tmp GAUGE_SOURCE_BUILD=true GAUGE_TELEMETRY_ENABLED=false GAUGE_PREFIX=/tmp
+  - GOPATH=/tmp GAUGE_SOURCE_BUILD=true GAUGE_TELEMETRY_ENABLED=false GAUGE_PREFIX=/tmp TERM=dumb
 addons:
   apt:
     packages:
-      - oracle-java8-set-default
+      - default-jdk
 install:
   - curl -sSfL https://raw.githubusercontent.com/getgauge/infrastructure/master/nightly_scripts/install_latest_gauge_nightly.sh | bash
   - export PATH=/tmp/bin:$PATH
   - gauge install screenshot
-  - gauge config gauge_repository_url  https://raw.githubusercontent.com/getgauge/gauge-nightly-repository/master/
+  - gauge config gauge_repository_url https://raw.githubusercontent.com/getgauge/gauge-nightly-repository/master/
   - bundle install
 
 language: ruby
