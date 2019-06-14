@@ -44,7 +44,7 @@ GEM
     parser (2.5.3.0)
       ast (~> 2.4.0)
     procto (0.0.3)
-    rake (12.3.0)
+    rake (12.3.2)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
