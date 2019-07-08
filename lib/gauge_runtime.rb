@@ -48,7 +48,7 @@ module Gauge
 
     def self.handle_message(socket, message)
       if !MessageProcessor.is_valid_message(message)
-        Gauge::Log.error "Invalid message received : #{message}"
+        GaugeLog.error "Invalid message received : #{message}"
         execution_status_response = Messages::ExecutionStatusResponse.new(executionResult: Messages::ProtoExecutionResult.new(failed: true, executionTime: 0))
         message = Messages::Message.new(messageType: :ExecutionStatusResponse, messageId: message.messageId, executionStatusResponse: execution_status_response)
         write_message(socket, message)
@@ -72,15 +72,16 @@ module Gauge
     end
 
     STDOUT.sync = true
-    # GaugeLog.init
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
     if ENV.key? 'GAUGE_LSP_GRPC'
+      GaugeLog.debug 'Starting grpc server..'
       server = GRPC::RpcServer.new
       p = server.add_http2_port('127.0.0.1:0', :this_port_is_insecure)
       server.handle(Gauge::LSPServer.new(server))
-      puts "Listening on port:#{p}"
+      GaugeLog.info "Listening on port #{p}"
       server.run_till_terminated
     else
+      GaugeLog.debug('Starting TCP server..')
       Connector.make_connection
       dispatch_messages(Connector.execution_socket)
     end

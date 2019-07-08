@@ -30,10 +30,11 @@ module Gauge
       start_debugger
       Dir["#{dir}/**/*.rb"].each do |x|
         begin
+          GaugeLog.info "Loading step implemetations from #{x} dirs"
           ENV['GAUGE_STEP_FILE'] = x
           require x
         rescue Exception => e
-          Gauge::Log.error "Cannot import #{x}. Reason: #{e.message}"
+          GaugeLog.error "Cannot import #{x}. Reason: #{e.message}"
         end
       end
     end
@@ -44,7 +45,7 @@ module Gauge
         options.host = '127.0.0.1'
         options.port = ENV['DEBUG_PORT'].to_i
         options.notify_dispatcher = false
-        Gauge::Log.info ATTACH_DEBUGGER_EVENT
+        GaugeLog.info ATTACH_DEBUGGER_EVENT
         Debugger.prepare_debugger(options)
       end
     end

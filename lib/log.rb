@@ -18,33 +18,34 @@
 require 'json'
 
 module Gauge
-    def debug(message)
-        print('debug', message)
-    end
+    module GaugeLog
+        def self.debug(message)
+            self.print('debug', message)
+        end
 
-    def info(message)
-        print('info', message)
-    end    
-    
-    def error(message)
-        print('error', message, True)
-    end
-    
-    def warning(message)
-        print('warning', message)
-    end
-    
-    def fatal(message)
-        print('fatal', message, True)
-    end
-
-    private def print(level, message, is_error=false)
-        stream = is_error ? STDERR : STDOUT
-        data = {"logLevel" => level, "message" => message}.to_json
-        stream.write "%sfrom the runner\n" [data]
-    end
-
-    # module GaugeLog
+        def self.info(message)
+            self.print('info', message)
+        end    
         
-    # end
+        def self.error(message)
+            puts self.private_instance_methods
+            self.print('error', message, true)
+        end
+        
+        def self.warning(message)
+            self.print('warning', message)
+        end
+        
+        def self.fatal(message)
+            self.print('fatal', message, true)
+            Kernel.exit!(1)
+        end
+
+        private
+        def self.print(level, message, is_error=false)
+            stream = is_error ? STDERR : STDOUT
+            data = JSON.dump({"logLevel" => level, "message" => message})
+            stream.write "#{data}\n"
+        end
+    end
 end
