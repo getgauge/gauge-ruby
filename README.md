@@ -21,10 +21,10 @@ The plugin is authored in [Ruby](https://en.wikipedia.org/wiki/Ruby_(programming
 gauge install ruby
 ```
 
-### Create a gauge-java project
+### Create a gauge-ruby project
 
 ```
-gauge init java
+gauge init ruby
 ```
 
 ### Run tests
