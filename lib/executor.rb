@@ -33,7 +33,7 @@ module Gauge
           ENV['GAUGE_STEP_FILE'] = x
           require x
         rescue Exception => e
-          Gauge::Log.error "[ERROR] Cannot import #{x}. Reason: #{e.message}"
+          Gauge::Log.error "Cannot import #{x}. Reason: #{e.message}"
         end
       end
     end

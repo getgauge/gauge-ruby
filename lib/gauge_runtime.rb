@@ -72,7 +72,7 @@ module Gauge
     end
 
     STDOUT.sync = true
-    GaugeLog.init
+    # GaugeLog.init
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
     if ENV.key? 'GAUGE_LSP_GRPC'
       server = GRPC::RpcServer.new
