@@ -78,7 +78,7 @@ module Gauge
       server = GRPC::RpcServer.new
       p = server.add_http2_port('127.0.0.1:0', :this_port_is_insecure)
       server.handle(Gauge::LSPServer.new(server))
-      GaugeLog.info "Listening on port #{p}"
+      GaugeLog.info "Listening on port:#{p}"
       server.run_till_terminated
     else
       GaugeLog.debug('Starting TCP server..')
