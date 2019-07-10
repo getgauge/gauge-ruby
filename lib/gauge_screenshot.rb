@@ -29,7 +29,7 @@ module Gauge
 
     def self.instance
       @gauge_screenshots ||= GaugeScreenshot.new
-      end      
+    end      
 
     def capture
       @screenshots.push(Configuration.instance.screengrabber.call)

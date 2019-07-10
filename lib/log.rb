@@ -15,19 +15,37 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'logger'
+require 'json'
 
 module Gauge
-    Log = Logger.new(STDOUT)
     module GaugeLog
-        def self.init()
-            Log.formatter = proc do |severity, datetime, progname, msg|
-                if ENV['IS_DAEMON']
-                    "#{datetime.strftime('%H:%M:%S.%L')} #{msg}\n"
-                else
-                    "#{msg}\n"
-                end
-            end
-        end 
+        def self.debug(message)
+            self.print('debug', message)
+        end
+
+        def self.info(message)
+            self.print('info', message)
+        end    
+        
+        def self.error(message)
+            puts self.private_instance_methods
+            self.print('error', message, true)
+        end
+        
+        def self.warning(message)
+            self.print('warning', message)
+        end
+        
+        def self.fatal(message)
+            self.print('fatal', message, true)
+            Kernel.exit!(1)
+        end
+
+        private
+        def self.print(level, message, is_error=false)
+            stream = is_error ? STDERR : STDOUT
+            data = JSON.dump({"logLevel" => level, "message" => message})
+            stream.write "#{data}\n"
+        end
     end
 end

@@ -119,7 +119,7 @@ module Gauge
         parser = Parser::CurrentRuby.new
       parser.parse(buffer)
       rescue Exception => e
-        Gauge::Log.error e.message
+        GaugeLog.error e
       end
     end
   end
