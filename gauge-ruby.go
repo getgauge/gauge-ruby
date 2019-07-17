@@ -18,6 +18,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -41,10 +42,24 @@ var initialize = flag.Bool("init", false, "Initialize the gauge ruby runner")
 var pluginDir = ""
 var projectRoot = ""
 
+type logger struct {
+	LogLevel string `json:"logLevel"`
+	Message  string `json:"message"`
+}
+
 type initializerFunc func()
 
-func showMessage(action, filename string) {
-	fmt.Printf(" %s  %s\n", action, filename)
+func logMessage(level, text string) {
+	c := &logger{LogLevel: level, Message: text}
+	if b, err := json.Marshal(c); err != nil {
+		fmt.Println(text)
+	} else {
+		fmt.Println(string(b))
+	}
+}
+
+func showMessage(action, filename string) string {
+	return fmt.Sprintf(" %s  %s\n", action, filename)
 }
 
 func createStepImplementationsDirectory() {
@@ -56,27 +71,27 @@ func createEnvDir() {
 }
 
 func createDirectory(filePath string) {
-	showMessage("create", filePath)
+	logMessage("info", showMessage("create", filePath))
 	if !common.DirExists(filePath) {
 		err := os.MkdirAll(filePath, 0755)
 		if err != nil {
-			fmt.Printf("Failed to make directory. %s\n", err.Error())
+			logMessage("error", fmt.Sprintf("Failed to make directory. %s\n", err.Error()))
 		}
 	} else {
-		showMessage("skip", filePath)
+		logMessage("info", showMessage("skip", filePath))
 	}
 }
 
 func createStepImplementationFile() {
 	destFile := path.Join(projectRoot, step_implementations_dir, step_implementation_file)
-	showMessage("create", destFile)
+	logMessage("info", showMessage("create", destFile))
 	if common.FileExists(destFile) {
-		showMessage("skip", destFile)
+		logMessage("info", showMessage("skip", destFile))
 	} else {
 		srcFile := path.Join(skelDir, step_implementation_file)
 		err := common.CopyFile(srcFile, destFile)
 		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
+			logMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
 		}
 	}
 }
@@ -84,14 +99,14 @@ func createStepImplementationFile() {
 func createOrAppendToGemFile() {
 	destFile := path.Join(projectRoot, gem_file)
 	srcFile := path.Join(skelDir, gem_file)
-	showMessage("create", destFile)
+	logMessage("info", showMessage("create", destFile))
 	if !common.FileExists(destFile) {
 		err := common.CopyFile(srcFile, destFile)
 		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
+			logMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
 		}
 	}
-	showMessage("append", destFile)
+	logMessage("info", showMessage("append", destFile))
 	f, err := os.OpenFile(destFile, os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		panic(err)
@@ -111,14 +126,14 @@ func createOrAppendToGemFile() {
 
 func createRubyPropertiesFile() {
 	destFile := path.Join(projectRoot, envDir, "default", ruby_properties_file)
-	showMessage("create", destFile)
+	logMessage("info", showMessage("create", destFile))
 	if common.FileExists(destFile) {
-		showMessage("skip", destFile)
+		logMessage("info", showMessage("skip", destFile))
 	} else {
 		srcFile := path.Join(skelDir, envDir, ruby_properties_file)
 		err := common.CopyFile(srcFile, destFile)
 		if err != nil {
-			showMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
+			logMessage("error", fmt.Sprintf("Failed to copy %s. %s", srcFile, err.Error()))
 		}
 	}
 }
@@ -126,9 +141,9 @@ func createRubyPropertiesFile() {
 func createOrAppendGitignore() {
 	destFile := path.Join(projectRoot, ".gitignore")
 	srcFile := path.Join(pluginDir, skelDir, ".gitignore")
-	showMessage("create", destFile)
+	logMessage("info", showMessage("create", destFile))
 	if err := common.AppendToFile(srcFile, destFile); err != nil {
-		showMessage("error", err.Error())
+		logMessage("error", err.Error())
 	}
 }
 
@@ -153,7 +168,7 @@ func main() {
 	var err error
 	pluginDir, err = os.Getwd()
 	if err != nil {
-		fmt.Printf("Failed to find current working directory: %s \n", err)
+		logMessage("fatal", fmt.Sprintf("Failed to find current working directory: %s \n", err))
 		os.Exit(1)
 	}
 	projectRoot = os.Getenv(common.GaugeProjectRootEnv)
@@ -165,7 +180,7 @@ func main() {
 		os.Chdir(projectRoot)
 		err = runCommand("bundle", "exec", "ruby", "-e", "require 'gauge_runtime'")
 		if err != nil {
-			fmt.Printf("Ruby runner Failed. Reason: %s\n", err.Error())
+			logMessage("fatal", fmt.Sprintf("Ruby runner Failed. Reason: %s\n", err.Error()))
 			os.Exit(1)
 		}
 	} else if *initialize {
@@ -177,8 +192,7 @@ func main() {
 		fmt.Printf("Running bundle install.. in %s\n", projectRoot)
 		err = runCommand("bundle", "install")
 		if err != nil {
-			fmt.Printf("bundle install Failed. Reason: %s\n", err.Error())
-			fmt.Printf("Consider running `bundle install` again.\n")
+			logMessage("error", fmt.Sprintf("bundle install Failed. Reason: %s\nConsider running `bundle install` again.\n", err.Error()))
 		}
 	} else {
 		printUsage()
