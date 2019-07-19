@@ -7,6 +7,11 @@ addons:
   apt:
     packages:
       - default-jdk
+
+before_install:
+  - gem update --system
+  - gem install bundler:2.0.2
+
 install:
   - curl -sSfL https://raw.githubusercontent.com/getgauge/infrastructure/master/nightly_scripts/install_latest_gauge_nightly.sh | bash
   - export PATH=/tmp/bin:$PATH
@@ -17,7 +22,7 @@ install:
 language: ruby
 
 rvm:
-  - 2.3.0
+  - 2.6.0
 
 script:
   - bundle exec rake spec install force_install
