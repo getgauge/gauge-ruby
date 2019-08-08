@@ -22,7 +22,7 @@ GEM
     concord (0.1.5)
       adamantium (~> 0.2.0)
       equalizer (~> 0.0.9)
-    debase (0.2.3)
+    debase (0.2.4)
       debase-ruby_core_source (>= 0.10.2)
     debase-ruby_core_source (0.10.5)
     diff-lcs (1.3)
