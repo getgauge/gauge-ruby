@@ -31,7 +31,7 @@ GEM
     google-protobuf (3.9.1)
     googleapis-common-protos-types (1.0.4)
       google-protobuf (~> 3.0)
-    grpc (1.22.0)
+    grpc (1.23.0)
       google-protobuf (~> 3.8)
       googleapis-common-protos-types (~> 1.0)
     grpc-tools (1.22.0)
