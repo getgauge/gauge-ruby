@@ -61,7 +61,7 @@ GEM
     ruby-debug-ide (0.7.0)
       rake (>= 0.8.1)
     ruby-protocol-buffers (1.6.1)
-    rubyzip (1.2.4)
+    rubyzip (2.0.0)
     simplecov (0.17.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
