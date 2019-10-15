@@ -1,6 +1,6 @@
 # Gauge-ruby
 
-[![Build Status](https://travis-ci.org/getgauge/gauge-ruby.svg?branch=master)](https://travis-ci.org/getgauge/gauge-ruby)
+[![Actions Status](https://github.com/getgauge/gauge-ruby/workflows/tests/badge.svg)](https://github.com/getgauge/gauge-ruby/actions)
 [![Gem](https://img.shields.io/gem/v/gauge-ruby.svg)](https://rubygems.org/gems/gauge-ruby)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
