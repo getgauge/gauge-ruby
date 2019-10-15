@@ -58,6 +58,7 @@ jobs:
   ft-linux-macos:
     name: Run FTs on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    needs: test
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -89,3 +90,24 @@ jobs:
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
           ./gradlew clean rubyFT
+
+  ft-windows:
+    name: Run FTs on windows
+    runs-on: windows-latest
+    needs: test-windows
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install ruby 2.6.0.1 and bundler
+        run: |
+          choco install ruby --version 2.6.0.1
+          gem install bundler:2.0.2
+
+      - name: Run tests
+        run: |
+          bundle install
+          bundle exec rake install force_install
+          git clone --depth=1 https://github.com/getgauge/gauge-tests
+          cd gauge-tests
+          .\gradlew.bat clean rubyFT
