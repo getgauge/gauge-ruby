@@ -78,7 +78,7 @@ describe Gauge::StaticLoader do
     end
 
     it 'reload a given file' do
-      file = '/temp/foo.rb'
+      file =  File.expand_path(File.join(ENV['GAUGE_PROJECT_ROOT'],'foo.rb'))
       ast = Gauge::CodeParser.code_to_ast "step 'foo <vowels>' do |v|\nend"
       Gauge::StaticLoader.load_steps(file, ast)
       ast = Gauge::CodeParser.code_to_ast "step 'hello <vowels>' do |v|\nend"
