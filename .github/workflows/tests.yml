@@ -81,6 +81,18 @@ jobs:
           export PATH="$HOME/.rbenv/bin:$PATH"
           rbenv install 2.6.0
 
+      - name: Setup go 1.13.1
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.1
+
+      - name: Install gauge
+        run: |
+          git clone https://github.com/getgauge/gauge
+          cd gauge
+          go run build/make.go --verbose
+          go run build/make.go --install --prefix=/tmp/
+
       - name: Run tests
         run: |
           export PATH="$HOME/.rbenv/versions/2.6.0/bin:$PATH"
@@ -89,6 +101,8 @@ jobs:
           bundle exec rake install force_install
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
+          gauge install
+          gauge -v
           ./gradlew clean rubyFT
 
   ft-windows:
@@ -104,10 +118,19 @@ jobs:
           choco install ruby --version 2.6.0.1
           gem install bundler:2.0.2
 
+      - name: Install gauge
+        run: |
+          git clone https://github.com/getgauge/gauge
+          cd gauge
+          go run build/make.go --verbose
+          go run build/make.go --install
+
       - name: Run tests
         run: |
           bundle install
           bundle exec rake install force_install
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
+          gauge install
+          gauge -v
           .\gradlew.bat clean rubyFT
