@@ -95,7 +95,7 @@ jobs:
 
       - name: Run tests
         run: |
-          export PATH="$HOME/.rbenv/versions/2.6.0/bin:$PATH"
+          export PATH="$HOME/.rbenv/versions/2.6.0/bin:/tmp/bin:$PATH"
           gem install bundler:2.0.2
           bundle install
           bundle exec rake install force_install
