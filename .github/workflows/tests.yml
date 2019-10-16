@@ -1,0 +1,136 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Run test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+
+      - uses: actions/checkout@v1
+
+      - name: Get rbenv and ruby-build
+        run: |
+          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+
+      - name: Install dependencies required to install Ruby
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y libreadline-dev
+
+      - name: Install ruby 2.6.0
+        run: |
+          export PATH="$HOME/.rbenv/bin:$PATH"
+          rbenv install 2.6.0
+
+      - name: Run tests
+        run: |
+          export PATH="$HOME/.rbenv/versions/2.6.0/bin:$PATH"
+          gem install bundler:2.0.2
+          bundle install
+          bundle exec rake spec
+
+  test-windows:
+    name: Run test on windows
+    runs-on: windows-latest
+
+    steps:
+
+      - uses: actions/checkout@v1
+
+      - name: Install ruby 2.6.0.1 and bundler
+        run: |
+          choco install ruby --version 2.6.0.1
+          gem install bundler:2.0.2
+
+      - name: Install gems
+        run: |
+          bundle install
+      - name: Run test
+        run: |
+          bundle exec rake spec
+
+  ft-linux-macos:
+    name: Run FTs on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: test
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Get rbenv and ruby-build
+        run: |
+          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+
+      - name: Install dependencies required to install Ruby
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get install -y libreadline-dev
+
+      - name: Install ruby 2.6.0
+        run: |
+          export PATH="$HOME/.rbenv/bin:$PATH"
+          rbenv install 2.6.0
+
+      - name: Setup go 1.13.1
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.1
+
+      - name: Install gauge
+        run: |
+          git clone https://github.com/getgauge/gauge
+          cd gauge
+          go run build/make.go --verbose
+          go run build/make.go --install --prefix=/tmp/
+
+      - name: Run tests
+        run: |
+          export PATH="$HOME/.rbenv/versions/2.6.0/bin:/tmp/bin:$PATH"
+          gem install bundler:2.0.2
+          bundle install
+          bundle exec rake install force_install
+          git clone --depth=1 https://github.com/getgauge/gauge-tests
+          cd gauge-tests
+          gauge install
+          gauge -v
+          ./gradlew clean rubyFT
+
+  ft-windows:
+    name: Run FTs on windows
+    runs-on: windows-latest
+    needs: test-windows
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install ruby 2.6.0.1 and bundler
+        run: |
+          choco install ruby --version 2.6.0.1
+          gem install bundler:2.0.2
+
+      - name: Install gauge
+        run: |
+          git clone https://github.com/getgauge/gauge
+          cd gauge
+          go run build/make.go --verbose
+          go run build/make.go --install
+
+      - name: Run tests
+        run: |
+          bundle install
+          bundle exec rake install force_install
+          git clone --depth=1 https://github.com/getgauge/gauge-tests
+          cd gauge-tests
+          gauge install
+          gauge -v
+          .\gradlew.bat clean rubyFT
