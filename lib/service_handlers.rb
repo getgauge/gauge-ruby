@@ -15,20 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative 'lsp_services_pb'
-require_relative 'processors/step_positions_request_processor'
-require_relative 'processors/cache_file_processor'
-require_relative 'processors/step_names_request_processor'
-require_relative 'processors/stub_implementation_processor'
-require_relative 'processors/implementation_file_list_processor'
-require_relative 'processors/step_validation_request_processor'
-require_relative 'processors/refactor_step_request_processor'
-require_relative 'processors/step_name_request_processor'
-require_relative 'processors/implementation_glob_pattern_processor'
+require_relative 'runner_services_pb'
+Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}
 
 module Gauge
-  class LSPServer < Gauge::Messages::LspService::Service
-    include Gauge::Processors
+  class ServiceHandlers < Messages::Runner::Service
+    include Processors
 
     def initialize(server)
       @server = server
@@ -68,6 +60,54 @@ module Gauge
 
     def get_glob_patterns(_request, _call)
       implementation_glob_pattern_response
+    end
+
+    def suite_data_store_init(*_args)
+      process_datastore_init(:suite_data_store)
+    end
+
+    def spec_data_store_init(*_args)
+      process_datastore_init(:spec_data_store)
+    end
+
+    def scenario_data_store_init(*_args)
+      process_datastore_init(:scenario_data_store)
+    end
+
+    def execution_starting(request, _call)
+      process_execution_start_request(request)
+    end
+
+    def execution_ending(request, _call)
+      process_execution_end_request(request)
+    end
+
+    def spec_execution_starting(request, _call)
+      process_spec_execution_start_request(request)
+    end
+
+    def spec_execution_ending(request, _call)
+      process_spec_execution_end_request(request)
+    end
+
+    def scenario_execution_starting(request, _call)
+      process_scenario_execution_start_request(request)
+    end
+
+    def scenario_execution_ending(request, _call)
+      process_scenario_execution_end_request(request)
+    end
+
+    def step_execution_starting(request, _call)
+      process_step_execution_start_request(request)
+    end
+
+    def step_execution_ending(request, _call)
+      process_step_execution_end_request(request)
+    end
+
+    def execute_step(request, _call)
+      process_execute_step_request(request)
     end
 
     def kill_process(_request, _call)

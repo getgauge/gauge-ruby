@@ -20,17 +20,19 @@ require_relative '../datastore'
 module Gauge
   # @api private
   module Processors
-    def process_datastore_init(message)
-      case message.messageType
-        when :SuiteDataStoreInit
+    def process_datastore_init(data_store_type)
+      case data_store_type
+      when :suite_data_store
+          puts data_store_type
           DataStoreFactory.suite_datastore.clear
-        when :SpecDataStoreInit
+      when :spec_data_store
+          puts data_store_type
           DataStoreFactory.spec_datastore.clear
-        when :ScenarioDataStoreInit
+      when :scenario_data_store
+          puts data_store_type
           DataStoreFactory.scenario_datastore.clear
       end
-      execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => false, :executionTime => 0))
-      Messages::Message.new(:messageType => :ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+      Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => false, :executionTime => 0))
     end
   end
 end

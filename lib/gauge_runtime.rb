@@ -26,7 +26,7 @@ require_relative 'connector'
 require_relative 'message_processor'
 require_relative 'util'
 require_relative 'log'
-require_relative 'lsp_server'
+require_relative 'service_handlers'
 
 module Gauge
   # @api private
@@ -73,18 +73,12 @@ module Gauge
 
     STDOUT.sync = true
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
-    if ENV.key? 'GAUGE_LSP_GRPC'
-      GaugeLog.debug 'Starting grpc server..'
-      server = GRPC::RpcServer.new
-      p = server.add_http2_port('127.0.0.1:0', :this_port_is_insecure)
-      server.handle(Gauge::LSPServer.new(server))
-      GaugeLog.info "Listening on port:#{p}"
-      server.run_till_terminated
-    else
-      GaugeLog.debug('Starting TCP server..')
-      Connector.make_connection
-      dispatch_messages(Connector.execution_socket)
-    end
+    GaugeLog.debug 'Starting grpc server..'
+    server = GRPC::RpcServer.new
+    port = server.add_http2_port('127.0.0.1:0', :this_port_is_insecure)
+    server.handle(Gauge::ServiceHandlers.new(server))
+    GaugeLog.info "Listening on port:#{port}"
+    server.run_till_terminated
     exit(0)
   end
 end
