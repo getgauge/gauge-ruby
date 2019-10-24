@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     steps:
 
       - uses: actions/checkout@v1
@@ -59,12 +59,15 @@ jobs:
     name: Run FTs on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: test
+    env:
+      RUBY_PLUGIN_BRANCH: grpc
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v1
+      - run: echo $RUBY_PLUGIN_BRANCH
 
       - name: Get rbenv and ruby-build
         run: |
@@ -88,7 +91,7 @@ jobs:
 
       - name: Install gauge
         run: |
-          git clone https://github.com/getgauge/gauge
+          git clone --depth=1 https://github.com/getgauge/gauge.git
           cd gauge
           go run build/make.go --verbose
           go run build/make.go --install --prefix=/tmp/
@@ -103,15 +106,23 @@ jobs:
           cd gauge-tests
           gauge install
           gauge -v
+          cat ~/.gauge/plugins/ruby/0.5.3/ruby.json
           ./gradlew clean rubyFT
 
   ft-windows:
     name: Run FTs on windows
     runs-on: windows-latest
     needs: test-windows
+    env:
+      RUBY_PLUGIN_BRANCH: grpc
 
     steps:
       - uses: actions/checkout@v1
+
+      - name: Setup go 1.13.1
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.1
 
       - name: Install ruby 2.6.0.1 and bundler
         run: |
@@ -120,15 +131,22 @@ jobs:
 
       - name: Install gauge
         run: |
-          git clone https://github.com/getgauge/gauge
+          git clone --depth=1 https://github.com/getgauge/gauge.git
           cd gauge
           go run build/make.go --verbose
           go run build/make.go --install
 
-      - name: Run tests
+      - name: Install gauge-ruby
+        shell: pwsh
         run: |
+          ${env:PATH} += ";C:\Program Files\gauge\bin"
           bundle install
           bundle exec rake install force_install
+
+      - name: Run tests
+        shell: pwsh
+        run: |
+          ${env:PATH} += ";C:\Program Files\gauge\bin"
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
           gauge install
