@@ -21,21 +21,21 @@ module Gauge
   module Processors
     # @api private
     module ExecutionHandler
-      def handle_hooks_execution(hooks, message, currentExecutionInfo, should_filter=true)
+      def handle_hooks_execution(hooks, currentExecutionInfo, should_filter=true)
         start_time= Time.now
         execution_error = Executor.execute_hooks(hooks, currentExecutionInfo, should_filter)
         if execution_error == nil
-          return handle_pass message, time_elapsed_since(start_time)
+          return handle_pass time_elapsed_since(start_time)
         else
-          return handle_failure message, execution_error, time_elapsed_since(start_time), false
+          return handle_failure execution_error, time_elapsed_since(start_time), false
         end
       end
 
-      def handle_pass(message, execution_time)
+      def handle_pass(execution_time)
         execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => false, :executionTime => execution_time))
         execution_status_response.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
         execution_status_response.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
-        Messages::Message.new(:messageType => :ExecutionStatusResponse, :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+        execution_status_response
       end
 
       def get_filepath(stacktrace)
@@ -43,7 +43,7 @@ module Gauge
         return MethodCache.relative_filepath toptrace
       end
     
-      def handle_failure(message, exception, execution_time, recoverable)
+      def handle_failure(exception, execution_time, recoverable)
         project_dir = File.basename(Dir.getwd)
         stacktrace =  exception.backtrace.select {|x| x.match(project_dir) && !x.match(File.join(project_dir, "vendor"))}.join("\n")+"\n"
         filepath = get_filepath(stacktrace)
@@ -63,8 +63,7 @@ module Gauge
         end
         execution_status_response.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
         execution_status_response.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
-        Messages::Message.new(:messageType => :ExecutionStatusResponse,
-          :messageId => message.messageId, :executionStatusResponse => execution_status_response)
+        execution_status_response
       end
 
       def get_code_snippet(filename, number)
