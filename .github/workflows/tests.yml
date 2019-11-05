@@ -204,7 +204,7 @@ jobs:
   lsp-windows:
     name: Run lsp on windows-latest
     runs-on: windows-latest
-    needs: test
+    needs: test-windows
     env:
       RUBY_PLUGIN_BRANCH: grpc
 
