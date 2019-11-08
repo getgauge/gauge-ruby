@@ -3,86 +3,47 @@ name: tests
 on: [push, pull_request]
 
 jobs:
-  test:
+  tests:
     name: Run test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
     steps:
 
       - uses: actions/checkout@v1
 
-      - name: Get rbenv and ruby-build
-        run: |
-          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+      - name: Set up Ruby 2.6.x
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
 
-      - name: Install dependencies required to install Ruby
-        if: matrix.os == 'ubuntu-latest'
+      - name: Install bundler
         run: |
-          sudo apt-get install -y libreadline-dev
-
-      - name: Install ruby 2.6.0
-        run: |
-          export PATH="$HOME/.rbenv/bin:$PATH"
-          rbenv install 2.6.0
+          gem install bundler:2.0.2
 
       - name: Run tests
         run: |
-          export PATH="$HOME/.rbenv/versions/2.6.0/bin:$PATH"
-          gem install bundler:2.0.2
           bundle install
           bundle exec rake spec
 
-  test-windows:
-    name: Run test on windows
-    runs-on: windows-latest
-
-    steps:
-
-      - uses: actions/checkout@v1
-
-      - name: Install ruby 2.6.0.1 and bundler
-        run: |
-          choco install ruby --version 2.6.0.1
-          gem install bundler:2.0.2
-
-      - name: Install gems
-        run: |
-          bundle install
-      - name: Run test
-        run: |
-          bundle exec rake spec
-
-  ft-linux-macos:
+  fts:
     name: Run FTs on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    needs: test
+    needs: tests
     env:
       RUBY_PLUGIN_BRANCH: grpc
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [windows-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v1
-      - run: echo $RUBY_PLUGIN_BRANCH
 
-      - name: Get rbenv and ruby-build
-        run: |
-          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
-
-      - name: Install dependencies required to install Ruby
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          sudo apt-get install -y libreadline-dev
-
-      - name: Install ruby 2.6.0
-        run: |
-          export PATH="$HOME/.rbenv/bin:$PATH"
-          rbenv install 2.6.0
+      - name: Set up Ruby 2.6.x
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
 
       - name: Setup go 1.13.1
         uses: actions/setup-go@v1
@@ -90,91 +51,66 @@ jobs:
           go-version: 1.13.1
 
       - name: Install gauge
+        if: matrix.os != 'windows-latest'
         run: |
           git clone --depth=1 https://github.com/getgauge/gauge.git
           cd gauge
           go run build/make.go --verbose
           go run build/make.go --install --prefix=/tmp/
+          echo "::add-path::/tmp/bin"
+
+      - name: Install gauge
+        if: matrix.os == 'windows-latest'
+        run: |
+          git clone --depth=1 https://github.com/getgauge/gauge.git
+          cd gauge
+          go run build/make.go --verbose
+          go run build/make.go --install
+          echo "::add-path::C:\\Program Files\\gauge\\bin"
+
+      - name: Install bundler
+        run: |
+          gem install bundler:2.0.2
+
+      - name: Install gauge ruby
+        run: |
+          go run ./make.go
+          go run ./make.go --install
 
       - name: Run tests
         run: |
-          export PATH="$HOME/.rbenv/versions/2.6.0/bin:/tmp/bin:$PATH"
-          gem install bundler:2.0.2
-          bundle install
-          bundle exec rake install force_install
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
           gauge install
           gauge -v
           ./gradlew clean rubyFT
 
-  ft-windows:
-    name: Run FTs on windows
-    runs-on: windows-latest
-    needs: test-windows
-    env:
-      RUBY_PLUGIN_BRANCH: grpc
-
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: Setup go 1.13.1
-        uses: actions/setup-go@v1
+      - uses: actions/upload-artifact@master
+        if: failure()
         with:
-          go-version: 1.13.1
+          name: fts-logs-${{ matrix.os }}
+          path: gauge-tests/logs
 
-      - name: Install ruby 2.6.0.1 and bundler
-        run: |
-          choco install ruby --version 2.6.0.1
-          gem install bundler:2.0.2
-
-      - name: Install gauge
-        run: |
-          git clone --depth=1 https://github.com/getgauge/gauge.git
-          cd gauge
-          go run build/make.go --verbose
-          go run build/make.go --install
-
-      - name: Install gauge-ruby
-        shell: pwsh
-        run: |
-          ${env:PATH} += ";C:\Program Files\gauge\bin"
-          bundle install
-          bundle exec rake install force_install
-
-      - name: Run tests
-        shell: pwsh
-        run: |
-          ${env:PATH} += ";C:\Program Files\gauge\bin"
-          git clone --depth=1 https://github.com/getgauge/gauge-tests
-          cd gauge-tests
-          gauge install
-          gauge -v
-          .\gradlew.bat clean rubyFT
-
-  lsp-linux:
-    name: Run lsp on ubuntu-latest
-    runs-on: ubuntu-latest
-    needs: test
+  lsp-tests:
+    name: Run lsp on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: tests
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     env:
-      RUBY_PLUGIN_BRANCH: grpc
+      BUILD_FROM_COMMIT_HASH: 'true'
 
     steps:
       - uses: actions/checkout@v1
-
-      - name: Get rbenv and ruby-build
+      - name: Set LATEST_COMMIT_HASH env to ${{ github.sha }}
         run: |
-          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          echo "::set-env name=LATEST_COMMIT_HASH::${{ github.sha}}"
 
-      - name: Install dependencies required to install Ruby
-        run: |
-          sudo apt-get install -y libreadline-dev
-
-      - name: Install ruby 2.6.0
-        run: |
-          export PATH="$HOME/.rbenv/bin:$PATH"
-          rbenv install 2.6.0
+      - name: Set up Ruby 2.6.x
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
 
       - name: Setup go 1.13.1
         uses: actions/setup-go@v1
@@ -182,61 +118,47 @@ jobs:
           go-version: 1.13.1
 
       - name: Install gauge
+        if: matrix.os != 'windows-latest'
         run: |
           git clone --depth=1 https://github.com/getgauge/gauge.git
           cd gauge
           go run build/make.go --verbose
           go run build/make.go --install --prefix=/tmp/
-
-      - name: Run tests
-        run: |
-          export PATH="$HOME/.rbenv/versions/2.6.0/bin:/tmp/bin:$PATH"
-          gem install bundler:2.0.2
-          bundle install
-          bundle exec rake install force_install
-          git clone --depth=1 https://github.com/getgauge/gauge-lsp-tests
-          cd gauge-lsp-tests
-          npm install
-          gauge install
-          gauge -v
-          gauge run --tags='!knownIssue & (actions_on_project_load | actions_on_file_edit)' --env=ruby-wd
-
-  lsp-windows:
-    name: Run lsp on windows-latest
-    runs-on: windows-latest
-    needs: test-windows
-    env:
-      RUBY_PLUGIN_BRANCH: grpc
-
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: Install ruby 2.6.0.1 and bundler
-        run: |
-          choco install ruby --version 2.6.0.1
-          gem install bundler:2.0.2
-
-      - name: Setup go 1.13.1
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.13.1
+          echo "::add-path::/tmp/bin"
 
       - name: Install gauge
+        if: matrix.os == 'windows-latest'
         run: |
           git clone --depth=1 https://github.com/getgauge/gauge.git
           cd gauge
           go run build/make.go --verbose
           go run build/make.go --install
+          echo "::add-path::C:\\Program Files\\gauge\\bin"
 
-      - name: Run tests
+      - name: Install bundler
         run: |
-          ${env:PATH} += ";C:\Program Files\gauge\bin"
           gem install bundler:2.0.2
-          bundle install
-          bundle exec rake install force_install
+
+      - name: Install gauge ruby
+        run: |
+          go run ./make.go
+          go run ./make.go --install
+
+      - name: Prepare lsp tests
+        run: |
           git clone --depth=1 https://github.com/getgauge/gauge-lsp-tests
           cd gauge-lsp-tests
           npm install
           gauge install
+
+      - name: Run lsp tests
+        run: |
+          cd gauge-lsp-tests
           gauge -v
-          gauge run --tags='!knownIssue & (actions_on_project_load | actions_on_file_edit)' --env=ruby-wd
+          gauge run  --tags='!knownIssue & (actions_on_project_load | actions_on_file_edit)' --env=ruby-wd
+
+      - uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: lsp-logs-${{ matrix.os }}
+          path: gauge-lsp-tests/logs
