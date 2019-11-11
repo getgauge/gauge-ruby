@@ -17,22 +17,28 @@
 
 module Gauge
   class Util
-    def self.get_param_name(params, index)
-      name = "arg_#{index}"
-      return name unless params.include? name
-      get_param_name(params, index + 1)
-    end
+    class << self
+      def get_param_name(params, index)
+        name = "arg_#{index}"
+        return name unless params.include? name
+        get_param_name(params, index + 1)
+      end
 
-    def self.get_step_implementation_dir
-      return File.join(ENV["GAUGE_PROJECT_ROOT"].gsub(/\\/, "/"), 'step_implementations')
-    end
+      def get_step_implementation_dir
+        return File.join(ENV["GAUGE_PROJECT_ROOT"].gsub(/\\/, "/"), "step_implementations")
+      end
 
-    def self.get_file_name(prefix = '', counter = 0)
-      name = "step_implementation#{prefix}.rb"
-      file_name = File.join(get_step_implementation_dir, name)
-      return file_name unless File.file? file_name
-      counter += 1
-      get_file_name("_#{counter}", counter)
+      def get_file_name(prefix = "", counter = 0)
+        name = "step_implementation#{prefix}.rb"
+        file_name = File.join(get_step_implementation_dir, name)
+        return file_name unless File.file? file_name
+        counter += 1
+        get_file_name("_#{counter}", counter)
+      end
+
+      def step_value(text)
+        text.gsub(/(<.*?>)/, "{}")
+      end
     end
   end
 end
