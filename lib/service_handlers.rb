@@ -111,8 +111,12 @@ module Gauge
     end
 
     def kill_process(_request, _call)
-      @server.stop
-      exit(0)
+      Thread.new do
+        sleep 0.1
+        @server.stop
+        exit(0)
+      end.run
+      Messages::Empty.new
     end
   end
 end
