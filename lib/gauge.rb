@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative 'connector'
 require_relative 'method_cache'
 require_relative 'configuration'
 
@@ -107,7 +106,7 @@ module Kernel
     step_texts = args - opts
     opts = { continue_on_failure: false }.merge opts.reduce({}, :merge)
     step_texts.each do |text|
-      step_value = Gauge::Connector.step_value(text)
+      step_value = Gauge::Util.step_value(text)
       si = { location: { file: ENV['GAUGE_STEP_FILE'], span: {} },
              block: block, step_text: text,
              recoverable: opts[:continue_on_failure] }

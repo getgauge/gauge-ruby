@@ -64,7 +64,7 @@ module Gauge
         load_aliases(file, node)
       else
         step_text = node.children[0].children[2].children[0]
-        step_value = Gauge::Connector.step_value step_text
+        step_value = Gauge::Util.step_value step_text
         load_step(file, step_value, step_text, node, {recoverable: recoverable?(node)})
       end
     end
@@ -83,7 +83,7 @@ module Gauge
       end
       Gauge::MethodCache.add_step_alias(*aliases.map {|x| x.children[0]})
       aliases.each {|x|
-        sv = Gauge::Connector.step_value x.children[0]
+        sv = Gauge::Util.step_value x.children[0]
         load_step(file, sv, x.children[0], node, {recoverable: recoverable})
       }
     end
