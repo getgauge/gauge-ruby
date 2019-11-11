@@ -182,7 +182,7 @@ describe Gauge::MethodCache do
   context 'step definitions' do
     before(:each) {
       %w(step_text bar baz).each { |v|
-        allow(Gauge::Connector).to receive(:step_value).with(v).and_return("parameterized_#{v}")
+        allow(Gauge::Util).to receive(:step_value).with(v).and_return("parameterized_#{v}")
       }
     }
     context "when 'step_text' is defined for a <block>" do
