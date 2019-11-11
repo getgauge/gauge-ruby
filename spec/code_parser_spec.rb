@@ -40,8 +40,8 @@ describe Gauge::CodeParser do
       @parsed_step = 'say {} to {}'
       @parsed_step_no_args = 'say hello'
 
-      allow(Gauge::Connector).to receive(:step_value).with('say <what> to <who>').and_return(@parsed_step)
-      allow(Gauge::Connector).to receive(:step_value).with('say hello').and_return(@parsed_step_no_args)
+      allow(Gauge::Util).to receive(:step_value).with('say <what> to <who>').and_return(@parsed_step)
+      allow(Gauge::Util).to receive(:step_value).with('say hello').and_return(@parsed_step_no_args)
       str = <<-EOS
         step 'say <what> to <who>' do |what, who|
           puts 'hello'
