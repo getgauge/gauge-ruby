@@ -16,6 +16,7 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'os'
+require_relative '../table'
 
 module Gauge
   module Processors
