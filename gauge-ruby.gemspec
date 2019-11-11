@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
     s.description = "Adds Ruby support into Gauge tests"
     s.homepage    = "http://www.getgauge.io"
     s.files = Dir.glob("lib/**/*.rb")
-    s.has_rdoc = 'yard'
 
     s.add_runtime_dependency 'ruby-protocol-buffers', '1.6.1'
     s.add_runtime_dependency 'os', '1.0.1'
