@@ -28,47 +28,8 @@ require_relative 'log'
 require_relative 'service_handlers'
 
 module Gauge
-  # @api private
   module Runtime
     DEFAULT_IMPLEMENTATIONS_DIR_PATH = Util.get_step_implementation_dir
-
-    def self.dispatch_messages(socket)
-      until socket.eof?
-        len = Connector.message_length(socket)
-        data = socket.read len
-        message = Messages::Message.decode(data)
-        handle_message(socket, message)
-        if message.messageType == :KillProcessRequest || message.messageType == :ExecutionEnding
-          socket.close
-          return
-        end
-      end
-    end
-
-    def self.handle_message(socket, message)
-      if !MessageProcessor.is_valid_message(message)
-        GaugeLog.error "Invalid message received : #{message}"
-        execution_status_response = Messages::ExecutionStatusResponse.new(executionResult: Messages::ProtoExecutionResult.new(failed: true, executionTime: 0))
-        message = Messages::Message.new(messageType: :ExecutionStatusResponse, messageId: message.messageId, executionStatusResponse: execution_status_response)
-        write_message(socket, message)
-      else
-        response = MessageProcessor.process_message message
-        write_message(socket, response) if response
-      end
-    end
-
-    def self.write_message(socket, message)
-      serialized_message = Messages::Message.encode(message)
-      size = serialized_message.bytesize
-      ProtocolBuffers::Varint.encode(socket, size)
-      socket.write serialized_message
-    end
-
-    def self.port_from_env_variable(env_variable)
-      port = ENV[env_variable]
-      raise "Could not find Env variable :#{env_variable}" if port.nil?
-      port
-    end
 
     STDOUT.sync = true
     StaticLoader.load_files(DEFAULT_IMPLEMENTATIONS_DIR_PATH)
