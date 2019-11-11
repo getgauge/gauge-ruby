@@ -31,14 +31,25 @@ jobs:
     name: Run FTs on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: tests
-    env:
-      RUBY_PLUGIN_BRANCH: grpc
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest]
 
     steps:
       - uses: actions/checkout@v1
+
+      - name: Setup env
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: |
+          $COMMIT_HASH = node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"
+          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
+
+      - name: Setup env
+        if: matrix.os != 'windows-latest'
+        run: |
+          export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
+          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
 
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
@@ -98,14 +109,21 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-    env:
-      BUILD_FROM_COMMIT_HASH: 'true'
 
     steps:
       - uses: actions/checkout@v1
-      - name: Set LATEST_COMMIT_HASH env to ${{ github.sha }}
+      - name: Setup env
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
         run: |
-          echo "::set-env name=LATEST_COMMIT_HASH::${{ github.sha}}"
+          $COMMIT_HASH = node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"
+          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
+
+      - name: Setup env
+        if: matrix.os != 'windows-latest'
+        run: |
+          export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
+          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
 
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
