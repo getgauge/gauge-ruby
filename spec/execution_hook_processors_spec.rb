@@ -1,12 +1,4 @@
 describe 'Execute Hook' do
-
-  before(:each) {
-    Gauge::Util.stub(:get_step_implementation_dir)
-    Gauge::Executor.stub(:load_steps)
-    execution_status_response = Gauge::Messages::ExecutionStatusResponse.new(:executionResult => Gauge::Messages::ProtoExecutionResult.new(:failed => false, :executionTime => 1))
-    Gauge::Processors.stub(:handle_hooks_execution) { execution_status_response }
-  }
-
   context 'before suite' do
     it 'should add custom message and screenshots from before suite' do
       input = Gauge::Messages::ExecutionStartingRequest.new(:currentExecutionInfo => nil)

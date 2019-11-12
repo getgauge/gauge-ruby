@@ -17,14 +17,7 @@
 
 module Gauge
   module Processors
-    def process_step_validation_request(message)
-      request = message.stepValidateRequest
-      Messages::Message.new(messageType: :StepValidateResponse,
-                            messageId: message.messageId,
-                            stepValidateResponse: step_validate_response(request))
-    end
-
-    def step_validate_response(request)
+    def process_step_validation_request(request)
       response = Messages::StepValidateResponse.new(isValid: true)
       if !MethodCache.valid_step? request.stepText
         suggestion = request.stepValue.stepValue.empty? ? '' : create_suggestion(request.stepValue)

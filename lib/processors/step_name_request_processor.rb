@@ -17,15 +17,10 @@
 
 module Gauge
   module Processors
-    def process_step_name_request(message)
-      r = step_name_response(message.stepNameRequest)
-      Messages::Message.new(messageType: :StepNameResponse, messageId: message.messageId, stepNameResponse: r)
-    end
-
-    def step_name_response(request)
+    def process_step_name_request(request)
       step_value = request.stepValue
       unless MethodCache.valid_step?(step_value)
-        return Messages::StepNameResponse.new(isStepPresent: false, stepName: [''], hasAlias: false, fileName: '', span: nil)
+        return Messages::StepNameResponse.new(isStepPresent: false, stepName: [""], hasAlias: false, fileName: "", span: nil)
       end
       step_text = MethodCache.get_step_text(step_value)
       has_alias = MethodCache.has_alias?(step_text)

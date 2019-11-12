@@ -19,13 +19,7 @@ require_relative '../code_parser'
 
 module Gauge
   module Processors
-    def refactor_step(message)
-      request = message.refactorRequest
-      response = refactor_response(request)
-      Messages::Message.new(messageType: :RefactorResponse, messageId: message.messageId, refactorResponse: response)
-    end
-
-    def refactor_response(request)
+    def process_refactor_request(request)
       response = Messages::RefactorResponse.new(success: true)
       begin
         step_info = get_step request.oldStepValue.stepValue

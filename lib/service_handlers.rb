@@ -15,8 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative 'runner_services_pb'
-Dir[File.join(File.dirname(__FILE__), 'processors/*.rb')].each {|file| require file}
+require_relative "runner_services_pb"
+Dir[File.join(File.dirname(__FILE__), "processors/*.rb")].each { |file| require file }
 
 module Gauge
   class ServiceHandlers < Messages::Runner::Service
@@ -26,52 +26,52 @@ module Gauge
       @server = server
     end
 
-    def get_step_names(_request, _call)
-      step_names_response
+    def get_step_names(request, _call)
+      process_step_names_request(request)
     end
 
     def cache_file(request, _call)
-      cache_file_response(request)
+      process_cache_file_request(request)
     end
 
     def get_step_positions(request, _call)
-      step_positions(request)
+      process_step_positions_request(request)
     end
 
-    def get_implementation_files(_request, _call)
-      implementation_files
+    def get_implementation_files(request, _call)
+      process_implementation_file_list_request(request)
     end
 
     def implement_stub(request, _call)
-      implement_stub_response(request)
+      process_stub_implementation_code_request(request)
     end
 
     def validate_step(request, _call)
-      step_validate_response(request)
+      process_step_validation_request(request)
     end
 
     def refactor(request, _call)
-      refactor_response(request)
+      process_refactor_request(request)
     end
 
     def get_step_name(request, _call)
-      step_name_response(request)
+      process_step_name_request(request)
     end
 
-    def get_glob_patterns(_request, _call)
-      implementation_glob_pattern_response
+    def get_glob_patterns(request, _call)
+      process_implementation_glob_pattern_request(request)
     end
 
-    def suite_data_store_init(*_args)
-      process_datastore_init(:suite_data_store)
+    def suite_data_store_init(request, _call)
+      process_suite_data_store_init_request(request)
     end
 
-    def spec_data_store_init(*_args)
-      process_datastore_init(:spec_data_store)
+    def spec_data_store_init(request, _call)
+      process_spec_data_store_init_request(request)
     end
 
-    def scenario_data_store_init(*_args)
-      process_datastore_init(:scenario_data_store)
+    def scenario_data_store_init(request, _call)
+      process_scenario_data_store_init_request(request)
     end
 
     def execution_starting(request, _call)

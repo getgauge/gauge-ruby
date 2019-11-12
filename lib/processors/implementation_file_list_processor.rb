@@ -19,12 +19,7 @@ require_relative '../util'
 
 module Gauge
   module Processors
-    def process_implementation_file_list_request(message)
-      r = implementation_files()
-      Messages::Message.new(:messageType => :ImplementationFileListResponse, :messageId => message.messageId, :implementationFileListResponse => r)
-    end
-
-    def implementation_files()
+    def process_implementation_file_list_request(_request)
       implPath = Util.get_step_implementation_dir
       fileList = Dir["#{implPath}/**/*.rb"]
       Messages::ImplementationFileListResponse.new(:implementationFilePaths => fileList)

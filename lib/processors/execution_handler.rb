@@ -41,7 +41,7 @@ module Gauge
 
       def get_filepath(stacktrace)
         toptrace = stacktrace.split("\n").first
-        return MethodCache.relative_filepath toptrace
+        MethodCache.relative_filepath toptrace
       end
     
       def handle_failure(exception, execution_time, recoverable)

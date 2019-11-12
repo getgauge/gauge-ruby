@@ -17,13 +17,7 @@
 
 module Gauge
   module Processors
-    def process_step_names_request(message)
-      r = step_names_response
-      Messages::Message.new(messageType: :StepNamesResponse,
-                            messageId: message.messageId, stepNamesResponse: r)
-    end
-
-    def step_names_response
+    def process_step_names_request(_request)
       Messages::StepNamesResponse.new(steps: MethodCache.all_steps)
     end
   end

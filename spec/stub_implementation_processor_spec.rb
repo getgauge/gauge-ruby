@@ -16,21 +16,19 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 describe Gauge::Processors do
-  let(:message) { double('message') }
+  let(:stub_impl_code_request) { double('request') }
   context '.process_stub_implementation_code_request' do
     describe 'should return filechanges' do
       it 'should give concatenated implementations for non existent file' do
-        allow(message).to receive_message_chain(:stubImplementationCodeRequest, implementationFilePath: '')
-        allow(message).to receive_message_chain(:stubImplementationCodeRequest, codes: ['code1', 'code2'])
-        allow(message).to receive(:messageId) { 1 }
+        allow(stub_impl_code_request).to receive_messages(implementationFilePath: '', codes: ['code1', 'code2'])
 
         ENV['GAUGE_PROJECT_ROOT'] = Dir.pwd
         span = Gauge::Messages::Span.new(start: 0, end: 0, startChar: 0, endChar: 0)
         text_diff = Gauge::Messages::TextDiff.new(span: span, content: "code1\ncode2")
-        response = subject.process_stub_implementation_code_request(message)
+        response = subject.process_stub_implementation_code_request(stub_impl_code_request)
 
-        expect(response.fileDiff.textDiffs[0]).to eq text_diff
-        expect(File.basename(response.fileDiff.filePath)).to eq 'step_implementation.rb'
+        expect(response.textDiffs[0]).to eq text_diff
+        expect(File.basename(response.filePath)).to eq 'step_implementation.rb'
       end
     end
   end

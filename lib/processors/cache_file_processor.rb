@@ -22,12 +22,7 @@ require_relative '../method_cache'
 module Gauge
   # @api private
   module Processors
-    def process_cache_file_request(message)
-      cache_file_response(message.cacheFileRequest)
-      nil
-    end
-
-    def cache_file_response(request)
+    def process_cache_file_request(request)
       f = request.filePath
       status =  Messages::CacheFileRequest::FileStatus.resolve(request.status)
       if (status == Messages::CacheFileRequest::FileStatus::CHANGED) || (status == Messages::CacheFileRequest::FileStatus::OPENED)

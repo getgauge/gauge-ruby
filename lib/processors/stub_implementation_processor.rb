@@ -19,12 +19,7 @@ require_relative '../../lib/util'
 
 module Gauge
   module Processors
-    def process_stub_implementation_code_request(message)
-      file_diff = implement_stub_response(message.stubImplementationCodeRequest)
-      Messages::Message.new(messageType: :FileDiff, messageId: message.messageId, fileDiff: file_diff)
-    end
-
-    def implement_stub_response(request)
+    def process_stub_implementation_code_request(request)
       codes = request.codes
       file_path = request.implementationFilePath
       content = ''

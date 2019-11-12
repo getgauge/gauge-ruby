@@ -17,12 +17,7 @@
 
 module Gauge
   module Processors
-    def process_step_positions_request(message)
-      r = step_positions(message.stepPositionsRequest)
-      Messages::Message.new(:messageType => :StepPositionsResponse, :messageId => message.messageId, :stepPositionsResponse => r)
-    end
-
-    def step_positions(request)
+    def process_step_positions_request(request)
       file = request.filePath
       positions = MethodCache.step_positions(file)
       p = create_step_position_messages(positions)
