@@ -15,23 +15,26 @@
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
-require_relative '../datastore'
+require_relative "../datastore"
 
 module Gauge
-  # @api private
   module Processors
-    def process_datastore_init(data_store_type)
-      case data_store_type
-      when :suite_data_store
-          puts data_store_type
-          DataStoreFactory.suite_datastore.clear
-      when :spec_data_store
-          puts data_store_type
-          DataStoreFactory.spec_datastore.clear
-      when :scenario_data_store
-          puts data_store_type
-          DataStoreFactory.scenario_datastore.clear
-      end
+    def process_suite_data_store_init_request(_request)
+      DataStoreFactory.suite_datastore.clear
+      datastore_response
+    end
+
+    def process_spec_data_store_init_request(_request)
+      DataStoreFactory.spec_datastore.clear
+      datastore_response
+    end
+
+    def process_scenario_data_store_init_request(_request)
+      DataStoreFactory.scenario_datastore.clear
+      datastore_response
+    end
+
+    def datastore_response
       Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => false, :executionTime => 0))
     end
   end

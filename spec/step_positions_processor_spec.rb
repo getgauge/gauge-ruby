@@ -16,7 +16,7 @@
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
 
 describe Gauge::Processors do
-  let(:message) {double('message')}
+  let(:step_positions_request) {double('request')}
   before(:each) {
     Gauge::MethodCache.clear
   }
@@ -26,11 +26,10 @@ describe Gauge::Processors do
         content = "step 'foo' do\n\tputs 'hello'\nend\n"
         ast = Gauge::CodeParser.code_to_ast content
         Gauge::StaticLoader.load_steps 'foo.rb', ast
-        allow(message).to receive_message_chain(:stepPositionsRequest, :filePath => 'foo.rb')
-        allow(message).to receive(:messageId) {1}
+        allow(step_positions_request).to receive(:filePath).and_return('foo.rb')
       }
       it 'should give step positions' do
-        positions = subject.process_step_positions_request(message).stepPositionsResponse.stepPositions
+        positions = subject.process_step_positions_request(step_positions_request).stepPositions
         expect(positions[0].stepValue).to eq 'foo'
         expect(positions[0].span.start).to eq 1
         expect(positions[0].span.end).to eq 3
@@ -42,11 +41,10 @@ describe Gauge::Processors do
         content = "step 'foo' do\n\tputs 'hello'\nend\n"
         ast = Gauge::CodeParser.code_to_ast content
         Gauge::StaticLoader.load_steps 'foo.rb', ast
-        allow(message).to receive_message_chain(:stepPositionsRequest, :filePath => 'bar.rb')
-        allow(message).to receive(:messageId) {1}
+        allow(step_positions_request).to receive(:filePath).and_return('bar.rb')
       }
       it 'should give empty for not loaded file' do
-        positions = subject.process_step_positions_request(message).stepPositionsResponse.stepPositions
+        positions = subject.process_step_positions_request(step_positions_request).stepPositions
         expect(positions.empty?).to eq true
       end
     end
