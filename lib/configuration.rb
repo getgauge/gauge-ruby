@@ -61,7 +61,7 @@ module Gauge
       }
     end
 
-    attr_reader :custom_screengrabber
+    attr_reader :custom_screengrabber, :file_based_screengrabber
 
     def self.instance
       @configuration ||= Configuration.new
@@ -82,6 +82,16 @@ module Gauge
     def screengrabber=(block)
       @custom_screengrabber=true
       @screengrabber=block
+    end
+
+    def file_based_screengrabber=(block)
+      @custom_screengrabber=true
+      @file_based_screengrabber=true
+      @screengrabber=block
+    end
+
+    def screenshot_dir
+      ENV['screenshots_dir']
     end
 
     def self.include_configured_modules

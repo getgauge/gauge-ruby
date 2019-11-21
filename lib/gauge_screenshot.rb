@@ -32,13 +32,17 @@ module Gauge
     end      
 
     def capture
-      content = Configuration.instance.screengrabber.call
-      if Configuration.instance.custom_screengrabber
+      @screenshots.push(capture_to_file)
+    end
+
+    def capture_to_file
+      if Configuration.instance.custom_screengrabber && !Configuration.instance.file_based_screengrabber
+        content = Configuration.instance.screengrabber.call
         file_name = Util.unique_screenshot_file
         File.write(file_name, content)
-        content = File.basename(file_name)
+        return File.basename(file_name)
       end
-      @screenshots.push(content)
+      Configuration.instance.screengrabber.call
     end
 
     def pending_screenshot

@@ -46,5 +46,13 @@ describe Gauge do
             expect(Gauge::GaugeScreenshot.instance.pending_screenshot).to match_array []
         end
     end
+
+    context 'capture file based screenshot' do
+        it "should have a screenshot" do
+            Gauge.configure { |c|  c.file_based_screengrabber = -> { return "screenshot-3.png" }}
+            Gauge.capture
+            expect(Gauge::GaugeScreenshot.instance.pending_screenshot).to match_array ["screenshot-3.png"]
+        end
+    end
 end
   
