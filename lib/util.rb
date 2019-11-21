@@ -39,6 +39,10 @@ module Gauge
       def step_value(text)
         text.gsub(/(<.*?>)/, "{}")
       end
+      def unique_screenshot_file
+        base_name = "screenshot-#{Process.pid}-#{(Time.now.to_f*10000).to_i}.png"
+        File.join(ENV['screenshots_dir'],base_name)
+      end
     end
   end
 end

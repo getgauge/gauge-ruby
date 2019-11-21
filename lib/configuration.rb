@@ -55,11 +55,9 @@ module Gauge
       @includes=[]
       @custom_screengrabber=false
       @screengrabber = -> {
-        file_name = "#{Dir.tmpdir}/screenshot.png"
+        file_name = Util.unique_screenshot_file
         `gauge_screenshot #{file_name}`
-        file_content = File.binread(file_name)
-        File.delete file_name
-        return file_content
+        return File.basename(file_name)
       }
     end
 

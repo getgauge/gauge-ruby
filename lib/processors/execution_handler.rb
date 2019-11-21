@@ -34,7 +34,7 @@ module Gauge
 
       def handle_pass(execution_time)
         execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => false, :executionTime => execution_time))
-        execution_status_response.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
+        execution_status_response.executionResult.screenshotFiles += Gauge::GaugeScreenshot.instance.pending_screenshot
         execution_status_response.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
         execution_status_response
       end
@@ -59,10 +59,10 @@ module Gauge
              :executionTime => execution_time))
         screenshot = screenshot_bytes
         if screenshot 
-          execution_status_response.executionResult.screenShot = screenshot
-          execution_status_response.executionResult.failureScreenshot = screenshot
+          # execution_status_response.executionResult.screenShot = screenshot
+          execution_status_response.executionResult.failureScreenshotFile = screenshot
         end
-        execution_status_response.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
+        execution_status_response.executionResult.screenshotFiles += Gauge::GaugeScreenshot.instance.pending_screenshot
         execution_status_response.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
         execution_status_response
       end
