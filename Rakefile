@@ -65,7 +65,7 @@ end
 
 desc "Generate protobuf stubs"
 task :gen_proto do
-    system "grpc_tools_ruby_protoc -I gauge-proto --ruby_out=lib --grpc_out=lib  gauge-proto/*.proto"
+    system "grpc_tools_ruby_protoc -I gauge-proto --ruby_out=lib --grpc_out=lib  gauge-proto/messages.proto gauge-proto/spec.proto gauge-proto/runner.proto"
 end
 
 def create_package(os=nil, arch=nil)
