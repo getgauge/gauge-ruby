@@ -80,6 +80,7 @@ module Gauge
     end
 
     def screengrabber=(block)
+      GaugeLog.warning("[DEPRECATED] Use file_based_screengrabber instead.")
       @custom_screengrabber=true
       @screengrabber=block
     end
