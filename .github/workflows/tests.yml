@@ -90,9 +90,8 @@ jobs:
 
       - name: Run tests
         run: |
-          git clone --depth=1 https://github.com/getgauge/gauge-tests
+          git clone --branch=fileBasedScreenshot https://github.com/getgauge/gauge-tests #Remove brach after fileBasedScreenshot branch merge with master
           cd gauge-tests
-          git checkout fileBasedScreenshot #Remove this line after fileBasedScreenshot branch merge with master
           gauge install
           gauge -v
           ./gradlew clean rubyFT
