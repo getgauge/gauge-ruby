@@ -88,9 +88,16 @@ jobs:
           go run ./make.go
           go run ./make.go --install
 
+      - name: Install html report
+        run: |
+          git clone --depth=1 https://github.com/getgauge/html-report
+          cd html-report
+          go run build/make.go
+          go run build/make.go --install
+
       - name: Run tests
         run: |
-          git clone --branch=fileBasedScreenshot https://github.com/getgauge/gauge-tests #Remove brach after fileBasedScreenshot branch merge with master
+          git clone --depth=1 --branch=fileBasedScreenshot https://github.com/getgauge/gauge-tests
           cd gauge-tests
           gauge install
           gauge -v
