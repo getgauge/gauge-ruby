@@ -55,15 +55,13 @@ module Gauge
       @includes=[]
       @custom_screengrabber=false
       @screengrabber = -> {
-        file_name = "#{Dir.tmpdir}/screenshot.png"
+        file_name = Util.unique_screenshot_file
         `gauge_screenshot #{file_name}`
-        file_content = File.binread(file_name)
-        File.delete file_name
-        return file_content
+        return File.basename(file_name)
       }
     end
 
-    attr_reader :custom_screengrabber
+    attr_reader :custom_screengrabber, :file_based_screengrabber
 
     def self.instance
       @configuration ||= Configuration.new
@@ -82,8 +80,19 @@ module Gauge
     end
 
     def screengrabber=(block)
+      GaugeLog.warning("[DEPRECATED] Use file_based_screengrabber instead.")
       @custom_screengrabber=true
       @screengrabber=block
+    end
+
+    def file_based_screengrabber=(block)
+      @custom_screengrabber=true
+      @file_based_screengrabber=true
+      @screengrabber=block
+    end
+
+    def screenshot_dir
+      ENV['screenshots_dir']
     end
 
     def self.include_configured_modules

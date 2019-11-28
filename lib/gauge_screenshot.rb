@@ -14,7 +14,7 @@
 
 # You should have received a copy of the GNU General Public License
 # along with Gauge-Ruby.  If not, see <http://www.gnu.org/licenses/>.
-
+require_relative './util'
 module Gauge
   class << self
     def capture
@@ -32,7 +32,17 @@ module Gauge
     end      
 
     def capture
-      @screenshots.push(Configuration.instance.screengrabber.call)
+      @screenshots.push(capture_to_file)
+    end
+
+    def capture_to_file
+      if Configuration.instance.custom_screengrabber && !Configuration.instance.file_based_screengrabber
+        content = Configuration.instance.screengrabber.call
+        file_name = Util.unique_screenshot_file
+        File.write(file_name, content)
+        return File.basename(file_name)
+      end
+      Configuration.instance.screengrabber.call
     end
 
     def pending_screenshot

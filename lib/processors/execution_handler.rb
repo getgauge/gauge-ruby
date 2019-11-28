@@ -34,7 +34,7 @@ module Gauge
 
       def handle_pass(execution_time)
         execution_status_response = Messages::ExecutionStatusResponse.new(:executionResult => Messages::ProtoExecutionResult.new(:failed => false, :executionTime => execution_time))
-        execution_status_response.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
+        execution_status_response.executionResult.screenshotFiles += Gauge::GaugeScreenshot.instance.pending_screenshot
         execution_status_response.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
         execution_status_response
       end
@@ -57,12 +57,11 @@ module Gauge
              :errorMessage => exception.message,
              :stackTrace => code_snippet + stacktrace,
              :executionTime => execution_time))
-        screenshot = screenshot_bytes
-        if screenshot 
-          execution_status_response.executionResult.screenShot = screenshot
-          execution_status_response.executionResult.failureScreenshot = screenshot
+        screenshot_file = take_screenshot
+        if screenshot_file 
+          execution_status_response.executionResult.failureScreenshotFile = screenshot_file
         end
-        execution_status_response.executionResult.screenshots += Gauge::GaugeScreenshot.instance.pending_screenshot
+        execution_status_response.executionResult.screenshotFiles += Gauge::GaugeScreenshot.instance.pending_screenshot
         execution_status_response.executionResult.message += Gauge::GaugeMessages.instance.pending_messages
         execution_status_response
       end
@@ -73,10 +72,10 @@ module Gauge
         number.to_s + " | " + line.strip + "\n\n"
       end
 
-      def screenshot_bytes
+      def take_screenshot
         return nil if (ENV['screenshot_on_failure'] || "").downcase == "false" || (which("gauge_screenshot").nil? && !Configuration.instance.custom_screengrabber)
         begin
-          Configuration.instance.screengrabber.call
+          GaugeScreenshot.instance.capture_to_file
         rescue Exception => e
           GaugeLog.error e
           return nil

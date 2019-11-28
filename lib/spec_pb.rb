@@ -20,6 +20,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       repeated :preHookScreenshots, :bytes, 12
       repeated :postHookScreenshots, :bytes, 13
       optional :itemCount, :int64, 14
+      repeated :preHookScreenshotFiles, :string, 15
+      repeated :postHookScreenshotFiles, :string, 16
     end
     add_message "gauge.messages.ProtoItem" do
       optional :itemType, :enum, 1, "gauge.messages.ProtoItem.ItemType"
@@ -62,6 +64,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       repeated :postHookMessage, :string, 18
       repeated :preHookScreenshots, :bytes, 19
       repeated :postHookScreenshots, :bytes, 20
+      repeated :preHookScreenshotFiles, :string, 21
+      repeated :postHookScreenshotFiles, :string, 22
     end
     add_message "gauge.messages.Span" do
       optional :start, :int64, 1
@@ -87,6 +91,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       repeated :postHookMessages, :string, 6
       repeated :preHookScreenshots, :bytes, 7
       repeated :postHookScreenshots, :bytes, 8
+      repeated :preHookScreenshotFiles, :string, 9
+      repeated :postHookScreenshotFiles, :string, 10
     end
     add_message "gauge.messages.ProtoConcept" do
       optional :conceptStep, :message, 1, "gauge.messages.ProtoStep"
@@ -182,6 +188,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       repeated :postHookScreenshots, :bytes, 18
       optional :chunked, :bool, 19
       optional :chunkSize, :int64, 20
+      repeated :preHookScreenshotFiles, :string, 21
+      repeated :postHookScreenshotFiles, :string, 22
     end
     add_message "gauge.messages.ProtoSpecResult" do
       optional :protoSpec, :message, 1, "gauge.messages.ProtoSpec"
