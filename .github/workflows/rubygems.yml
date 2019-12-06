@@ -1,0 +1,34 @@
+name: rubygems
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  tests:
+    name: deploy on rubygems
+    runs-on: ubuntu-latest
+    env:
+      RUBYGEMS_USER: '${{ secrets.RUBYGEMS_USER }}'
+      RUBYGEMS_PASS: '${{ secrets.RUBYGEMS_PASS }}'
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Ruby 2.6.x
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+
+      - name: Install bundler
+        run: |
+          gem install bundler:2.0.2
+
+      - name: create packages
+        run: |
+          bundle install
+          bundle exec rake package_all
+
+      - name: deploy
+        run: |
+          curl -u $RUBYGEMS_USER:$RUBYGEMS_PASS https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials && chmod 0600 ~/.gem/credentials
+          cd pkg
+          for i in gauge-ruby*.gem; do gem push $i; done

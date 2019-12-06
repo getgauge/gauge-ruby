@@ -12,4 +12,4 @@ curl \
     -H "Accept: application/vnd.github.ant-man-preview+json" \
     -H "Content-Type: application/json" \
     https://api.github.com/repos/getgauge/gauge-ruby/deployments \
-    --data '{"ref": "actions", "required_contexts": [], "environment": "production"}'
+    --data '{"ref": "master", "required_contexts": [], "environment": "production"}'
