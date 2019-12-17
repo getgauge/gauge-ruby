@@ -53,15 +53,14 @@ module Gauge
   class Configuration
     def initialize
       @includes=[]
-      @custom_screengrabber=false
+      @screenshot_writer = true
+      @custom_screengrabber = false
       @screengrabber = -> {
         file_name = Util.unique_screenshot_file
         `gauge_screenshot #{file_name}`
         return File.basename(file_name)
       }
     end
-
-    attr_reader :custom_screengrabber, :file_based_screengrabber
 
     def self.instance
       @configuration ||= Configuration.new
@@ -80,15 +79,22 @@ module Gauge
     end
 
     def screengrabber=(block)
-      GaugeLog.warning("[DEPRECATED] Use file_based_screengrabber instead.")
-      @custom_screengrabber=true
-      @screengrabber=block
+      GaugeLog.warning("[DEPRECATED] Use custom_screenshot_writer instead.")
+      @screenshot_writer = false
+      set_screengrabber(block)
     end
 
-    def file_based_screengrabber=(block)
-      @custom_screengrabber=true
-      @file_based_screengrabber=true
-      @screengrabber=block
+    def custom_screenshot_writer=(block)
+      @screenshot_writer = true
+      set_screengrabber(block)
+    end
+
+    def screenshot_writer?
+      @screenshot_writer
+    end
+
+    def custom_screengrabber?
+      @custom_screengrabber
     end
 
     def screenshot_dir
@@ -100,6 +106,12 @@ module Gauge
       # TODO: move this feature to something more specific, ex look at supporting Sandboxed execution.
       main=TOPLEVEL_BINDING.eval('self')
       self.instance.includes.each &main.method(:include)
+    end
+
+    private
+    def set_screengrabber(block)
+      @custom_screengrabber = true
+      @screengrabber=block
     end
   end
 end

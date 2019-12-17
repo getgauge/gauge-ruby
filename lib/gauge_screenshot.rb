@@ -36,7 +36,7 @@ module Gauge
     end
 
     def capture_to_file
-      if Configuration.instance.custom_screengrabber && !Configuration.instance.file_based_screengrabber
+      unless Configuration.instance.screenshot_writer?
         content = Configuration.instance.screengrabber.call
         file_name = Util.unique_screenshot_file
         File.write(file_name, content)

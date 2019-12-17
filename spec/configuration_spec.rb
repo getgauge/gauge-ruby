@@ -59,7 +59,19 @@ describe Gauge::Configuration do
         Gauge.configure { |c|  c.screengrabber = -> { puts "foo" }}
       }
       it 'should set custom_screengrabber attribute as true' do
-        expect(Gauge::Configuration.instance.custom_screengrabber).to be true
+        expect(Gauge::Configuration.instance.custom_screengrabber?).to be true
+      end
+      it 'should set custom screengrabber' do
+        expect(Gauge::Configuration.instance.screengrabber.source).to include 'puts "foo"'
+      end
+    end
+
+    describe 'config.custom_screenshot_writer' do
+      before(:each) {
+        Gauge.configure { |c|  c.custom_screenshot_writer = -> { puts "foo" }}
+      }
+      it 'should set custom_screengrabber attribute as true' do
+        expect(Gauge::Configuration.instance.custom_screengrabber?).to be true
       end
       it 'should set custom screengrabber' do
         expect(Gauge::Configuration.instance.screengrabber.source).to include 'puts "foo"'

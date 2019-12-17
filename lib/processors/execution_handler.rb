@@ -73,7 +73,7 @@ module Gauge
       end
 
       def take_screenshot
-        return nil if (ENV['screenshot_on_failure'] || "").downcase == "false" || (which("gauge_screenshot").nil? && !Configuration.instance.custom_screengrabber)
+        return nil if (ENV['screenshot_on_failure'] || "").downcase == "false" || (which("gauge_screenshot").nil? && !Configuration.instance.custom_screengrabber?)
         begin
           GaugeScreenshot.instance.capture_to_file
         rescue Exception => e
