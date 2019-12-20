@@ -19,8 +19,12 @@ require_relative "services_services_pb"
 Dir[File.join(File.dirname(__FILE__), "processors/*.rb")].each { |file| require file }
 
 module Gauge
-  class ExecutionHandler < Messages::Execution::Service
+  class ExecutionHandler < Messages::Runner::Service
     include Processors
+
+    def initialize(server)
+      @server = server
+    end
 
     def initialize_suite_data_store(request, _call)
       process_suite_data_store_init_request(request)
@@ -69,10 +73,6 @@ module Gauge
     def execute_step(request, _call)
       process_execute_step_request(request)
     end
-  end
-
-  class AuthoringHandler < Messages::Authoring::Service
-    include Processors
 
     def get_step_names(request, _call)
       process_step_names_request(request)
@@ -105,21 +105,9 @@ module Gauge
     def get_glob_patterns(request, _call)
       process_implementation_glob_pattern_request(request)
     end
-  end
-
-  class ValidatorHandler < Messages::Validator::Service
-    include Processors
 
     def validate_step(request, _call)
       process_step_validation_request(request)
-    end
-  end
-
-  class ProcessHandler < Messages::Process::Service
-    include Processors
-
-    def initialize(server)
-      @server = server
     end
 
     def kill(_request, _call)

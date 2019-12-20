@@ -35,10 +35,7 @@ module Gauge
     GaugeLog.debug 'Starting grpc server..'
     server = GRPC::RpcServer.new
     port = server.add_http2_port('127.0.0.1:0', :this_port_is_insecure)
-    server.handle(Gauge::ExecutionHandler.new)
-    server.handle(Gauge::AuthoringHandler.new)
-    server.handle(Gauge::ValidatorHandler.new)
-    server.handle(Gauge::ProcessHandler.new(server))
+    server.handle(Gauge::ExecutionHandler.new(server))
     GaugeLog.info "Listening on port:#{port}"
     server.run_till_terminated
     exit(0)

@@ -6,15 +6,19 @@ require 'services_pb'
 
 module Gauge
   module Messages
-    module Execution
+    module Runner
       class Service
 
         include GRPC::GenericService
 
         self.marshal_class_method = :encode
         self.unmarshal_class_method = :decode
-        self.service_name = 'gauge.messages.Execution'
+        self.service_name = 'gauge.messages.Runner'
 
+        # ValidateStep is a RPC to validate a given step.
+        #
+        # Accepts a StepValidateRequest message and returns a StepValidateResponse message
+        rpc :ValidateStep, StepValidateRequest, StepValidateResponse
         # SuiteDataStoreInit is a RPC to initialize the suite level data store.
         #
         # Accepts a Empty message and returns a ExecutionStatusResponse message
@@ -63,19 +67,6 @@ module Gauge
         #
         # Accepts a ExecutionEndingRequest message and returns a ExecutionStatusResponse message
         rpc :FinishExecution, ExecutionEndingRequest, ExecutionStatusResponse
-      end
-
-      Stub = Service.rpc_stub_class
-    end
-    module Authoring
-      class Service
-
-        include GRPC::GenericService
-
-        self.marshal_class_method = :encode
-        self.unmarshal_class_method = :decode
-        self.service_name = 'gauge.messages.Authoring'
-
         # CacheFile is a RPC to tell runner to load/reload/unload a implementation file.
         #
         # Accepts a CacheFileRequest message and returns a Empty message
@@ -108,53 +99,60 @@ module Gauge
         #
         # Accepts a RefactorRequest message and returns a RefactorResponse message.
         rpc :Refactor, RefactorRequest, RefactorResponse
+        # Kill is a RPC tell plugin to stop grpc server and kill the plugin process.
+        #
+        # Accepts a KillProcessRequest message and returns a Empty message.
+        rpc :Kill, KillProcessRequest, Empty
       end
 
       Stub = Service.rpc_stub_class
     end
-    module Result
+    module Reporter
+      # Reporter services is meant for reporting plugins, or others plugins which are interested the live events
       class Service
 
         include GRPC::GenericService
 
         self.marshal_class_method = :encode
         self.unmarshal_class_method = :decode
-        self.service_name = 'gauge.messages.Result'
+        self.service_name = 'gauge.messages.Reporter'
 
+        # NotifyExecutionStarting is a RPC to tell plugins that the execution has started.
+        #
+        # Accepts a ExecutionStartingRequest message and returns a Empty message
+        rpc :NotifyExecutionStarting, ExecutionStartingRequest, Empty
+        # NotifySpecExecutionStarting is a RPC to tell plugins that the specification execution has started.
+        #
+        # Accepts a SpecExecutionStartingRequest message and returns a Empty message
+        rpc :NotifySpecExecutionStarting, SpecExecutionStartingRequest, Empty
+        # NotifyScenarioExecutionStarting is a RPC to tell plugins that the scenario execution has started.
+        #
+        # Accepts a ScenarioExecutionStartingRequest message and returns a Empty message
+        rpc :NotifyScenarioExecutionStarting, ScenarioExecutionStartingRequest, Empty
+        # NotifyStepExecutionStarting is a RPC to tell plugins that the step execution has started.
+        #
+        # Accepts a StepExecutionStartingRequest message and returns a Empty message
+        rpc :NotifyStepExecutionStarting, StepExecutionStartingRequest, Empty
+        # NotifyStepExecutionEnding is a RPC to tell plugins that the step execution has finished.
+        #
+        # Accepts a StepExecutionStartingRequest message and returns a Empty message
+        rpc :NotifyStepExecutionEnding, StepExecutionEndingRequest, Empty
+        # NotifyScenarioExecutionEnding is a RPC to tell plugins that the scenario execution has finished.
+        #
+        # Accepts a ScenarioExecutionEndingRequest message and returns a Empty message
+        rpc :NotifyScenarioExecutionEnding, ScenarioExecutionEndingRequest, Empty
+        # NotifySpecExecutionEnding is a RPC to tell plugins that the specification execution has finished.
+        #
+        # Accepts a SpecExecutionStartingRequest message and returns a Empty message
+        rpc :NotifySpecExecutionEnding, SpecExecutionEndingRequest, Empty
+        # NotifyExecutionEnding is a RPC to tell plugins that the execution has finished.
+        #
+        # Accepts a ExecutionEndingRequest message and returns a Empty message
+        rpc :NotifyExecutionEnding, ExecutionEndingRequest, Empty
         # NotifySuiteResult is a RPC to tell about the end result of execution
         #
         # Accepts a SuiteExecutionResult message and returns a Empty message.
         rpc :NotifySuiteResult, SuiteExecutionResult, Empty
-      end
-
-      Stub = Service.rpc_stub_class
-    end
-    module Validator
-      class Service
-
-        include GRPC::GenericService
-
-        self.marshal_class_method = :encode
-        self.unmarshal_class_method = :decode
-        self.service_name = 'gauge.messages.Validator'
-
-        # ValidateStep is a RPC to validate a given step.
-        #
-        # Accepts a StepValidateRequest message and returns a StepValidateResponse message
-        rpc :ValidateStep, StepValidateRequest, StepValidateResponse
-      end
-
-      Stub = Service.rpc_stub_class
-    end
-    module Process
-      class Service
-
-        include GRPC::GenericService
-
-        self.marshal_class_method = :encode
-        self.unmarshal_class_method = :decode
-        self.service_name = 'gauge.messages.Process'
-
         # Kill is a RPC tell plugin to stop grpc server and kill the plugin process.
         #
         # Accepts a KillProcessRequest message and returns a Empty message.
