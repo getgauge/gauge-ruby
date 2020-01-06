@@ -76,7 +76,7 @@ GEM
       equalizer (~> 0.0.9)
       parser (~> 2.6.3)
       procto (~> 0.0.2)
-    yard (0.9.22)
+    yard (0.9.23)
 
 PLATFORMS
   ruby
