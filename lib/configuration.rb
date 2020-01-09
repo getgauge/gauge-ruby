@@ -98,7 +98,7 @@ module Gauge
     end
 
     def screenshot_dir
-      ENV['screenshots_dir']
+      ENV['gauge_screenshots_dir']
     end
 
     def self.include_configured_modules

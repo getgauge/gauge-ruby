@@ -18,12 +18,12 @@ describe Gauge do
     screenshot_dir = File.expand_path('./tmp_screenshots_dir')
     before(:all) {
         Dir.mkdir(screenshot_dir)
-        ENV['screenshots_dir'] = screenshot_dir
+        ENV['gauge_screenshots_dir'] = screenshot_dir
     }
 
     after(:all) {
         FileUtils.rm_rf(screenshot_dir)
-        ENV['screenshots_dir'] = nil
+        ENV['gauge_screenshots_dir'] = nil
     }
     before(:each) {
         Gauge.configure { |c|  c.screengrabber = -> { return "screenshotdata" }}
