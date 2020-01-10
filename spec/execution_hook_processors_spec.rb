@@ -2,7 +2,7 @@ describe "Execute Hook" do
   screenshot_dir = File.expand_path("./tmp_screenshots_dir")
   before(:all) {
     Dir.mkdir(screenshot_dir)
-    ENV["screenshots_dir"] = screenshot_dir
+    ENV["gauge_screenshots_dir"] = screenshot_dir
   }
   before(:each) do |e|
     screenshot_instance = instance_double("Gauge::GaugeScreenshot")
@@ -19,7 +19,7 @@ describe "Execute Hook" do
 
   after(:all) {
     FileUtils.rm_rf(screenshot_dir)
-    ENV["screenshots_dir"] = nil
+    ENV["gauge_screenshots_dir"] = nil
   }
   context "before suite" do
     it "should add custom message and screenshots from before suite", {
