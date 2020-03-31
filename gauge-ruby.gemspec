@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
     s.files = Dir.glob("lib/**/*.rb")
 
     s.add_runtime_dependency 'ruby-protocol-buffers', '1.6.1'
-    s.add_runtime_dependency 'os', '1.0.1'
+    s.add_runtime_dependency 'os', '1.1.0'
     s.add_runtime_dependency 'parser', '~> 2.3'
     s.add_runtime_dependency 'unparser', '>= 0.2.6', '< 0.5.0'
     s.add_runtime_dependency 'method_source', '>= 0.8.2', '< 1.1.0'
