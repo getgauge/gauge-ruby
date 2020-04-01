@@ -40,6 +40,7 @@ jobs:
           if [ -z "$version" ]; then
             version=$(ls gauge-ruby* | head -1 | sed "s/\.[^\.]*$//" | sed "s/gauge-ruby-//" | sed "s/-[a-z]*\.[a-z0-9_]*$//");
           fi
+          echo "::set-env name=VERSION::$version"
           artifacts=()
           dir=`pwd`
           for i in `ls`; do
@@ -68,3 +69,12 @@ jobs:
           curl -u $RUBYGEMS_USER:$RUBYGEMS_PASS https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials && chmod 0600 ~/.gem/credentials
           cd pkg
           for i in gauge-ruby*.gem; do gem push $i; done
+
+      - name: Update metadata in gauge-repository
+        run: |
+          git clone https://github.com/getgauge/gauge-repository.git
+          cd gauge-repository
+          python update_metadata.py ruby $VERSION
+          commit_message=$(echo -e "Update ruby to v$VERSION")
+          git commit -am "$commit_message"
+          git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/getgauge/gauge-repository.git" master
