@@ -1,32 +1,40 @@
-name: deploy
+name: Release on PR Merge
 
-on: [deployment]
+on: deployment
 
 jobs:
-  tests:
-    name: deploy on github
-    runs-on: macos-latest
+  release:
+    if: github.event.deployment.environment == 'production'
+    runs-on: ubuntu-latest
     env:
-      GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      GITHUB_TOKEN: '${{ secrets.GAUGEBOT_GITHUB_TOKEN }}'
+      RUBYGEMS_USER: '${{ secrets.RUBYGEMS_USER }}'
+      RUBYGEMS_PASS: '${{ secrets.RUBYGEMS_PASS }}'
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
         with:
           ruby-version: 2.6.x
 
+      - name: Install hub
+        uses: geertvdc/setup-hub@master
+
       - name: Install bundler
         run: |
           gem install bundler:2.0.2
+
+      - name: Setup git
+        run: |
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
 
       - name: create packages
         run: |
           bundle install
           bundle exec rake package_all
 
-      - name: Install hub
-        run: brew install hub
-      - name: update
+      - name: Release on github
         run: |
           cd deploy
           if [ -z "$version" ]; then
@@ -42,10 +50,10 @@ jobs:
           echo "Updating release v$version"
           echo "---------------------------"
           echo -e "Gauge Ruby v$version\n\n" > desc.txt
-          release_description=$(ruby -e "$(curl -sSfL https://github.com/getgauge/gauge/raw/master/build/create_release_text.rb)" gauge-ruby getgauge)
+          release_description=$(ruby -e "$(curl -sSfL https://github.com/getgauge/gauge/raw/master/build/create_release_text.rb)" getgauge gauge-ruby)
           echo "$release_description" >> desc.txt
           echo "Creating new draft for release v$version"
-          hub release create -d -F ./desc.txt "v$version"
+          hub release create -F ./desc.txt "v$version"
           rm -rf desc.txt
           echo "Start uploading assets..."
           for i in `ls $artifacts`; do
@@ -54,16 +62,9 @@ jobs:
                   exit 1
               fi
           done
-      - name: 'deployment success'
-        if: success()
-        uses: 'deliverybot/status@master'
-        with:
-          state: 'success'
-          token: '${{ secrets.GITHUB_TOKEN }}'
 
-      - name: 'deployment failure'
-        if: failure()
-        uses: 'deliverybot/status@master'
-        with:
-          state: 'failure'
-          token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Release on ruby gems
+        run: |
+          curl -u $RUBYGEMS_USER:$RUBYGEMS_PASS https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials && chmod 0600 ~/.gem/credentials
+          cd pkg
+          for i in gauge-ruby*.gem; do gem push $i; done
