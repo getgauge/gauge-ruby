@@ -1,0 +1,80 @@
+name: Release on PR Merge
+
+on: deployment
+
+jobs:
+  release:
+    if: github.event.deployment.environment == 'production'
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: '${{ secrets.GAUGEBOT_GITHUB_TOKEN }}'
+      RUBYGEMS_USER: '${{ secrets.RUBYGEMS_USER }}'
+      RUBYGEMS_PASS: '${{ secrets.RUBYGEMS_PASS }}'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby 2.6.x
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+
+      - name: Install hub
+        uses: geertvdc/setup-hub@master
+
+      - name: Install bundler
+        run: |
+          gem install bundler:2.0.2
+
+      - name: Setup git
+        run: |
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+
+      - name: create packages
+        run: |
+          bundle install
+          bundle exec rake package_all
+
+      - name: Release on github
+        run: |
+          cd deploy
+          if [ -z "$version" ]; then
+            version=$(ls gauge-ruby* | head -1 | sed "s/\.[^\.]*$//" | sed "s/gauge-ruby-//" | sed "s/-[a-z]*\.[a-z0-9_]*$//");
+          fi
+          echo "::set-env name=VERSION::$version"
+          artifacts=()
+          dir=`pwd`
+          for i in `ls`; do
+              artifacts+="$dir/$i "
+          done
+          cd ..
+          echo "---------------------------"
+          echo "Updating release v$version"
+          echo "---------------------------"
+          echo -e "Gauge Ruby v$version\n\n" > desc.txt
+          release_description=$(ruby -e "$(curl -sSfL https://github.com/getgauge/gauge/raw/master/build/create_release_text.rb)" getgauge gauge-ruby)
+          echo "$release_description" >> desc.txt
+          echo "Creating new draft for release v$version"
+          hub release create -F ./desc.txt "v$version"
+          rm -rf desc.txt
+          echo "Start uploading assets..."
+          for i in `ls $artifacts`; do
+              hub release edit -m "" -a $i "v$version"
+              if [ $? -ne 0 ];then
+                  exit 1
+              fi
+          done
+
+      - name: Release on ruby gems
+        run: |
+          curl -u $RUBYGEMS_USER:$RUBYGEMS_PASS https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials && chmod 0600 ~/.gem/credentials
+          cd pkg
+          for i in gauge-ruby*.gem; do gem push $i; done
+
+      - name: Update metadata in gauge-repository
+        run: |
+          git clone https://github.com/getgauge/gauge-repository.git
+          cd gauge-repository
+          python update_metadata.py ruby $VERSION
+          commit_message=$(echo -e "Update ruby to v$VERSION")
+          git commit -am "$commit_message"
+          git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/getgauge/gauge-repository.git" master
