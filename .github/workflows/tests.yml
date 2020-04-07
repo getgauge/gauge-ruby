@@ -137,6 +137,11 @@ jobs:
         with:
           ruby-version: 2.6.x
 
+      - name: Setup java 12.x.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12.x.x
+
       - name: Setup go 1.13.1
         uses: actions/setup-go@v1
         with:
