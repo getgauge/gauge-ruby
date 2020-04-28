@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gauge-ruby (0.5.4)
+    gauge-ruby (0.5.3)
       debase (~> 0.2.2)
       grpc (~> 1.10, >= 1.10.0)
       method_source (>= 0.8.2, < 1.1.0)
@@ -28,10 +28,10 @@ GEM
     diff-lcs (1.3)
     docile (1.3.2)
     equalizer (0.0.11)
-    google-protobuf (3.11.4)
-    googleapis-common-protos-types (1.0.4)
-      google-protobuf (~> 3.0)
-    grpc (1.28.0)
+    google-protobuf (3.11.4-universal-darwin)
+    googleapis-common-protos-types (1.0.5)
+      google-protobuf (~> 3.11)
+    grpc (1.28.0-universal-darwin)
       google-protobuf (~> 3.11)
       googleapis-common-protos-types (~> 1.0)
     grpc-tools (1.28.0)
@@ -89,4 +89,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
