@@ -11,7 +11,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
 
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
@@ -36,7 +36,7 @@ jobs:
         os: [windows-latest, ubuntu-latest]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Setup env
         if: matrix.os == 'windows-latest'
@@ -123,7 +123,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Setup env
         if: matrix.os == 'windows-latest'
         shell: pwsh
