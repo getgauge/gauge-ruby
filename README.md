@@ -113,10 +113,9 @@ New distribution details need to be updated in the ruby-install.json file in  [g
 
 ## License
 
-![GNU Public License version 3.0](http://www.gnu.org/graphics/gplv3-127x51.png)
-Gauge-Ruby is released under [GNU Public License version 3.0](http://www.gnu.org/licenses/gpl-3.0.txt)
+[Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 ## Copyright
 
-Copyright 2015 ThoughtWorks, Inc.
+Copyright ThoughtWorks, Inc.
 
