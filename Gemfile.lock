@@ -51,7 +51,7 @@ GEM
       ice_nine (~> 0.11.1)
       procto (~> 0.0.2)
     os (1.1.1)
-    parser (2.7.1.5)
+    parser (2.7.2.0)
       ast (~> 2.4.1)
     procto (0.0.3)
     rake (13.0.1)
