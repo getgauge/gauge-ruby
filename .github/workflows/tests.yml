@@ -132,7 +132,7 @@ jobs:
         run: |
           export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
           echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
-          echo "LOCAL_RUBY_PLUGIN_PATH=$ruby_plugin_path" >> $GITHUB_ENV
+          echo "LOCAL_RUBY_PLUGIN_PATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
