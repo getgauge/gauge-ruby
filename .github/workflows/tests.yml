@@ -46,17 +46,22 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: |
-          $COMMIT_HASH = node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"
-          $ruby_plugin_path = (pwd).Path
-          echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
-          echo "LOCAL_RUBY_PLUGIN_PATH=$ruby_plugin_path" >> $GITHUB_ENV
+          echo 'RUBY_PLUGIN_BRANCH<<EOF' >> $GITHUB_ENV
+          node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+          echo 'LOCAL_RUBY_PLUGIN_PATH<<EOF' >> $GITHUB_ENV
+          (pwd).Path >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
       - name: Setup env
         if: matrix.os != 'windows-latest'
         run: |
-          export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
-          echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
-          echo "LOCAL_RUBY_PLUGIN_PATH=$ruby_plugin_path" >> $GITHUB_ENV
+          echo 'RUBY_PLUGIN_BRANCH<<EOF' >> $GITHUB_ENV
+          node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))" >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+          echo 'LOCAL_RUBY_PLUGIN_PATH<<EOF' >> $GITHUB_ENV
+          (pwd).Path >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
 
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
