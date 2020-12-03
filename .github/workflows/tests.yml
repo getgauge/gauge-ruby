@@ -150,21 +150,6 @@ jobs:
           go run ./make.go
           go run ./make.go --install
 
-      - name: Prepare lsp tests
-        run: |
-          git clone --depth=1 https://github.com/getgauge/gauge-lsp-tests
-          cd gauge-lsp-tests
-          npm install
-          gauge install
-
-      - name: Run lsp tests
-        run: |
-          cd gauge-lsp-tests
-          gauge -v
-          gauge run  --tags='!knownIssue & (actions_on_project_load | actions_on_file_edit)' --env=ruby-wd
-
-      - uses: actions/upload-artifact@master
-        if: failure()
+      - uses: getgauge/gauge-lsp-tests@githubaction
         with:
-          name: lsp-logs-${{ matrix.os }}
-          path: gauge-lsp-tests/logs
+          env: ruby-wd
