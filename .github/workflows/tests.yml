@@ -150,6 +150,6 @@ jobs:
           go run ./make.go
           go run ./make.go --install
 
-      - uses: getgauge/gauge-lsp-tests@githubaction
+      - uses: getgauge/run-lsp-tests@main
         with:
           env: ruby-wd
