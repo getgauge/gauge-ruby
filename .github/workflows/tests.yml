@@ -48,15 +48,15 @@ jobs:
         run: |
           $COMMIT_HASH = node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"
           $ruby_plugin_path = (pwd).Path
-          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
-          echo "::set-env name=LOCAL_RUBY_PLUGIN_PATH::$ruby_plugin_path"
+          echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "LOCAL_RUBY_PLUGIN_PATH=$ruby_plugin_path" >> $GITHUB_ENV
 
       - name: Setup env
         if: matrix.os != 'windows-latest'
         run: |
           export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
-          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
-          echo "::set-env name=LOCAL_RUBY_PLUGIN_PATH::$(pwd)"
+          echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "LOCAL_RUBY_PLUGIN_PATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
@@ -73,23 +73,9 @@ jobs:
         with:
           java-version: 12.x.x    
 
-      - name: Install gauge
-        if: matrix.os != 'windows-latest'
-        run: |
-          git clone --depth=1 https://github.com/getgauge/gauge.git
-          cd gauge
-          go run build/make.go --verbose
-          go run build/make.go --install --prefix=/tmp/
-          echo "::add-path::/tmp/bin"
-
-      - name: Install gauge
-        if: matrix.os == 'windows-latest'
-        run: |
-          git clone --depth=1 https://github.com/getgauge/gauge.git
-          cd gauge
-          go run build/make.go --verbose
-          go run build/make.go --install
-          echo "::add-path::C:\\Program Files\\gauge\\bin"
+      - uses: getgauge/setup-gauge@master
+        with:
+          gauge-version: master
 
       - name: Install bundler
         run: |
@@ -99,13 +85,6 @@ jobs:
         run: |
           go run ./make.go
           go run ./make.go --install
-
-      - name: Install html report
-        run: |
-          git clone --depth=1 https://github.com/getgauge/html-report
-          cd html-report
-          go run build/make.go
-          go run build/make.go --install
 
       - name: Run tests
         run: |
@@ -138,15 +117,15 @@ jobs:
         run: |
           $COMMIT_HASH = node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"
           $ruby_plugin_path = (pwd).Path
-          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
-          echo "::set-env name=LOCAL_RUBY_PLUGIN_PATH::$ruby_plugin_path"
+          echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "LOCAL_RUBY_PLUGIN_PATH=$ruby_plugin_path" >> $GITHUB_ENV
 
       - name: Setup env
         if: matrix.os != 'windows-latest'
         run: |
           export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
-          echo "::set-env name=RUBY_PLUGIN_BRANCH::$COMMIT_HASH"
-          echo "::set-env name=LOCAL_RUBY_PLUGIN_PATH::$(pwd)"
+          echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
+          echo "LOCAL_RUBY_PLUGIN_PATH=$(pwd)" >> $GITHUB_ENV
 
       - name: Set up Ruby 2.6.x
         uses: actions/setup-ruby@v1
@@ -158,23 +137,9 @@ jobs:
         with:
           go-version: 1.13.1
 
-      - name: Install gauge
-        if: matrix.os != 'windows-latest'
-        run: |
-          git clone --depth=1 https://github.com/getgauge/gauge.git
-          cd gauge
-          go run build/make.go --verbose
-          go run build/make.go --install --prefix=/tmp/
-          echo "::add-path::/tmp/bin"
-
-      - name: Install gauge
-        if: matrix.os == 'windows-latest'
-        run: |
-          git clone --depth=1 https://github.com/getgauge/gauge.git
-          cd gauge
-          go run build/make.go --verbose
-          go run build/make.go --install
-          echo "::add-path::C:\\Program Files\\gauge\\bin"
+      - uses: getgauge/setup-gauge@master
+        with:
+          gauge-version: master
 
       - name: Install bundler
         run: |
