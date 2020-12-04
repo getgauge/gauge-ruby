@@ -76,7 +76,7 @@ jobs:
       - uses: getgauge/setup-gauge@master
         with:
           gauge-version: release 
-          plugins: screenshot,html-report,java
+          gauge-plugins: screenshot,html-report,java
 
       - name: Install bundler
         run: |
@@ -139,7 +139,7 @@ jobs:
       - uses: getgauge/setup-gauge@master
         with:
           gauge-version: release
-          plugins: screenshot,html-report, js
+          gauge-plugins: screenshot,html-report, js
 
       - name: Install bundler
         run: |
