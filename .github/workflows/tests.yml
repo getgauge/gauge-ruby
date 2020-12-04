@@ -24,7 +24,7 @@ jobs:
 
       - name: Install bundler
         run: |
-          gem install bundler:2.0.2
+          gem install bundler:2.1.4
 
       - name: Run tests
         run: |
@@ -80,7 +80,7 @@ jobs:
 
       - name: Install bundler
         run: |
-          gem install bundler:2.0.2
+          gem install bundler:2.1.4
 
       - name: Install gauge ruby
         run: |
@@ -139,11 +139,11 @@ jobs:
       - uses: getgauge/setup-gauge@master
         with:
           gauge-version: release
-          plugins: screenshot,html-report,js
+          plugins: screenshot,html-report, js
 
       - name: Install bundler
         run: |
-          gem install bundler:2.0.2
+          gem install bundler:2.1.4
 
       - name: Install gauge ruby
         run: |
