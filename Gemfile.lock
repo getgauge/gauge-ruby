@@ -87,7 +87,7 @@ GEM
       mprelude (~> 0.1.0)
       parser (>= 2.6.5)
       procto (~> 0.0.2)
-    yard (0.9.25)
+    yard (0.9.26)
 
 PLATFORMS
   ruby
