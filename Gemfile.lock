@@ -38,7 +38,7 @@ GEM
     grpc (1.35.0)
       google-protobuf (~> 3.14)
       googleapis-common-protos-types (~> 1.0)
-    grpc-tools (1.35.0)
+    grpc-tools (1.36.0)
     ice_nine (0.11.2)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
