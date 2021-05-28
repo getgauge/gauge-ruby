@@ -76,6 +76,7 @@ jobs:
       - uses: getgauge/setup-gauge@master
         with:
           gauge-version: master
+          gauge-plugins: screenshot,html-report,java
 
       - name: Install bundler
         run: |
@@ -90,8 +91,6 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
-          gauge install
-          gauge -v
           ./gradlew clean rubyFT
 
       - uses: actions/upload-artifact@master
@@ -139,7 +138,8 @@ jobs:
 
       - uses: getgauge/setup-gauge@master
         with:
-          gauge-version: master
+          gauge-version: master 
+          gauge-plugins: screenshot,html-report, js
 
       - name: Install bundler
         run: |
@@ -150,21 +150,6 @@ jobs:
           go run ./make.go
           go run ./make.go --install
 
-      - name: Prepare lsp tests
-        run: |
-          git clone --depth=1 https://github.com/getgauge/gauge-lsp-tests
-          cd gauge-lsp-tests
-          npm install
-          gauge install
-
-      - name: Run lsp tests
-        run: |
-          cd gauge-lsp-tests
-          gauge -v
-          gauge run  --tags='!knownIssue & (actions_on_project_load | actions_on_file_edit)' --env=ruby-wd
-
-      - uses: actions/upload-artifact@master
-        if: failure()
+      - uses: getgauge/run-lsp-tests@main
         with:
-          name: lsp-logs-${{ matrix.os }}
-          path: gauge-lsp-tests/logs
+          env: ruby-wd
