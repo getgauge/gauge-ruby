@@ -1,6 +1,6 @@
 {
     "id" : "ruby",
-    "version" : "0.5.4",
+    "version" : "0.5.5",
 	"description": "ruby support for gauge",
     "install": {
         "windows": [],
