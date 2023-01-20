@@ -103,7 +103,7 @@ Note: Run after compiling
 bundle exec rake package
 ````
 
-For distributable across platforms os, windows and linux for bith x86 and x86_64
+For distributable across platforms os, windows and linux for both x86_64 and arm64
 
 ````
 bundle exec rake package_all

@@ -11,18 +11,14 @@ jobs:
       RUBYGEMS_USER: '${{ secrets.RUBYGEMS_USER }}'
       RUBYGEMS_PASS: '${{ secrets.RUBYGEMS_PASS }}'
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby 2.6.x
-        uses: actions/setup-ruby@v1
+      - uses: actions/checkout@v3
+      - name: Set up Ruby 2.7.x
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6.x
+          ruby-version: 2.7
 
       - name: Install hub
         uses: geertvdc/setup-hub@master
-
-      - name: Install bundler
-        run: |
-          gem install bundler:2.0.2
 
       - name: Setup git
         run: |

@@ -32,15 +32,15 @@ const (
 	plugins           = "plugins"
 	GOARCH            = "GOARCH"
 	GOOS              = "GOOS"
-	X86               = "386"
 	X86_64            = "amd64"
+	arm64             = "arm64"
 	DARWIN            = "darwin"
 	LINUX             = "linux"
 	WINDOWS           = "windows"
 	bin               = "bin"
 	newDirPermissions = 0755
 	gauge             = "gauge"
-	gaugeRuby         = "gauge-ruby"
+	gaugeRuby         = "github.com/getgauge/gauge-ruby"
 	deployDir         = "deploy"
 	commonDep         = "github.com/getgauge/common"
 )
@@ -146,7 +146,7 @@ func createGoPathForBuild() {
 	}
 }
 
-//Copy gauge ruby files to GOPATH
+// Copy gauge ruby files to GOPATH
 func copyGaugeRubyFilesToGoPath() {
 	for _, f := range gaugeRubyFiles {
 		mirrorFile(f, path.Join(BUILD_DIR_SRC, gaugeRuby, f))
@@ -183,8 +183,7 @@ func runProcess(command string, workingdir string, arg ...string) {
 
 func compileGoPackage(packageName string) {
 	setGoEnv()
-	runProcess("go", BUILD_DIR, "get", "-u", "-d", commonDep)
-	runProcess("go", BUILD_DIR, "install", "-v", packageName)
+	runProcess("go", BUILD_DIR, "install", "-mod=readonly", "-v", packageName)
 }
 
 func copyBinaries() {
@@ -318,12 +317,12 @@ var binDir = flag.String("bin-dir", "", "Specifies OS_PLATFORM specific binaries
 
 var (
 	platformEnvs = []map[string]string{
-		map[string]string{GOARCH: X86, GOOS: DARWIN, CGO_ENABLED: "0"},
-		map[string]string{GOARCH: X86_64, GOOS: DARWIN, CGO_ENABLED: "0"},
-		map[string]string{GOARCH: X86, GOOS: LINUX, CGO_ENABLED: "0"},
-		map[string]string{GOARCH: X86_64, GOOS: LINUX, CGO_ENABLED: "0"},
-		map[string]string{GOARCH: X86, GOOS: WINDOWS, CGO_ENABLED: "0"},
-		map[string]string{GOARCH: X86_64, GOOS: WINDOWS, CGO_ENABLED: "0"},
+		{GOARCH: arm64, GOOS: DARWIN, CGO_ENABLED: "0"},
+		{GOARCH: X86_64, GOOS: DARWIN, CGO_ENABLED: "0"},
+		{GOARCH: arm64, GOOS: LINUX, CGO_ENABLED: "0"},
+		{GOARCH: X86_64, GOOS: LINUX, CGO_ENABLED: "0"},
+		{GOARCH: arm64, GOOS: WINDOWS, CGO_ENABLED: "0"},
+		{GOARCH: X86_64, GOOS: WINDOWS, CGO_ENABLED: "0"},
 	}
 )
 
@@ -477,8 +476,8 @@ func getUserHome() string {
 
 func getArch() string {
 	arch := getGOARCH()
-	if arch == X86 {
-		return "x86"
+	if arch == arm64 {
+		return "arm64"
 	}
 	return "x86_64"
 }

@@ -10,7 +10,7 @@ require 'zip'
 require 'rake/clean'
 
 PLUGIN_VERSION=JSON.parse(File.read('ruby.json'))['version']
-ARCH_MAP = {"386" => "x86", "amd64" => "x86_64"}
+ARCH_MAP = {"amd64" => "x86_64", "arm64" => "arm64"}
 
 RSpec::Core::RakeTask.new(:spec)
 YARD::Rake::YardocTask.new
@@ -24,13 +24,13 @@ end
 
 desc "Compile gauge-ruby.go for current OS/Arch"
 task :compile => [:fetch_common, :build] do
-    sh "go build -o pkg/#{binary_name(nil)} gauge-ruby.go"
+    sh "go build -mod=readonly -o pkg/#{binary_name(nil)} gauge-ruby.go"
 end
 
 desc "X-Compile gauge-ruby.go for all supported OS/Arch"
 task :xcompile => [:fetch_common, :build] do
     run_for_all_os_arch {|os,arch|
-        sh "go build -o #{binary_path(os, arch)} gauge-ruby.go"
+        sh "go build -mod=readonly -o #{binary_path(os, arch)} gauge-ruby.go"
     }
 end
 
@@ -93,7 +93,7 @@ def windows?
 end
 
 def run_for_all_os_arch
-    ["386", "amd64"].each {|arch|
+    ["amd64", "arm64"].each {|arch|
         ["darwin", "linux", "windows"].each {|os|
             ENV["GOOS"] = os
             ENV["GOARCH"] = arch
