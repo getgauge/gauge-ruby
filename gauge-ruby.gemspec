@@ -4,11 +4,11 @@ Gem::Specification.new do |s|
     s.version     = JSON.parse(File.read('ruby.json'))['version']
     s.authors     = ["Gauge Team"]
     s.email       = ["gauge@thoughtworks.com"]
-    s.license     = "GPL-3.0"
+    s.license     = "Apache-2.0"
 
     s.summary     = "Ruby support for Gauge"
     s.description = "Adds Ruby support into Gauge tests"
-    s.homepage    = "http://www.getgauge.io"
+    s.homepage    = "https://gauge.org"
     s.files = Dir.glob("lib/**/*.rb")
 
     s.add_runtime_dependency 'ruby-protocol-buffers', '1.6.1'
