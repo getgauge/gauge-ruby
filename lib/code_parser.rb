@@ -33,7 +33,7 @@ module Gauge
       args = new_params.map { |v| Parser::AST::Node.new(:arg, [v]) }
       step = [node.children[0].children[0], node.children[0].children[1], Parser::AST::Node.new(:str, [new_step_text])]
       c1 = Parser::AST::Node.new(:send, step)
-      c2 = Parser::AST::Node.new(:args, args)
+      c2 = Parser::AST::Node.new(:kwargs, args)
       Parser::AST::Node.new(:block, [c1, c2, node.children[2]])
     end
 

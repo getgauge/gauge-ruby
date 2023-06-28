@@ -4,7 +4,7 @@
 [![Gem](https://img.shields.io/gem/v/gauge-ruby.svg)](https://rubygems.org/gems/gauge-ruby)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
-This project adds ruby [language plugin](https://docs.gauge.org/plugins.html#language-reporting-plugins) for [gauge](http://getgauge.io).
+This project adds ruby [language plugin](https://docs.gauge.org/plugins.html#language-reporting-plugins) for [gauge](https://gauge.org/).
 
 The plugin is authored in [Ruby](https://en.wikipedia.org/wiki/Ruby_(programming_language)). It contains a launcher component (gauge-ruby.go) written in golang which is used to start the plugin from [gauge](https://github.com/getgauge/gauge).
 
@@ -53,7 +53,7 @@ gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
 * [Golang](http://golang.org/)
 * [Ruby](https://www.ruby-lang.org/en/)
 * [Bundler](http://bundler.io/)
-* [Gauge](http://getgauge.io)
+* [Gauge](https://gauge.org/)
 
 Run `bundle install` to install all required gems.
 
@@ -103,13 +103,13 @@ Note: Run after compiling
 bundle exec rake package
 ````
 
-For distributable across platforms os, windows and linux for bith x86 and x86_64
+For distributable across platforms os, windows and linux for both x86_64 and arm64
 
 ````
 bundle exec rake package_all
 ````
 
-New distribution details need to be updated in the ruby-install.json file in  [gauge plugin repository](https://github.com/getgauge/gauge-repository) for a new verison update.
+New distribution details need to be updated in the ruby-install.json file in  [gauge plugin repository](https://github.com/getgauge/gauge-repository) for a new version update.
 
 ## License
 
