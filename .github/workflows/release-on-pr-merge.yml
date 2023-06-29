@@ -12,10 +12,10 @@ jobs:
       RUBYGEMS_PASS: '${{ secrets.RUBYGEMS_PASS }}'
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Ruby 2.7.x
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: 3.2
 
       - name: Setup git
         run: |
