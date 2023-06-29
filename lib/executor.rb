@@ -3,10 +3,7 @@
  *  Licensed under the Apache License, Version 2.0
  *  See LICENSE.txt in the project root for license information.
 =end
-require 'ruby-debug-ide'
 require_relative 'gauge'
-
-ATTACH_DEBUGGER_EVENT = 'Runner Ready for Debugging'
 
 module Gauge
   class DebugOptions
@@ -16,27 +13,14 @@ module Gauge
   # @api private
   module Executor
     def self.load_steps(dir)
-      start_debugger
       Dir["#{dir}/**/*.rb"].each do |x|
         begin
-          GaugeLog.debug "Loading step implemetations from #{x} dirs"
+          GaugeLog.debug "Loading step implementations from #{x} dirs"
           ENV['GAUGE_STEP_FILE'] = x
           require x
         rescue Exception => e
           GaugeLog.error "Cannot import #{x}. Reason: #{e.message}"
         end
-      end
-    end
-
-    def self.start_debugger
-      if ENV['DEBUGGING']
-        options = DebugOptions.new
-        options.host = '127.0.0.1'
-        options.port = ENV['DEBUG_PORT'].to_i
-        options.notify_dispatcher = false
-        options.skip_wait_for_start = false
-        GaugeLog.info ATTACH_DEBUGGER_EVENT
-        Debugger.prepare_debugger(options)
       end
     end
 
