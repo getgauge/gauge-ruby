@@ -5,7 +5,6 @@
 =end
 require 'parser/current'
 require 'unparser'
-require 'method_source'
 require 'fileutils'
 require 'tempfile'
 require 'util'

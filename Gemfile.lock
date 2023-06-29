@@ -4,7 +4,6 @@ PATH
     gauge-ruby (0.6.0)
       debase (~> 0.2.5.beta2)
       grpc (~> 1.10, >= 1.10.0)
-      method_source (>= 0.8.2, < 1.1.0)
       parser (>= 2.7, < 4.0)
       ruby-debug-ide (>= 0.6, < 0.8)
       ruby-protocol-buffers (= 1.6.1)
@@ -81,6 +80,7 @@ PLATFORMS
 DEPENDENCIES
   gauge-ruby!
   grpc-tools (~> 1.10, >= 1.10.0)
+  method_source
   os
   rake
   rspec
