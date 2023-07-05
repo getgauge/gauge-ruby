@@ -37,14 +37,14 @@ gauge run specs
 #### Install specific version
 * Installing specific version
 ```
-gauge install ruby --version 0.4.2
+gauge install ruby --version 0.7.0
 ```
 
 #### Offline installation
 
 * Download the plugin from [Releases](https://github.com/getgauge/gauge-ruby/releases)
 ```
-gauge install ruby --file gauge-ruby-0.4.2-linux.x86_64.zip
+gauge install ruby --file gauge-ruby-0.7.0-linux.x86_64.zip
 ```
 
 #### Build from Source
