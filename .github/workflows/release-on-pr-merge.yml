@@ -62,7 +62,7 @@ jobs:
 
       - name: Release on ruby gems
         run: |
-          curl -u $RUBYGEMS_USER:$RUBYGEMS_PASS https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials && chmod 0600 ~/.gem/credentials
+          mkdir -p ~/.gem && curl -u $RUBYGEMS_USER:$RUBYGEMS_PASS https://rubygems.org/api/v1/api_key.yaml > ~/.gem/credentials && chmod 0600 ~/.gem/credentials
           cd pkg
           for i in gauge-ruby*.gem; do gem push $i; done
 
