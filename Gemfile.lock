@@ -4,7 +4,6 @@ PATH
     gauge-ruby (0.7.0)
       grpc (~> 1.10, >= 1.10.0)
       parser (>= 2.7, < 4.0)
-      ruby-protocol-buffers (= 1.6.1)
       unparser (>= 0.5.0, < 0.7.0)
 
 GEM
@@ -50,7 +49,6 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.12.0)
     rspec-support (3.12.1)
-    ruby-protocol-buffers (1.6.1)
     rubyzip (2.3.2)
     simplecov (0.22.0)
       docile (~> 1.1)

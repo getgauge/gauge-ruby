@@ -4,7 +4,6 @@
  *  See LICENSE.txt in the project root for license information.
 =end
 require 'socket'
-require 'protocol_buffers'
 require 'grpc'
 
 require_relative 'messages_pb'
