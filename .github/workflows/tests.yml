@@ -15,6 +15,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         ruby_version: ['2.7', '3.0', '3.1', '3.2']
+      fail-fast: false
     steps:
 
       - uses: actions/checkout@v3
@@ -30,9 +31,13 @@ jobs:
 
       - name: Run tests
         run: |
-          sudo apt-get install build-essential
           bundle install
           bundle exec rake spec
+
+      - if: failure()
+        run: |
+          find . -name mkmf.log -exec cat {} \;
+          find . -name gem_make.out -exec cat {} \;
 
   fts:
     name: Run FTs on ${{ matrix.ruby_version }} + ${{ matrix.os }}
@@ -42,6 +47,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest]
         ruby_version: ['2.7', '3.0', '3.1', '3.2']
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
@@ -109,6 +115,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         ruby_version: ['2.7', '3.0', '3.1', '3.2']
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v3
