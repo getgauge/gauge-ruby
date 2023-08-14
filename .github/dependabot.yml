@@ -12,3 +12,5 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
+    allow:
+      - dependency-type: all
