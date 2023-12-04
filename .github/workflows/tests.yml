@@ -75,7 +75,7 @@ jobs:
           go-version-file: 'go.mod'
 
       - name: Setup java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
