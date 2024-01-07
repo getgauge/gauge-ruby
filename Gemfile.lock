@@ -37,7 +37,7 @@ GEM
     grpc-tools (1.60.0)
     method_source (1.0.0)
     os (1.1.4)
-    parser (3.2.2.4)
+    parser (3.3.0.2)
       ast (~> 2.4.1)
       racc
     racc (1.7.3)
@@ -86,4 +86,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.4.14
+   2.5.4
