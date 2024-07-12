@@ -22,6 +22,6 @@ Gem::Specification.new do |s|
     s.add_runtime_dependency 'unparser', '>= 0.6.4', '< 0.7.0'
     s.add_runtime_dependency 'grpc', '~> 1.10', '>= 1.10.0', '< 1.65'
     s.add_runtime_dependency 'google-protobuf', '>= 3', '< 4'
-    s.add_development_dependency 'grpc-tools', '~> 1.10', '>= 1.10.0', '< 1.65'
+    s.add_development_dependency 'grpc-tools', '~> 1.10', '>= 1.10.0', '< 1.66'
     s.required_ruby_version = ">= 3.1"
 end
