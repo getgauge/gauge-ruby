@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     gauge-ruby (0.9.1)
-      google-protobuf (>= 3, < 4)
-      grpc (~> 1.10, >= 1.10.0, < 1.65)
+      google-protobuf (>= 3, < 5)
+      grpc (~> 1.10, >= 1.10.0, < 1.66)
       parser (>= 3.1, < 4.0)
       unparser (>= 0.6.4, < 0.7.0)
 
@@ -11,31 +11,42 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    bigdecimal (3.1.8)
     diff-lcs (1.5.1)
     docile (1.4.0)
-    google-protobuf (3.25.3)
-    google-protobuf (3.25.3-aarch64-linux)
-    google-protobuf (3.25.3-arm64-darwin)
-    google-protobuf (3.25.3-x86_64-darwin)
-    google-protobuf (3.25.3-x86_64-linux)
+    google-protobuf (4.27.2)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.27.2-aarch64-linux)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.27.2-arm64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.27.2-x86_64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.27.2-x86_64-linux)
+      bigdecimal
+      rake (>= 13)
     googleapis-common-protos-types (1.15.0)
       google-protobuf (>= 3.18, < 5.a)
-    grpc (1.64.0)
-      google-protobuf (~> 3.25)
+    grpc (1.65.0)
+      google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.64.0-aarch64-linux)
-      google-protobuf (~> 3.25)
+    grpc (1.65.0-aarch64-linux)
+      google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.64.0-arm64-darwin)
-      google-protobuf (~> 3.25)
+    grpc (1.65.0-arm64-darwin)
+      google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.64.0-x86_64-darwin)
-      google-protobuf (~> 3.25)
+    grpc (1.65.0-x86_64-darwin)
+      google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.64.0-x86_64-linux)
-      google-protobuf (~> 3.25)
+    grpc (1.65.0-x86_64-linux)
+      google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc-tools (1.64.0)
+    grpc-tools (1.65.0)
     method_source (1.1.0)
     os (1.1.4)
     parser (3.3.4.0)
@@ -77,7 +88,7 @@ PLATFORMS
 
 DEPENDENCIES
   gauge-ruby!
-  grpc-tools (~> 1.10, >= 1.10.0, < 1.65)
+  grpc-tools (~> 1.10, >= 1.10.0, < 1.66)
   method_source
   os
   rake
