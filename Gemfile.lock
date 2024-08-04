@@ -34,13 +34,13 @@ GEM
     grpc (1.64.0-x86_64-linux)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
-    grpc-tools (1.64.0)
+    grpc-tools (1.65.2)
     method_source (1.1.0)
     os (1.1.4)
     parser (3.3.4.0)
       ast (~> 2.4.1)
       racc
-    racc (1.8.0)
+    racc (1.8.1)
     rake (13.2.1)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
@@ -76,7 +76,7 @@ PLATFORMS
 
 DEPENDENCIES
   gauge-ruby!
-  grpc-tools (~> 1.10, >= 1.10.0, < 1.65)
+  grpc-tools (~> 1.10, >= 1.10.0, < 1.66)
   method_source
   os
   rake
