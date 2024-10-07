@@ -91,12 +91,22 @@ jobs:
           go run -mod=readonly build/make.go --install
 
       - name: Run tests
+        if: matrix.os != 'ubuntu-latest'
         run: |
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
           gauge install
           gauge -v
           ./gradlew clean rubyFT
+
+      - name: Run tests
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          git clone --depth=1 https://github.com/getgauge/gauge-tests
+          cd gauge-tests
+          gauge install
+          gauge -v
+          xvfb-run --auto-servernum ./gradlew clean rubyFT
 
       - uses: actions/upload-artifact@master
         if: failure() || cancelled()
