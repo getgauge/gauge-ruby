@@ -96,7 +96,7 @@ jobs:
           cd gauge-tests
           gauge install
           gauge -v
-          ./gradlew clean rubyFT
+          xvfb-run --auto-servernum ./gradlew clean rubyFT
 
       - uses: actions/upload-artifact@master
         if: failure() || cancelled()
