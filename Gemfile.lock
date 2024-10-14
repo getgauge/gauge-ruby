@@ -34,7 +34,7 @@ GEM
     grpc (1.64.3-x86_64-linux)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
-    grpc-tools (1.64.3)
+    grpc-tools (1.67.0)
     method_source (1.1.0)
     os (1.1.4)
     parser (3.3.5.0)
@@ -51,7 +51,7 @@ GEM
     rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.1)
+    rspec-mocks (3.13.2)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.1)
@@ -76,7 +76,7 @@ PLATFORMS
 
 DEPENDENCIES
   gauge-ruby!
-  grpc-tools (~> 1.10, >= 1.10.0, < 1.65)
+  grpc-tools (~> 1.10, >= 1.10.0, < 1.68)
   method_source
   os
   rake
