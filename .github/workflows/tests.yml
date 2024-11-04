@@ -96,13 +96,13 @@ jobs:
           cd gauge-tests
           gauge install
           gauge -v
-          ./gradlew clean rubyFT
+          xvfb-run --auto-servernum ./gradlew clean rubyFT
 
       - uses: actions/upload-artifact@master
         if: failure() || cancelled()
         with:
           name: fts-logs-${{ matrix.os }}-ruby-${{ matrix.ruby_version }}
-          path: gauge-tests/logs
+          path: gauge-tests/testLogs
 
   lsp-tests:
     name: Run lsp on ${{ matrix.ruby_version }} + ${{ matrix.os }}
