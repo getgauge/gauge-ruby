@@ -19,7 +19,7 @@ task :default => [:spec]
 
 desc "Fetch github.com/getgauge/common"
 task :fetch_common do
-    sh "go get -u -d github.com/getgauge/common"
+    sh "go get -u github.com/getgauge/common"
 end
 
 desc "Compile gauge-ruby.go for current OS/Arch"
