@@ -34,7 +34,7 @@ GEM
     grpc (1.64.3-x86_64-linux)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
-    grpc-tools (1.69.0)
+    grpc-tools (1.70.1)
     method_source (1.1.0)
     os (1.1.4)
     parser (3.3.7.0)
