@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        ruby_version: ['3.1', '3.2', '3.3']
+        ruby_version: ['3.1', '3.2', '3.3', '3.4']
       fail-fast: false
 
     steps:
@@ -41,8 +41,8 @@ jobs:
     needs: tests
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
-        ruby_version: ['3.1', '3.2', '3.3']
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        ruby_version: ['3.1', '3.2', '3.3', '3.4']
       fail-fast: false
 
     steps:
@@ -91,6 +91,7 @@ jobs:
           go run -mod=readonly build/make.go --install
 
       - name: Run tests
+        if: matrix.os != 'ubuntu-latest'
         run: |
           git clone --depth=1 https://github.com/getgauge/gauge-tests
           cd gauge-tests
@@ -98,11 +99,20 @@ jobs:
           gauge -v
           ./gradlew clean rubyFT
 
+      - name: Run tests
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          git clone --depth=1 https://github.com/getgauge/gauge-tests
+          cd gauge-tests
+          gauge install
+          gauge -v
+          xvfb-run --auto-servernum ./gradlew clean rubyFT
+
       - uses: actions/upload-artifact@master
         if: failure() || cancelled()
         with:
           name: fts-logs-${{ matrix.os }}-ruby-${{ matrix.ruby_version }}
-          path: gauge-tests/logs
+          path: gauge-tests/testLogs
 
   lsp-tests:
     name: Run lsp on ${{ matrix.ruby_version }} + ${{ matrix.os }}
@@ -111,7 +121,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        ruby_version: ['3.1', '3.2', '3.3']
+        ruby_version: ['3.1', '3.2', '3.3', '3.4']
       fail-fast: false
 
     steps:
