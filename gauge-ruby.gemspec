@@ -19,8 +19,8 @@ Gem::Specification.new do |s|
     s.files = Dir.glob("lib/**/*.rb")
 
     s.add_runtime_dependency 'parser', '>= 3.1', '< 4.0'
-    s.add_runtime_dependency 'unparser', '>= 0.6.4', '< 0.7.0'
-    s.add_runtime_dependency 'grpc', '~> 1.10', '>= 1.10.0', '< 1.65'
+    s.add_runtime_dependency 'unparser', '>= 0.6.4', '< 0.8.0'
+    s.add_runtime_dependency 'grpc', '~> 1.10', '>= 1.10.0', '< 1.72'
     s.add_development_dependency 'grpc-tools', '~> 1.10', '>= 1.10.0'
     s.required_ruby_version = ">= 3.1"
 end
