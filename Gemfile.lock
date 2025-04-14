@@ -37,7 +37,7 @@ GEM
     grpc-tools (1.71.0)
     method_source (1.1.0)
     os (1.1.4)
-    parser (3.3.7.4)
+    parser (3.3.8.0)
       ast (~> 2.4.1)
       racc
     racc (1.8.1)
