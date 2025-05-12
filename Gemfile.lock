@@ -10,7 +10,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.3)
-    diff-lcs (1.6.1)
+    diff-lcs (1.6.2)
     docile (1.4.1)
     google-protobuf (3.25.7)
     google-protobuf (3.25.7-aarch64-linux)
@@ -34,7 +34,7 @@ GEM
     grpc (1.64.3-x86_64-linux)
       google-protobuf (~> 3.25)
       googleapis-common-protos-types (~> 1.0)
-    grpc-tools (1.71.0)
+    grpc-tools (1.72.0)
     method_source (1.1.0)
     os (1.1.4)
     parser (3.3.8.0)
@@ -51,7 +51,7 @@ GEM
     rspec-expectations (3.13.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
-    rspec-mocks (3.13.3)
+    rspec-mocks (3.13.4)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.3)
