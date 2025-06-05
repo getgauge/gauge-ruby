@@ -102,7 +102,7 @@ jobs:
         if: failure() || cancelled()
         with:
           name: fts-logs-${{ matrix.os }}-ruby-${{ matrix.ruby_version }}
-          path: gauge-tests/logs
+          path: gauge-tests/testLogs
 
   lsp-tests:
     name: Run lsp on ${{ matrix.ruby_version }} + ${{ matrix.os }}
