@@ -92,7 +92,7 @@ jobs:
 
       - name: Run tests
         run: |
-          git clone --depth=1 https://github.com/getgauge/gauge-tests
+          git clone --single-branch --depth=1 --branch debug-tests https://github.com/getgauge/gauge-tests
           cd gauge-tests
           gauge install
           gauge -v
@@ -155,7 +155,7 @@ jobs:
 
       - name: Prepare lsp tests
         run: |
-          git clone --depth=1 https://github.com/getgauge/gauge-lsp-tests
+          git clone --single-branch --depth=1 https://github.com/getgauge/gauge-lsp-tests
           cd gauge-lsp-tests
           npm install
           gauge install
