@@ -1,6 +1,8 @@
 source "https://rubygems.org"
 gemspec
 
+gem 'grpc', github: 'grpc/grpc', submodules: true
+
 group :development, :test do
 	gem 'rake'
   gem 'os'
