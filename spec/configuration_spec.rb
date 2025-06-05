@@ -69,7 +69,7 @@ describe Gauge::Configuration do
 
   context ".screenshot" do
     it "invokes gauge_screenshot by default" do
-      expect(Gauge::Configuration.new.screengrabber.source).to include "`gauge_screenshot"
+      expect(Gauge::Configuration.new.screengrabber.source).to include "'gauge_screenshot"
     end
   end
 end
