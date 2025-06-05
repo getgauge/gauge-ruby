@@ -43,7 +43,7 @@ module Gauge
       @custom_screengrabber = false
       @screengrabber = -> {
         file_name = Util.unique_screenshot_file
-        `gauge_screenshot #{file_name}`
+        Kernel.system('gauge_screenshot', file_name)
         return File.basename(file_name)
       }
     end

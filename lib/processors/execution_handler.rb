@@ -76,14 +76,14 @@ module Gauge
       def create_param_values parameters
         params = []
         parameters.each do |param|
-          if ((param.parameterType == :Table) ||(param.parameterType == :Special_Table))
+          if (param.parameterType == :Table) || (param.parameterType == :Special_Table)
             gtable = Gauge::Table.new(param.table)
             params.push gtable
           else
             params.push param.value
           end
         end
-        return params
+        params
       end
 
       private
@@ -95,7 +95,7 @@ module Gauge
             return exe if File.executable?(exe) && !File.directory?(exe)
           }
         end
-        return nil
+        nil
       end
     end
   end
