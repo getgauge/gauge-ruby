@@ -56,6 +56,7 @@ jobs:
           $ruby_plugin_path = (pwd).Path
           echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $env:GITHUB_ENV
           echo "LOCAL_RUBY_PLUGIN_PATH=$ruby_plugin_path" >> $env:GITHUB_ENV
+          echo "RUBY_PLUGIN_GRPC_SOURCE_BRANCH=master" >> $env:GITHUB_ENV
 
       - name: Setup env
         if: matrix.os != 'windows-latest'
@@ -63,6 +64,7 @@ jobs:
           export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
           echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
           echo "LOCAL_RUBY_PLUGIN_PATH=$(pwd)" >> $GITHUB_ENV
+          echo "RUBY_PLUGIN_GRPC_SOURCE_BRANCH=master" >> $GITHUB_ENV
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
         uses: ruby/setup-ruby@v1
@@ -135,6 +137,7 @@ jobs:
           $ruby_plugin_path = (pwd).Path
           echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $env:GITHUB_ENV
           echo "LOCAL_RUBY_PLUGIN_PATH=$ruby_plugin_path" >> $env:GITHUB_ENV
+          echo "RUBY_PLUGIN_GRPC_SOURCE_BRANCH=master" >> $env:GITHUB_ENV
 
       - name: Setup env
         if: matrix.os != 'windows-latest'
@@ -142,6 +145,7 @@ jobs:
           export COMMIT_HASH=`node -e "console.log((process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF).replace(/refs\/heads\//,''))"`
           echo "RUBY_PLUGIN_BRANCH=$COMMIT_HASH" >> $GITHUB_ENV
           echo "LOCAL_RUBY_PLUGIN_PATH=$(pwd)" >> $GITHUB_ENV
+          echo "RUBY_PLUGIN_GRPC_SOURCE_BRANCH=master" >> $GITHUB_ENV
 
       - name: Set up Ruby ${{ matrix.ruby_version }}
         uses: ruby/setup-ruby@v1
