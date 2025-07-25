@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
 
     s.add_runtime_dependency 'parser', '>= 3.1', '< 4.0'
     s.add_runtime_dependency 'unparser', '>= 0.6.4', '< 0.9.0'
-    s.add_runtime_dependency 'grpc', '>= 1.74.0.pre2', '< 2.0'
+    s.add_runtime_dependency 'grpc', '>= 1.74.0', '< 2.0'
     s.add_development_dependency 'grpc-tools', '>= 1.10.0', '< 2.0'
     s.required_ruby_version = ">= 3.1"
 end
