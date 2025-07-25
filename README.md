@@ -4,7 +4,7 @@
 [![Gem](https://img.shields.io/gem/v/gauge-ruby.svg)](https://rubygems.org/gems/gauge-ruby)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
-This project adds ruby [language plugin](https://docs.gauge.org/plugins.html#language-reporting-plugins) for [gauge](https://gauge.org/).
+This project adds a ruby [language plugin](https://docs.gauge.org/plugins.html#language-reporting-plugins) for [gauge](https://gauge.org/).
 
 The plugin is authored in [Ruby](https://en.wikipedia.org/wiki/Ruby_(programming_language)). It contains a launcher component (gauge-ruby.go) written in golang which is used to start the plugin from [gauge](https://github.com/getgauge/gauge).
 
