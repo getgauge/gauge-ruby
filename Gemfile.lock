@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    gauge-ruby (0.9.5)
-      grpc (>= 1.74.0.pre2, < 2.0)
+    gauge-ruby (0.9.6)
+      grpc (>= 1.74.0, < 2.0)
       parser (>= 3.1, < 4.0)
       unparser (>= 0.6.4, < 0.9.0)
 
