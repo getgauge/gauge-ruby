@@ -106,7 +106,9 @@ module Gauge
         parser = Parser::CurrentRuby.new
       parser.parse(buffer)
       rescue Exception => e
-        GaugeLog.error e
+        GaugeLog.error "Cannot translate code to ast due to [#{e.message}], ignoring. Enable gauge debug logging to see the backtrace."
+        GaugeLog.debug "Backtrace:"
+        e.backtrace&.each { |line| GaugeLog.debug line }
       end
     end
   end
