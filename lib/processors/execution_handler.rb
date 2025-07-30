@@ -64,7 +64,9 @@ module Gauge
         begin
           GaugeScreenshot.instance.capture_to_file
         rescue Exception => e
-          GaugeLog.error e
+          GaugeLog.error "Cannot capture screenshot due to [#{e.message}], ignoring. Enable gauge debug logging to see the backtrace."
+          GaugeLog.debug "Backtrace:"
+          e.backtrace&.each { |line| GaugeLog.debug line }
           return nil
         end
       end
