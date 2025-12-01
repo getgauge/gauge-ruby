@@ -13,19 +13,19 @@ GEM
     bigdecimal (3.3.1)
     diff-lcs (1.6.2)
     docile (1.4.1)
-    google-protobuf (4.33.0)
+    google-protobuf (4.33.1)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.0-aarch64-linux-gnu)
+    google-protobuf (4.33.1-aarch64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.0-arm64-darwin)
+    google-protobuf (4.33.1-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.0-x86_64-darwin)
+    google-protobuf (4.33.1-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.0-x86_64-linux-gnu)
+    google-protobuf (4.33.1-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
     googleapis-common-protos-types (1.22.0)
@@ -67,17 +67,17 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.6)
-    rubyzip (3.2.1)
+    rubyzip (3.2.2)
     simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
-    unparser (0.8.0)
+    unparser (0.8.1)
       diff-lcs (~> 1.6)
       parser (>= 3.3.0)
-      prism (>= 1.4)
+      prism (>= 1.5.1)
     yard (0.9.37)
 
 PLATFORMS
