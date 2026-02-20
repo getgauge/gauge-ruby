@@ -1,7 +1,7 @@
 github.com/dmotylev/goproperties v0.0.0-20140630191356-7cbffbaada47 h1:sP2APvSdZpfBiousrppBZNOvu+TE79Myq4kkmmrtSuI=
 github.com/dmotylev/goproperties v0.0.0-20140630191356-7cbffbaada47/go.mod h1:f2V6964+f0p8Asqy8mIK5cKyyVc6MP9PFzGVNRcnYJQ=
-github.com/getgauge/common v0.0.0-20251001154240-471505c641c5 h1:jo4x8MD1bXykQckTg8TcC/5maRFkbZS1rULnUWK+lTs=
-github.com/getgauge/common v0.0.0-20251001154240-471505c641c5/go.mod h1:j4ycvkEuUDSM1pYN2HAwjHtT70ErW3gB/tFKIP8znfE=
+github.com/getgauge/common v0.0.0-20251201180245-fc645fb6d342 h1:fQWy1IltLhZHWad5C3DsADhd88dJHwraui1WpfylUjI=
+github.com/getgauge/common v0.0.0-20251201180245-fc645fb6d342/go.mod h1:3p3RLFqsklsqkcXbIb8+6ASkj0KwI52t7aW8B7/bKoQ=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
 github.com/kr/pretty v0.3.1/go.mod h1:hoEshYVHaxMs3cyo3Yncou5ZscifuDolrwPKZanG3xk=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
