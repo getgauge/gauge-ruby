@@ -8,5 +8,5 @@ group :development, :test do
 	gem 'yard'
 	gem 'simplecov', :require => false
 	gem 'method_source'
-	gem 'rubyzip', ">= 1.2.2"
+	gem 'rubyzip'
 end

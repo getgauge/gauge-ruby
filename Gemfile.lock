@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    gauge-ruby (0.9.7)
-      grpc (>= 1.74.0, < 2.0)
-      parser (>= 3.1, < 4.0)
-      unparser (>= 0.6.4, < 0.9.0)
+    gauge-ruby (1.0.0)
+      grpc (~> 1.74)
+      parser (~> 3.2)
+      unparser (>= 0.6.6, < 0.9.0)
 
 GEM
   remote: https://rubygems.org/
@@ -13,42 +13,42 @@ GEM
     bigdecimal (4.0.1)
     diff-lcs (1.6.2)
     docile (1.4.1)
-    google-protobuf (4.33.4)
+    google-protobuf (4.33.5)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-aarch64-linux-gnu)
+    google-protobuf (4.33.5-aarch64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-arm64-darwin)
+    google-protobuf (4.33.5-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-x86_64-darwin)
+    google-protobuf (4.33.5-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.33.4-x86_64-linux-gnu)
+    google-protobuf (4.33.5-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
     googleapis-common-protos-types (1.22.0)
       google-protobuf (~> 4.26)
-    grpc (1.76.0)
+    grpc (1.78.1)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.76.0-aarch64-linux-gnu)
+    grpc (1.78.1-aarch64-linux-gnu)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.76.0-arm64-darwin)
+    grpc (1.78.1-arm64-darwin)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.76.0-x86_64-darwin)
+    grpc (1.78.1-x86_64-darwin)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc (1.76.0-x86_64-linux-gnu)
+    grpc (1.78.1-x86_64-linux-gnu)
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
-    grpc-tools (1.76.0)
+    grpc-tools (1.78.1)
     method_source (1.1.0)
     os (1.1.4)
-    parser (3.3.10.1)
+    parser (3.3.10.2)
       ast (~> 2.4.1)
       racc
     prism (1.9.0)
@@ -89,14 +89,14 @@ PLATFORMS
 
 DEPENDENCIES
   gauge-ruby!
-  grpc-tools (>= 1.10.0, < 2.0)
+  grpc-tools (~> 1.10)
   method_source
   os
   rake
   rspec
-  rubyzip (>= 1.2.2)
+  rubyzip
   simplecov
   yard
 
 BUNDLED WITH
-   2.6.9
+  4.0.6
