@@ -18,9 +18,9 @@ Gem::Specification.new do |s|
     s.homepage    = "https://gauge.org"
     s.files = Dir.glob("lib/**/*.rb")
 
-    s.add_runtime_dependency 'parser', '>= 3.1', '< 4.0'
-    s.add_runtime_dependency 'unparser', '>= 0.6.4', '< 0.9.0'
-    s.add_runtime_dependency 'grpc', '>= 1.74.0', '< 2.0'
-    s.add_development_dependency 'grpc-tools', '>= 1.10.0', '< 2.0'
-    s.required_ruby_version = ">= 3.1"
+    s.add_runtime_dependency 'parser', '~> 3.2'
+    s.add_runtime_dependency 'unparser', '>= 0.6.6', '< 0.9.0'
+    s.add_runtime_dependency 'grpc', '~> 1.74'
+    s.add_development_dependency 'grpc-tools', '~> 1.10'
+    s.required_ruby_version = '>= 3.2'
 end
