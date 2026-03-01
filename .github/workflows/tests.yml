@@ -104,7 +104,7 @@ jobs:
           gauge -v
           xvfb-run --auto-servernum ./gradlew clean rubyFT
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: failure() || cancelled()
         with:
           name: fts-logs-${{ matrix.os }}-ruby-${{ matrix.ruby_version }}
@@ -172,7 +172,7 @@ jobs:
           gauge -v
           gauge run  --tags='!knownIssue & (actions_on_project_load | actions_on_file_edit)' --env=ruby-wd
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: failure() || cancelled()
         with:
           name: lsp-logs-${{ matrix.os }}-ruby-${{ matrix.ruby_version }}
