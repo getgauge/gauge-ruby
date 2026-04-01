@@ -17,6 +17,12 @@ jobs:
         with:
           ruby-version: '4.0'
 
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          check-latest: true
+          go-version-file: 'go.mod'
+
       - name: Setup git
         run: |
           git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
