@@ -12,7 +12,7 @@ The plugin is authored in [Ruby](https://en.wikipedia.org/wiki/Ruby_(programming
 
 ### Pre-requisite
 
-- [Install Gauge](https://docs.gauge.org/installing.html#installation)
+- [Install Gauge](https://docs.gauge.org/getting_started/installing-gauge)
 
 ### Installation
 
