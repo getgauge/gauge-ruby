@@ -15,7 +15,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '4.0'
+          ruby-version: .tool-versions
 
       - name: Set up Go
         uses: actions/setup-go@v7
