@@ -1,6 +1,6 @@
 module github.com/getgauge/gauge-ruby
 
-go 1.26
+go 1.27.0
 
 require github.com/getgauge/common v0.0.0-20251201180245-fc645fb6d342
 
